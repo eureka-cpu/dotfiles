@@ -113,22 +113,7 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-
-  # zsh & oh-my-zsh configurations
-  programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-    autosuggestions.enable = true;
-    shellAliases = {
-      swaydev = "nix develop github:fuellabs/fuel.nix#sway-dev -c zsh";
-    };
-  };
-  programs.zsh.ohMyZsh = {
-    enable = true;
-    plugins = [ "git" ];
-    theme = "agnoster";
-  };
-
+  
   # Experimental nix features
   nix = {
     settings = {

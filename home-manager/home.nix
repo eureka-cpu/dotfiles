@@ -49,8 +49,48 @@
     v4l-utils
     gphoto2
     #    fix kernel header vvvvvvvvvv
-    # linuxKernel.packages.linux_5_15.vrl2loopback
+    # linuxKernel.packages.linux_5_15.vrl2loopbacko
+    adw-gtk3
+    simp1e-cursors
+    zathura
+    image-roll
+    celluloid
   ];
+
+  # zsh & oh-my-zsh configurations
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    autosuggestions.enable = true;
+    shellAliases = {
+      swaydev = "nix develop github:fuellabs/fuel.nix#sway-dev -c zsh";
+    };
+  };
+  programs.zsh.ohMyZsh = {
+    enable = true;
+    plugins = [ "git" ];
+    theme = "agnoster";
+  };
+
+  programs.git = {
+    enable = true;
+    userName = "eureka-cpu";
+    userEmail = "github.eureka@gmail.com";
+  }
+  gtk = {
+    enable = true;
+    theme.name = "adw-gtk3";
+    # cursorTheme.name = "sim1le-cursors"
+    # iconTheme.name = "GruvboxPlus"
+  }
+  xdg.mimeApps.defaultApplications = {
+    "text/plain" = [ "helix.desktop" ];
+    "application/pdf" = [ "zathura.desktop" ];
+    "image/*" = [ "image-roll.desktop" ];
+    "video/png" = [ "celluloid.desktop" ];
+    "video/jpg" = [ "celluloid.desktop" ];
+    "video/*" = [ "celluloid.desktop" ];
+  }
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
@@ -67,7 +107,9 @@
     # '';
   };
 
-  home.sessionVariables = {};
+  home.sessionVariables = {
+    EDITOR = "helix";
+  };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
