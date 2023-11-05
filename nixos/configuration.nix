@@ -145,52 +145,6 @@
       WLR_NO_HARDWARE_CURSORS = "1"; # fixes disappearing cursor
       NIXOS_OZONE_WL = "1"; # tells electron apps to use wayland
     };
-
-    systemPackages = with pkgs; [
-      # xfce.xfce4-screenshooter
-      # # Hyprland
-      # eww-wayland
-      # rofi-wayland
-      # mako
-      # swww
-      # xfce.thunar
-      # networkmanagerapplet
-      # wl-clipboard
-      # # shell
-      # zsh
-      # oh-my-zsh
-      # neofetch
-      # # comms
-      # discord
-      # telegram-desktop
-      # # code
-      # git
-      # helix
-      # (vscode-with-extensions.override {
-      #   vscodeExtensions = with vscode-extensions; [
-      #     bbenoist.nix # nix syntax highlighting
-      #     matklad.rust-analyzer
-      #     vadimcn.vscode-lldb # lldb for rust
-      #     pkief.material-product-icons
-      #     tamasfe.even-better-toml
-      #     esbenp.prettier-vscode
-      #     ms-vsliveshare.vsliveshare
-      #     vscodevim.vim
-      #     piousdeer.adwaita-theme
-      #     dracula-theme.theme-dracula
-      #     zhuangtongfa.material-theme
-      #     file-icons.file-icons
-      #     eamodio.gitlens # git lens
-      #   ];
-      # })
-      # # studio
-      # obs-studio
-      # ffmpeg # video formatter
-      # v4l-utils
-      # gphoto2
-      # #    fix kernel header vvvvvvvvvv
-      # # linuxKernel.packages.linux_5_15.vrl2loopback
-    ];
   };
 
   fonts = {
