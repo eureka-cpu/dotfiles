@@ -61,12 +61,12 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    autosuggestions.enable = true;
+    enableAutosuggestions = true;
     shellAliases = {
       swaydev = "nix develop github:fuellabs/fuel.nix#sway-dev -c zsh";
     };
   };
-  programs.zsh.ohMyZsh = {
+  programs.zsh.oh-my-zsh = {
     enable = true;
     plugins = [ "git" ];
     theme = "agnoster";
@@ -76,13 +76,13 @@
     enable = true;
     userName = "eureka-cpu";
     userEmail = "github.eureka@gmail.com";
-  }
+  };
   gtk = {
     enable = true;
     theme.name = "adw-gtk3";
     # cursorTheme.name = "sim1le-cursors"
     # iconTheme.name = "GruvboxPlus"
-  }
+  };
   xdg.mimeApps.defaultApplications = {
     "text/plain" = [ "helix.desktop" ];
     "application/pdf" = [ "zathura.desktop" ];
@@ -90,7 +90,7 @@
     "video/png" = [ "celluloid.desktop" ];
     "video/jpg" = [ "celluloid.desktop" ];
     "video/*" = [ "celluloid.desktop" ];
-  }
+  };
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.

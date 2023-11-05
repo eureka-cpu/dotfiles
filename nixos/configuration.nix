@@ -107,6 +107,20 @@
     shell = pkgs.zsh;
   };
 
+  # zsh & oh-my-zsh configurations
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    autosuggestions.enable = true;
+    shellAliases = {
+      swaydev = "nix develop github:fuellabs/fuel.nix#sway-dev -c zsh";
+    };
+  };
+  programs.zsh.ohMyZsh = {
+    enable = true;
+    plugins = [ "git" ];
+    theme = "agnoster";
+  };
   # Enable automatic login for the user.
   services.xserver.displayManager.autoLogin.enable = false;
   services.xserver.displayManager.autoLogin.user = "eureka";
