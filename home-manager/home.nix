@@ -50,15 +50,21 @@
     gphoto2
     #    fix kernel header vvvvvvvvvv
     # linuxKernel.packages.linux_5_15.vrl2loopbacko
-    adw-gtk3
+    gruvbox-dark-gtk
     kitty-themes
     simp1e-cursors
     zathura
     image-roll
     celluloid
+    jetbrains-mono
   ];
 
-  programs.kitty.theme = "Gruvbox Material Dark Medium";
+  programs.kitty = {
+    enable = true;
+    theme = "Gruvbox Material Dark Medium";
+    font.package = pkgs.jetbrains-mono;
+    font.name = "JetBrains Mono";
+  };
 
   # zsh & oh-my-zsh configurations
   programs.zsh = {
@@ -82,7 +88,7 @@
   };
   gtk = {
     enable = true;
-    theme.name = "adw-gtk3";
+    theme.name = "gruvbox-dark-gtk";
     # cursorTheme.name = "sim1le-cursors"
     # iconTheme.name = "GruvboxPlus"
   };
