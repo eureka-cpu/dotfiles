@@ -51,11 +51,14 @@
     #    fix kernel header vvvvvvvvvv
     # linuxKernel.packages.linux_5_15.vrl2loopbacko
     adw-gtk3
+    kitty-themes
     simp1e-cursors
     zathura
     image-roll
     celluloid
   ];
+
+  programs.kitty.theme = "Gruvbox Material Dark Medium";
 
   # zsh & oh-my-zsh configurations
   programs.zsh = {
@@ -69,7 +72,7 @@
   programs.zsh.oh-my-zsh = {
     enable = true;
     plugins = [ "git" ];
-    theme = "agnoster";
+    theme = "dst";
   };
 
   programs.git = {
