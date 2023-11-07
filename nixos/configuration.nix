@@ -100,13 +100,8 @@
     isNormalUser = true;
     description = "Chris O'Brien";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-      brave
-      kitty
-    ];
     shell = pkgs.zsh;
   };
-
   programs.zsh.enable = true;
   
   # Enable automatic login for the user.
