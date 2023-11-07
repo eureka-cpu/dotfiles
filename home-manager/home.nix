@@ -1,6 +1,10 @@
 { pkgs, ... }:
 
 {
+  imports = [
+    ./theme.nix
+  ];
+
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "eureka";
@@ -232,12 +236,7 @@
     userName = "eureka-cpu";
     userEmail = "github.eureka@gmail.com";
   };
-  gtk = {
-    enable = true;
-    theme.name = "gruvbox-dark-gtk";
-    # cursorTheme.name = "sim1le-cursors"
-    # iconTheme.name = "GruvboxPlus"
-  };
+
   xdg.mimeApps.defaultApplications = {
     "text/plain" = [ "helix.desktop" ];
     "application/pdf" = [ "zathura.desktop" ];
