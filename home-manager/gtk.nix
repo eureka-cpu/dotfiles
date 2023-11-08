@@ -9,7 +9,7 @@ in
     theme.name = "gruvbox-dark";
     iconTheme = {
       name = gruvbox-plus.name;
-      package = (pkgs.callPackage gruvbox-plus {});
+      package = gruvbox-plus;
     };
   };
 }
