@@ -13,7 +13,7 @@
   home.packages = with pkgs; [
     home-manager
     # Hyprland
-    xfce.xfce4-screenshooter
+    grim
     eww-wayland
     rofi-wayland
     mako

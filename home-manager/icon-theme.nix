@@ -6,11 +6,10 @@ in
 {
   gtk = {
     enable = true;
-    theme.name = "gruvbox-dark-gtk";
-    # cursorTheme.name = "sim1le-cursors"
+    theme.name = "gruvbox-dark";
     iconTheme = {
       name = gruvbox-plus.name;
-      package = gruvbox-plus;
+      package = (pkgs.callPackage gruvbox-plus {});
     };
   };
 }
