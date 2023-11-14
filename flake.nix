@@ -15,7 +15,7 @@
   in
   {
     nixosConfigurations = {
-      critter-tank = nixpkgs.lib.nixosSystem {
+      nixos = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
           ./nixos/configuration.nix
