@@ -68,6 +68,11 @@
     jetbrains-mono
   ];
 
+  # home.configFile = {
+  #   "hypr/start.sh".source = ./hypr/start.sh;
+  #   "hypr/hyprland.conf".source = ./hypr/hyprland.conf;
+  # };
+
   programs.kitty = {
     enable = true;
     theme = "Gruvbox Material Dark Medium";
