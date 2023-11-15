@@ -68,10 +68,11 @@
     jetbrains-mono
   ];
 
-  home.extraOptions.xdg.configFile = {
-    "hypr/start.sh".source = ./hypr/start.sh;
-    "hypr/hyprland.conf".source = ./hypr/hyprland.conf;
-    "hypr/Wallpapers".source = ./hypr/Wallpapers;
+  xdg.configFile = {
+    "hypr" = {
+      source = ./hypr;
+      recursive = true;
+    };
   };
 
   programs.kitty = {
