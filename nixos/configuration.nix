@@ -150,8 +150,5 @@
     options = "--delete-older-than 7d";
   };
 
-  system = {
-    autoUpgrade.enable = true;
-    autoUpgrade.allowReboot = true;
-  };
+  system.autoUpgrade.flake = "github:eureka-cpu/dotfiles/tree/tensorbook";
 }
