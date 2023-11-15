@@ -48,6 +48,10 @@
     enableNvidiaPatches = true;
   };
 
+  # Razer peripherals
+  hardware.openrazer.enable = true;
+  environment.systemPackages = [ pkgs.openrazer-daemon ];
+
   # Nvidia settings
   hardware.opengl = {
     enable = true; # Must be enabled
