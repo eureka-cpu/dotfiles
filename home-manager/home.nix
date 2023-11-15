@@ -28,7 +28,6 @@
     oh-my-zsh
     neofetch
     # comms
-    discord
     telegram-desktop
     # code
     git
@@ -68,10 +67,12 @@
     jetbrains-mono
   ];
 
-  # home.configFile = {
-  #   "hypr/start.sh".source = ./hypr/start.sh;
-  #   "hypr/hyprland.conf".source = ./hypr/hyprland.conf;
-  # };
+  xdg.configFile = {
+    "hypr" = {
+      source = ./hypr;
+      recursive = true;
+    };
+  };
 
   programs.kitty = {
     enable = true;
