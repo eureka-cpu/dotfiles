@@ -68,10 +68,11 @@
     jetbrains-mono
   ];
 
-  # home.configFile = {
-  #   "hypr/start.sh".source = ./hypr/start.sh;
-  #   "hypr/hyprland.conf".source = ./hypr/hyprland.conf;
-  # };
+  home.extraOptions.xdg.configFile = {
+    "hypr/start.sh".source = ./hypr/start.sh;
+    "hypr/hyprland.conf".source = ./hypr/hyprland.conf;
+    "hypr/Wallpapers".source = ./hypr/Wallpapers;
+  };
 
   programs.kitty = {
     enable = true;
