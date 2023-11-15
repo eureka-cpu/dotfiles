@@ -28,7 +28,6 @@
     oh-my-zsh
     neofetch
     # comms
-    discord
     telegram-desktop
     # code
     git

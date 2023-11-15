@@ -48,12 +48,6 @@
     enableNvidiaPatches = true;
   };
 
-  # xdg portal
-  xdg.portal = {
-    enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-  };
-
   # Nvidia settings
   hardware.opengl = {
     enable = true; # Must be enabled
@@ -145,4 +139,15 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
+
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
+  };
+
+  system = {
+    autoUpgrade.enable = true;
+    autoUpgrade.allowReboot = true;
+  };
 }
