@@ -49,10 +49,6 @@
     enableNvidiaPatches = true;
   };
 
-  # Razer peripherals
-  hardware.openrazer.enable = true;
-  environment.systemPackages = [ pkgs.openrazer-daemon ];
-
   # Nvidia settings
   hardware.opengl = {
     enable = true; # Must be enabled
@@ -70,6 +66,14 @@
     nvidiaSettings = true;
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
     package = config.boot.kernelPackages.nvidiaPackages.stable;
+    prime = {
+      offload = {
+        enable = true;
+        enableOffloadCmd = true;
+      };
+      intelBusId = "PCI:0:2:0";
+      nvidiaBusId = "PCI:1:0:0";
+    };
   };
 
   # Configure keymap in X11
@@ -91,6 +95,7 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     jack.enable = true;
+    wireplumber.enable = true;
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.

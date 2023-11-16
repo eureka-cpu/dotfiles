@@ -12,8 +12,6 @@
 
   home.packages = with pkgs; [
     home-manager
-    discord
-    xwaylandvideobridge
     # Hyprland
     grim
     eww-wayland
@@ -25,6 +23,7 @@
     wl-clipboard
     brave
     kitty
+    pwvucontrol
     # shell
     zsh
     oh-my-zsh
