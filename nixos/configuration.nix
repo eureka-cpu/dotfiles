@@ -38,8 +38,9 @@
     desktopManager = {
       xterm.enable = false;
     };
-    # used for logging in and shutting down for now
+    # fallback for when things don't work
     displayManager.gdm.enable = true;
+    desktopManager.gnome.enable = true;
   };
 
   # hyprland
@@ -89,8 +90,7 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
+    jack.enable = true;
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.

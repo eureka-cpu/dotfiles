@@ -12,6 +12,8 @@
 
   home.packages = with pkgs; [
     home-manager
+    discord
+    xwaylandvideobridge
     # Hyprland
     grim
     eww-wayland
