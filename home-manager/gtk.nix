@@ -2,6 +2,7 @@
 
 let
   cursor = pkgs.simp1e-cursors;
+  cursorName = "Simp1e-Gruvbox-Dark";
 in
 {
   gtk = {
@@ -18,7 +19,14 @@ in
     cursorTheme = {
       size = 24;
       package = cursor;
-      name = cursor.name;
+      name = cursorName;
     };
+  };
+  home.pointerCursor = {
+    package = cursor;
+    name = cursorName;
+    size = 24;
+    gtk.enable = true;
+    x11.enable = true;
   };
 }
