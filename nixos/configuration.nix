@@ -8,7 +8,10 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
+  boot.extraModprobeConfig = ''
+    options snd-sof-pci tplg_filename=sof-hda-generic-2ch-pdm1.tplg
+  '';
+  
   networking.hostName = "nixos"; # Define your hostname.
 
   # Enable networking
@@ -56,6 +59,7 @@
     driSupport32Bit = true;
   };
   services.xserver.videoDrivers = ["nvidia"];
+  hardware.pulseaudio.package = pkgs.pulseaudioFull;
   hardware.nvidia = {
     # Modesetting is needed for most Wayland compositors
     modesetting.enable = true;
@@ -65,7 +69,7 @@
     # Enable the nvidia settings menu
     nvidiaSettings = true;
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
+    package = config.boot.kernelPackages.nvidiaPackages.production;
     prime = {
       offload = {
         enable = true;
@@ -95,7 +99,7 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     jack.enable = true;
-    wireplumber.enable = true;
+    # wireplumber.enable = true;
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
