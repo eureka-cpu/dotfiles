@@ -1,5 +1,8 @@
-{ /* pkgs, */... }:
+{ pkgs, ... }:
 
+let
+  cursor = pkgs.simp1e-cursors;
+in
 {
   gtk = {
     enable = true;
@@ -12,5 +15,10 @@
     #   name = "Gruvbox-Plus-Dark";
     #   package = pkgs.gruvbox-plus-icon-pack;
     # };
+    cursorTheme = {
+      size = 24;
+      package = cursor;
+      name = cursor.name;
+    };
   };
 }

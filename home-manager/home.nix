@@ -67,7 +67,7 @@
     celluloid
     jetbrains-mono
   ];
-
+  
   xdg.configFile = {
     "hypr" = {
       source = ./hypr;
