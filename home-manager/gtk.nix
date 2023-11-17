@@ -16,16 +16,11 @@ in
     #   name = "Gruvbox-Plus-Dark";
     #   package = pkgs.gruvbox-plus-icon-pack;
     # };
-    cursorTheme = {
-      size = 24;
-      package = cursor;
-      name = cursorName;
-    };
   };
   home.pointerCursor = {
     package = cursor;
     name = cursorName;
-    size = 24;
+    size = 23;
     gtk.enable = true;
     x11.enable = true;
   };
