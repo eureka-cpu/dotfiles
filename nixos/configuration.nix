@@ -59,7 +59,6 @@
     driSupport32Bit = true;
   };
   services.xserver.videoDrivers = ["nvidia"];
-  hardware.pulseaudio.package = pkgs.pulseaudioFull;
   hardware.nvidia = {
     # Modesetting is needed for most Wayland compositors
     modesetting.enable = true;
@@ -99,7 +98,6 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     jack.enable = true;
-    # wireplumber.enable = true;
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -138,10 +136,7 @@
 
   fonts = {
     packages = with pkgs; [
-      fira
-      fira-code
-      jetbrains-mono
-      powerline-fonts
+      (nerdfonts.override { fonts = [ "FiraCode" "JetBrainsMono" ]; })
     ];
   };
 
