@@ -145,9 +145,4 @@
     dates = "weekly";
     options = "--delete-older-than 7d";
   };
-
-  system = {
-    autoUpgrade.enable = true;
-    autoUpgrade.allowReboot = true;
-  };
 }
