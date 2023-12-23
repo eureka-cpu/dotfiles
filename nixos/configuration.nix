@@ -12,8 +12,7 @@
     efi.canTouchEfiVariables = true;
   };
 
-  # Setup keyfile
-  boot.initrd.luks.devices."luks-84d82150-a3d9-4e27-befb-434a42d649c5".device = "/dev/disk/by-uuid/84d82150-a3d9-4e27-befb-434a42d649c5";
+  boot.initrd.luks.devices."luks-db29127c-e05e-4a4e-8558-2df438c6c766".device = "/dev/disk/by-uuid/db29127c-e05e-4a4e-8558-2df438c6c766";
 
   # video capture from external device
   boot.kernelModules = [ "v4l2loopback" ];
@@ -100,7 +99,7 @@
   services.auto-cpufreq.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.caobrien = {
+  users.users.eureka = {
     isNormalUser = true;
     description = "Chris O'Brien";
     extraGroups = [ "networkmanager" "wheel" ];
