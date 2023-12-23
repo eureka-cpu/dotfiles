@@ -105,7 +105,7 @@
   services.auto-cpufreq.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.eureka = {
+  users.users.caobrien = {
     isNormalUser = true;
     description = "Chris O'Brien";
     extraGroups = [ "networkmanager" "wheel" ];
