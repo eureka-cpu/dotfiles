@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
   imports =
@@ -9,16 +9,11 @@
   # Bootloader.
   boot.loader = {
     systemd-boot.enable = true;
-    efi = {
-      canTouchEfiVariables = true;
-      efiSysMountPoint = "/boot/efi";
-    };
+    efi.canTouchEfiVariables = true;
   };
 
   # Setup keyfile
-  boot.initrd.secrets = {
-    "/crypto_keyfile.bin" = null;
-  };
+  boot.initrd.luks.devices."luks-84d82150-a3d9-4e27-befb-434a42d649c5".device = "/dev/disk/by-uuid/84d82150-a3d9-4e27-befb-434a42d649c5";
 
   # video capture from external device
   boot.kernelModules = [ "v4l2loopback" ];
@@ -129,6 +124,14 @@
     plugins = [ "git" ];
     theme = "dst";
   };
+
+  # Enable automatic login for the user.
+  services.xserver.displayManager.autoLogin.enable = true;
+  services.xserver.displayManager.autoLogin.user = "eureka";
+
+  # Workaround for GNOME autologin
+  systemd.services."getty@tty1".enable = false;
+  systemd.services."autovt@tty1".enable = false;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -256,7 +259,7 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "22.11"; # Did you read the comment?
+  system.stateVersion = "23.11"; # Did you read the comment?
 
   nix.gc = {
     automatic = true;
@@ -266,6 +269,5 @@
 
   system = {
     autoUpgrade.enable = true;
-    autoUpgrade.allowReboot = true;
   };
 }
