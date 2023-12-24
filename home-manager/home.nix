@@ -77,8 +77,7 @@
   programs.kitty = {
     enable = true;
     theme = "Gruvbox Material Dark Medium";
-    font.package = pkgs.jetbrains-mono;
-    font.name = "JetBrains Mono";
+    font.name = "JetBrainsMono Nerd Font";
   };
   programs.helix = {
     enable = true;
