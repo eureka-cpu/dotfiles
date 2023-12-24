@@ -125,10 +125,7 @@
 
   fonts = {
     packages = with pkgs; [
-      fira
-      fira-code
-      jetbrains-mono
-      powerline-fonts
+      (nerdfonts.override { fonts = [ "FiraCode" "JetBrainsMono" ]; })
     ];
   };
 
