@@ -56,8 +56,7 @@
     ffmpeg # video formatter
     v4l-utils
     gphoto2
-    #    fix kernel header vvvvvvvvvv
-    # linuxKernel.packages.linux_5_15.vrl2loopbacko
+    linuxKernel.packages.linux_6_1.v4l2loopback
     gruvbox-dark-gtk
     kitty-themes
     simp1e-cursors
