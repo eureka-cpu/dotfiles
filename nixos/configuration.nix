@@ -11,6 +11,9 @@
 
   networking.hostName = "critter-tank"; # Define your hostname.
 
+  boot.kernelModules = [ "v4l2loopback" ];
+  boot.extraModulePackages = [ pkgs.linuxPackages.v4l2loopback ];
+
   # Enable networking
   networking.networkmanager.enable = true;
 
