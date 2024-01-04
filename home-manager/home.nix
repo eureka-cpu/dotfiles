@@ -46,6 +46,7 @@
     # linuxKernel.packages.linux_5_15.vrl2loopbacko
     gnomeExtensions.color-picker
     gnomeExtensions.pop-shell
+    gnomeExtensions.user-themes
     tlp
     auto-cpufreq
     discord
@@ -261,8 +262,19 @@
       '';
     };
   };
-
   home.sessionVariables.GTK_THEME = "Nordic-darker";
+  dconf.settings = {
+    "org/gnome/shell" = {
+      disable-user-extensions = false;
+      enabled-extensions = [
+        "pop-shell@system76.com"
+        "user-theme@gnome-shell-extensions.gcampax.github.com"
+      ];
+    };
+    "org/gnome/shell/extensions/user-theme" = {
+      name = "Nordic-darker";
+    };
+  };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
