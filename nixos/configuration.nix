@@ -155,7 +155,6 @@
       gnome-tour
       epiphany
       gnome.geary
-      gnome.gedit
       gnome-text-editor
       gnome.gnome-contacts
       gnome.yelp
