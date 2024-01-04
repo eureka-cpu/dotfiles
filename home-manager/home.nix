@@ -62,6 +62,9 @@
     enable = true;
     theme = "kanagawabones";
     font.name = "JetBrainsMono Nerd Font";
+    settings = {
+      hide_window_decorations = true;
+    };
   };
 
   programs.helix = {
