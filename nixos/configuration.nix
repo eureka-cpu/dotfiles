@@ -62,10 +62,6 @@
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
-  environment.sessionVariables = {
-    NIXOS_OZONE_WL = "1";
-    # WLR_NO_HARDWARE_CURSORS = "1";
-  };
 
   # Configure keymap in X11
   services.xserver = {
@@ -149,61 +145,9 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment = {
-    systemPackages = with pkgs; [
-      brave
-      (vscode-with-extensions.override {
-        vscodeExtensions = with vscode-extensions; [
-          bbenoist.nix
-          matklad.rust-analyzer
-          vadimcn.vscode-lldb
-          pkief.material-product-icons
-          tamasfe.even-better-toml
-          esbenp.prettier-vscode
-          ms-vsliveshare.vsliveshare
-          vscodevim.vim
-          catppuccin.catppuccin-vsc
-          jdinhlife.gruvbox
-          piousdeer.adwaita-theme
-          zhuangtongfa.material-theme
-          arcticicestudio.nord-visual-studio-code
-          file-icons.file-icons
-          eamodio.gitlens
-        ];
-      })
-      gnomeExtensions.color-picker
-      gnomeExtensions.pop-shell
-      gnome.gnome-tweaks
-      helix
-      git
-      zsh
-      oh-my-zsh
-      tdesktop
-      pipes-rs
-      tlp
-      auto-cpufreq
-      discord
-      cups
-      brlaser
-      alacritty
-      kitty
-      colloid-icon-theme
-      nordic
-      marwaita-manjaro
-      papirus-maia-icon-theme
-      neofetch
-      xdg-desktop-portal
-      xdg-desktop-portal-gnome
-      obs-studio
-      blender
-      steam
-      gphoto2
-      # linuxKernel.packages.linux_5_15.v4l2loopback
-      v4l-utils
-      ffmpeg
-      libreoffice
-      wl-clipboard
-      kitty-themes
-    ];
+    sessionVariables = {
+      NIXOS_OZONE_WL = "1";
+    };
 
     gnome.excludePackages = with pkgs; [
       gnome.cheese
@@ -264,9 +208,5 @@
     automatic = true;
     dates = "weekly";
     options = "--delete-older-than 7d";
-  };
-
-  system = {
-    autoUpgrade.enable = true;
   };
 }
