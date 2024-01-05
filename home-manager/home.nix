@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 {
   home.username = "eureka";
@@ -95,7 +95,7 @@
         };
       };
     };
-    themes = helix-themes;
+    themes = inputs.helix-themes.outputs.themes;
   };
 
   # zsh & oh-my-zsh configurations
