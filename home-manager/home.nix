@@ -1,4 +1,4 @@
-{ pkgs, helix-themes, ... }:
+{ pkgs, ... }:
 
 {
   home.username = "eureka";
