@@ -7,6 +7,7 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    helix-themes.url = "github:eureka-cpu/helix-themes.nix";
   };
 
   outputs = { nixpkgs, home-manager, ... }:
