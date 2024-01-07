@@ -10,7 +10,7 @@
     helix-themes.url = "github:eureka-cpu/helix-themes.nix";
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, ... }:
+  outputs = { nixpkgs, home-manager, ... } @inputs:
   let
     system = "x86_64-linux";
   in

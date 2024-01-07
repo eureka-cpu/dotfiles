@@ -2,11 +2,11 @@
   "nodes": {
     "helix-themes": {
       "locked": {
-        "lastModified": 1704432561,
-        "narHash": "sha256-my6KvCbhuCOkAt8xmzpIq3QZQlgsVTwbcFOsSg+XbDE=",
+        "lastModified": 1704445274,
+        "narHash": "sha256-Qpged9pY3ik+LzUi8GUcfMHckzn23IF4lLBXBpUSGbY=",
         "owner": "eureka-cpu",
         "repo": "helix-themes.nix",
-        "rev": "0179ded68c0a9d2ecc972cb307f51582f7b7fb10",
+        "rev": "3e25a712091e42702333a4126ed0e57a30016793",
         "type": "github"
       },
       "original": {
