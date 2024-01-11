@@ -156,26 +156,27 @@
 
     # keybindings
     "org/gnome/shell/keybindings" = {
-      toggle-quick-settings = "@as []"; # turn off focus power menu
-      toggle-message-tray = "['<Super>n']";
-      focus-active-notification = "@as []";
+      toggle-quick-settings = "disabled"; # turn off focus power menu
+      toggle-message-tray = ["<Super>n"];
+      focus-active-notification = "disabled";
     };
     "org/gnome/desktop/wm/keybindings" = {
-      minimize = "@as []";
-      maximize = "@as []";
-      toggle-maximized = "['<Super>m']";
+      close = ["<Super>q"];
+      minimize = [];
+      maximize = "disabled";
+      toggle-maximized = ["<Super>m"];
       # workspace/monitor settings
-      switch-to-workspace-left = "['<Alt>h']";
-      switch-to-workspace-right = "['<Alt>l']";
-      move-to-workspace-left = "['<Shift><Alt>h']";
-      move-to-workspace-right = "['<Shift><Alt>l']";
-      move-to-monitor-down = "@as []";  # handled by pop-shell
-      move-to-monitor-left = "@as []";  #
-      move-to-monitor-right = "@as []"; #
-      move-to-monitor-up = "@as []";    #
+      switch-to-workspace-left = ["<Alt>h"];
+      switch-to-workspace-right = ["<Alt>l"];
+      move-to-workspace-left = ["<Shift><Alt>h"];
+      move-to-workspace-right = ["<Shift><Alt>l"];
+      move-to-monitor-down = "disabled";  # handled by pop-shell
+      move-to-monitor-left = "disabled";  #
+      move-to-monitor-right = "disabled"; #
+      move-to-monitor-up = "disabled";    #
     };
     "org/gnome/settings-daemon/plugins/media-keys" = {
-      screensaver = "@as []"; # turn off lock screen
+      screensaver = "disabled"; # turn off lock screen
     };
   };
 
