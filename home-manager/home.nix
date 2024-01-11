@@ -156,27 +156,27 @@
 
     # keybindings
     "org/gnome/shell/keybindings" = {
-      toggle-quick-settings = "disabled"; # turn off focus power menu
+      toggle-quick-settings = []; # turn off focus power menu
       toggle-message-tray = ["<Super>n"];
-      focus-active-notification = "disabled";
+      focus-active-notification = [];
     };
     "org/gnome/desktop/wm/keybindings" = {
       close = ["<Super>q"];
       minimize = [];
-      maximize = "disabled";
+      maximize = [];
       toggle-maximized = ["<Super>m"];
       # workspace/monitor settings
       switch-to-workspace-left = ["<Alt>h"];
       switch-to-workspace-right = ["<Alt>l"];
       move-to-workspace-left = ["<Shift><Alt>h"];
       move-to-workspace-right = ["<Shift><Alt>l"];
-      move-to-monitor-down = "disabled";  # handled by pop-shell
-      move-to-monitor-left = "disabled";  #
-      move-to-monitor-right = "disabled"; #
-      move-to-monitor-up = "disabled";    #
+      move-to-monitor-down = [];  # handled by pop-shell
+      move-to-monitor-left = [];  #
+      move-to-monitor-right = []; #
+      move-to-monitor-up = [];    #
     };
     "org/gnome/settings-daemon/plugins/media-keys" = {
-      screensaver = "disabled"; # turn off lock screen
+      screensaver = []; # turn off lock screen
     };
   };
 
