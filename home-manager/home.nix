@@ -267,7 +267,7 @@
   };
 
   home.sessionVariables = {
-    XCURSOR_SIZE = "24";
+    # XCURSOR_SIZE = "20";
   };
 
   # Let Home Manager install and manage itself.

@@ -8,11 +8,12 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  # Topology config for routing audio/microphone on Razer laptops
   boot.extraModprobeConfig = ''
     options snd-sof-pci tplg_filename=sof-hda-generic-2ch-pdm1.tplg
   '';
   
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "tensorbook"; # Define your hostname.
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -49,7 +50,6 @@
   # hyprland
   programs.hyprland = {
     enable = true;
-    enableNvidiaPatches = true;
   };
 
   # Nvidia settings
