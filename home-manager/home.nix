@@ -72,6 +72,10 @@
       source = ./hypr;
       recursive = true;
     };
+    "rofi" = {
+      source = ./rofi;
+      recursive = true;
+    };
   };
 
   programs.kitty = {
