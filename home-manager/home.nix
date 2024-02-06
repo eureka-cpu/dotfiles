@@ -86,7 +86,10 @@
   programs.kitty = {
     enable = true;
     theme = "Gruvbox Material Dark Medium";
-    font.name = "JetBrainsMono Nerd Font";
+    font = {
+      name = "JetBrainsMono Nerd Font";
+      size = 16;
+    };
     settings = {
       hide_window_decorations = true;
     };
@@ -131,9 +134,9 @@
         "user-theme@gnome-shell-extensions.gcampax.github.com"
       ];
     };
-    "org/gnome/shell/extensions/user-theme" = {
-      name = "Gruvbox-Dark";
-    };
+    # "org/gnome/shell/extensions/user-theme" = {
+    #   name = "Gruvbox-Dark";
+    # };
 
     # keybindings
     "org/gnome/shell/keybindings" = {
@@ -207,7 +210,7 @@
   };
 
   home.sessionVariables = {
-    GTK_THEME = "Gruvbox-Dark";
+    # GTK_THEME = "Gruvbox-Dark";
     # XCURSOR_SIZE = "20";
   };
 
