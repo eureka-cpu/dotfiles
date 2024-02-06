@@ -12,6 +12,7 @@
 
   home.packages = with pkgs; [
     home-manager
+    nvtop
     # Hyprland
     # grim
     eww-wayland

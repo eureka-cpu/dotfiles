@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   imports = [
@@ -69,13 +69,21 @@
     nvidiaSettings = true;
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
     package = config.boot.kernelPackages.nvidiaPackages.production;
-    prime = {
-      offload = {
-        enable = true;
-        enableOffloadCmd = true;
+  };
+  specialisation = {
+    on-the-go.configuration = {
+      system.nixos.tags = [ "on-the-go" ];
+      hardware.nvidia = {
+        prime = {
+          offload = {
+            enable = lib.mkForce true;
+            enableOffloadCmd = lib.mkForce true;
+          };
+          sync.enable = lib.mkForce false;
+          intelBusId = "PCI:0:2:0";
+          nvidiaBusId = "PCI:1:0:0";
+        };
       };
-      intelBusId = "PCI:0:2:0";
-      nvidiaBusId = "PCI:1:0:0";
     };
   };
 
