@@ -132,7 +132,7 @@
       ];
     };
     "org/gnome/shell/extensions/user-theme" = {
-      name = "gruvbox-dark";
+      name = "Gruvbox-Dark";
     };
 
     # keybindings
@@ -207,7 +207,7 @@
   };
 
   home.sessionVariables = {
-    GTK_THEME = "gruvbox-dark";
+    GTK_THEME = "Gruvbox-Dark";
     # XCURSOR_SIZE = "20";
   };
 
