@@ -65,6 +65,7 @@
     zathura
     image-roll
     celluloid
+    auto-cpufreq
   ];
   
   xdg.configFile = {
