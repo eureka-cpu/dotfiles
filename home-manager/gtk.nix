@@ -1,9 +1,9 @@
 { pkgs, ... }:
 
-let
-  cursor = pkgs.simp1e-cursors;
-  cursorName = "Simp1e-Adw-Dark";
-in
+# let
+  # cursor = pkgs.simp1e-cursors;
+  # cursorName = "Simp1e-Adw-Dark";
+# in
 {
   gtk = {
     enable = true;
@@ -13,11 +13,11 @@ in
       package = pkgs.gruvbox-plus-icons;
     };
   };
-  home.pointerCursor = {
-    package = cursor;
-    name = cursorName;
-    size = 21;
-    gtk.enable = true;
-    # x11.enable = true;
-  };
+  # home.pointerCursor = {
+  #   package = cursor;
+  #   name = cursorName;
+  #   size = 21;
+  #   gtk.enable = true;
+  #   # x11.enable = true;
+  # };
 }

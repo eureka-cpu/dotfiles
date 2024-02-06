@@ -44,13 +44,13 @@
     };
     # fallback for when things don't work
     displayManager.gdm.enable = true;
-    # desktopManager.gnome.enable = true;
+    desktopManager.gnome.enable = true;
   };
 
   # hyprland
-  programs.hyprland = {
-    enable = true;
-  };
+  # programs.hyprland = {
+  #   enable = true;
+  # };
 
   # Nvidia settings
   hardware.opengl = {

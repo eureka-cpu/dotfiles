@@ -13,17 +13,17 @@
   home.packages = with pkgs; [
     home-manager
     # Hyprland
-    grim
+    # grim
     eww-wayland
-    rofi-wayland
-    mako
-    swww
-    xfce.thunar
-    networkmanagerapplet
+    # rofi-wayland
+    # mako
+    # swww
+    # xfce.thunar
+    # networkmanagerapplet
     wl-clipboard
     brave
     kitty
-    pwvucontrol
+    # pwvucontrol
     # shell
     zsh
     oh-my-zsh
@@ -61,23 +61,23 @@
     # linuxKernel.packages.linux_5_15.vrl2loopbacko
     gruvbox-dark-gtk
     kitty-themes
-    simp1e-cursors
-    zathura
-    image-roll
-    celluloid
+    # simp1e-cursors
+    # zathura
+    # image-roll
+    # celluloid
     auto-cpufreq
   ];
   
-  xdg.configFile = {
-    "hypr" = {
-      source = ./hypr;
-      recursive = true;
-    };
-    "rofi" = {
-      source = ./rofi;
-      recursive = true;
-    };
-  };
+  # xdg.configFile = {
+  #   "hypr" = {
+  #     source = ./hypr;
+  #     recursive = true;
+  #   };
+  #   "rofi" = {
+  #     source = ./rofi;
+  #     recursive = true;
+  #   };
+  # };
 
   programs.kitty = {
     enable = true;
@@ -247,14 +247,14 @@
     userEmail = "github.eureka@gmail.com";
   };
 
-  xdg.mimeApps.defaultApplications = {
-    "text/plain" = [ "helix.desktop" ];
-    "application/pdf" = [ "zathura.desktop" ];
-    "image/*" = [ "image-roll.desktop" ];
-    "video/png" = [ "celluloid.desktop" ];
-    "video/jpg" = [ "celluloid.desktop" ];
-    "video/*" = [ "celluloid.desktop" ];
-  };
+  # xdg.mimeApps.defaultApplications = {
+  #   "text/plain" = [ "helix.desktop" ];
+  #   "application/pdf" = [ "zathura.desktop" ];
+  #   "image/*" = [ "image-roll.desktop" ];
+  #   "video/png" = [ "celluloid.desktop" ];
+  #   "video/jpg" = [ "celluloid.desktop" ];
+  #   "video/*" = [ "celluloid.desktop" ];
+  # };
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
