@@ -1,5 +1,20 @@
 {
   "nodes": {
+    "helix-themes": {
+      "locked": {
+        "lastModified": 1704445274,
+        "narHash": "sha256-Qpged9pY3ik+LzUi8GUcfMHckzn23IF4lLBXBpUSGbY=",
+        "owner": "eureka-cpu",
+        "repo": "helix-themes.nix",
+        "rev": "3e25a712091e42702333a4126ed0e57a30016793",
+        "type": "github"
+      },
+      "original": {
+        "owner": "eureka-cpu",
+        "repo": "helix-themes.nix",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -38,6 +53,7 @@
     },
     "root": {
       "inputs": {
+        "helix-themes": "helix-themes",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs"
       }

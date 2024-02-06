@@ -159,6 +159,7 @@
     "org/gnome/settings-daemon/plugins/media-keys" = {
       screensaver = []; # turn off lock screen
     };
+  };
 
   # zsh & oh-my-zsh configurations
   programs.zsh = {
