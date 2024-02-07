@@ -5,6 +5,18 @@
     ./hardware-configuration.nix
   ];
 
+  # kernel header
+  boot.kernelPackages = pkgs.linuxPackagesFor (pkgs.linux_6_5.override {
+    argsOverride = rec {
+      src = pkgs.fetchurl {
+            url = "mirror://kernel/linux/kernel/v6.x/linux-${version}.tar.xz";
+            sha256 = "sha256-jPEDefffjqcx4Jv/PQgnQU5LZD3UHcmdCvM5ZpZG75U=";
+      };
+      version = "6.5.5";
+      modDirVersion = "6.5.5";
+      };
+  });
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
