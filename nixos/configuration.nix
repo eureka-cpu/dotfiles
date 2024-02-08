@@ -60,28 +60,19 @@ in
     };
     # fallback for when things don't work
     displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
+    # desktopManager.gnome.enable = true;
   };
 
   # hyprland
-  # programs.hyprland = {
-  #   enable = true;
-  # };
+  programs.hyprland = {
+    enable = true;
+  };
 
   # Nvidia settings
   hardware.opengl = {
     enable = true; # Must be enabled
     driSupport = true;
     driSupport32Bit = true;
-    extraPackages = with pkgs; [
-      vaapiIntel
-      intel-media-driver
-      vaapiVdpau
-      libvdpau-va-gl
-    ];
-  };
-  nixpkgs.config.packageOverrides = pkgs: {
-    vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
   };
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
@@ -93,7 +84,7 @@ in
     # Enable the nvidia settings menu
     nvidiaSettings = true;
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
-    package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+    package = config.boot.kernelPackages.nvidiaPackages.production;
 
     prime = {
       sync.enable = true;
@@ -143,9 +134,9 @@ in
   };
 
   # Configure keymap in X11
-  services.xserver = {
+  services.xserver.xkb = {
     layout = "us";
-    xkbVariant = "";
+    variant = "";
   };
 
   services.auto-cpufreq.enable = true;
@@ -194,7 +185,7 @@ in
 
   environment = {
     sessionVariables = {
-      # WLR_NO_HARDWARE_CURSORS = "1"; # fixes disappearing cursor
+      WLR_NO_HARDWARE_CURSORS = "1"; # fixes disappearing cursor
       NIXOS_OZONE_WL = "1"; # tells electron apps to use wayland
     };
   };

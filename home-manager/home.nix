@@ -14,13 +14,13 @@
     home-manager
     nvtop
     # Hyprland
-    # grim
+    grim
     eww-wayland
-    # rofi-wayland
-    # mako
-    # swww
-    # xfce.thunar
-    # networkmanagerapplet
+    rofi-wayland
+    mako
+    swww
+    xfce.thunar
+    networkmanagerapplet
     wl-clipboard
     brave
     kitty
@@ -59,12 +59,12 @@
     v4l-utils
     gphoto2
     #    fix kernel header vvvvvvvvvv
-    # linuxKernel.packages.linux_5_15.vrl2loopbacko
+    # linuxKernel.packages.linux_5_15.vrl2loopback
     kitty-themes
     # simp1e-cursors
-    # zathura
-    # image-roll
-    # celluloid
+    zathura
+    image-roll
+    celluloid
     auto-cpufreq
     gnomeExtensions.pop-shell
     gnomeExtensions.color-picker
@@ -73,16 +73,16 @@
     libreoffice
   ];
   
-  # xdg.configFile = {
-  #   "hypr" = {
-  #     source = ./hypr;
-  #     recursive = true;
-  #   };
-  #   "rofi" = {
-  #     source = ./rofi;
-  #     recursive = true;
-  #   };
-  # };
+  xdg.configFile = {
+    "hypr" = {
+      source = ./hypr;
+      recursive = true;
+    };
+    "rofi" = {
+      source = ./rofi;
+      recursive = true;
+    };
+  };
 
   programs.kitty = {
     enable = true;
@@ -126,44 +126,44 @@
     themes = inputs.helix-themes.outputs.themes;
   };
 
-  dconf.settings = {
-    # shell extensions
-    "org/gnome/shell" = {
-      disable-user-extensions = false;
-      enabled-extensions = [
-        "pop-shell@system76.com"
-        "user-theme@gnome-shell-extensions.gcampax.github.com"
-      ];
-    };
-    # "org/gnome/shell/extensions/user-theme" = {
-    #   name = "Adwaita Dark";
-    # };
+  # dconf.settings = {
+  #   # shell extensions
+  #   "org/gnome/shell" = {
+  #     disable-user-extensions = false;
+  #     enabled-extensions = [
+  #       "pop-shell@system76.com"
+  #       "user-theme@gnome-shell-extensions.gcampax.github.com"
+  #     ];
+  #   };
+  #   # "org/gnome/shell/extensions/user-theme" = {
+  #   #   name = "Adwaita Dark";
+  #   # };
 
-    # keybindings
-    "org/gnome/shell/keybindings" = {
-      toggle-quick-settings = []; # turn off focus power menu
-      toggle-message-tray = ["<Super>n"];
-      focus-active-notification = [];
-    };
-    "org/gnome/desktop/wm/keybindings" = {
-      close = ["<Super>q"];
-      minimize = [];
-      maximize = [];
-      toggle-maximized = ["<Super>m"];
-      # workspace/monitor settings
-      switch-to-workspace-left = ["<Alt>h"];
-      switch-to-workspace-right = ["<Alt>l"];
-      move-to-workspace-left = ["<Shift><Alt>h"];
-      move-to-workspace-right = ["<Shift><Alt>l"];
-      move-to-monitor-down = [];  # handled by pop-shell
-      move-to-monitor-left = [];  #
-      move-to-monitor-right = []; #
-      move-to-monitor-up = [];    #
-    };
-    "org/gnome/settings-daemon/plugins/media-keys" = {
-      screensaver = []; # turn off lock screen
-    };
-  };
+  #   # keybindings
+  #   "org/gnome/shell/keybindings" = {
+  #     toggle-quick-settings = []; # turn off focus power menu
+  #     toggle-message-tray = ["<Super>n"];
+  #     focus-active-notification = [];
+  #   };
+  #   "org/gnome/desktop/wm/keybindings" = {
+  #     close = ["<Super>q"];
+  #     minimize = [];
+  #     maximize = [];
+  #     toggle-maximized = ["<Super>m"];
+  #     # workspace/monitor settings
+  #     switch-to-workspace-left = ["<Alt>h"];
+  #     switch-to-workspace-right = ["<Alt>l"];
+  #     move-to-workspace-left = ["<Shift><Alt>h"];
+  #     move-to-workspace-right = ["<Shift><Alt>l"];
+  #     move-to-monitor-down = [];  # handled by pop-shell
+  #     move-to-monitor-left = [];  #
+  #     move-to-monitor-right = []; #
+  #     move-to-monitor-up = [];    #
+  #   };
+  #   "org/gnome/settings-daemon/plugins/media-keys" = {
+  #     screensaver = []; # turn off lock screen
+  #   };
+  # };
 
   # zsh & oh-my-zsh configurations
   programs.zsh = {
@@ -186,14 +186,14 @@
     userEmail = "github.eureka@gmail.com";
   };
 
-  # xdg.mimeApps.defaultApplications = {
-  #   "text/plain" = [ "helix.desktop" ];
-  #   "application/pdf" = [ "zathura.desktop" ];
-  #   "image/*" = [ "image-roll.desktop" ];
-  #   "video/png" = [ "celluloid.desktop" ];
-  #   "video/jpg" = [ "celluloid.desktop" ];
-  #   "video/*" = [ "celluloid.desktop" ];
-  # };
+  xdg.mimeApps.defaultApplications = {
+    "text/plain" = [ "helix.desktop" ];
+    "application/pdf" = [ "zathura.desktop" ];
+    "image/*" = [ "image-roll.desktop" ];
+    "video/png" = [ "celluloid.desktop" ];
+    "video/jpg" = [ "celluloid.desktop" ];
+    "video/*" = [ "celluloid.desktop" ];
+  };
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
@@ -211,7 +211,7 @@
   };
 
   home.sessionVariables = {
-    # GTK_THEME = "Gruvbox-Dark";
+    GTK_THEME = "Gruvbox-Dark";
     # XCURSOR_SIZE = "20";
   };
 
