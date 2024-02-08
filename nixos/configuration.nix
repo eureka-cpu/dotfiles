@@ -1,11 +1,15 @@
 { config, pkgs, lib, ... }:
 
+let
+  intel_bus = "PCI:0:2:0";
+  nvidia_bus = "PCI:1:0:0";
+in
 {
   imports = [
     ./hardware-configuration.nix
   ];
 
-  # kernel header
+  # Pinned Kernel Version
   boot.kernelPackages = pkgs.linuxPackagesFor (pkgs.linux_6_5.override {
     argsOverride = rec {
       src = pkgs.fetchurl {
@@ -14,7 +18,7 @@
       };
       version = "6.5.5";
       modDirVersion = "6.5.5";
-      };
+    };
   });
 
   # Bootloader.
@@ -69,8 +73,17 @@
     enable = true; # Must be enabled
     driSupport = true;
     driSupport32Bit = true;
+    extraPackages = with pkgs; [
+      vaapiIntel
+      intel-media-driver
+      vaapiVdpau
+      libvdpau-va-gl
+    ];
   };
-  services.xserver.videoDrivers = ["nvidia"];
+  nixpkgs.config.packageOverrides = pkgs: {
+    vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+  };
+  services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
     # Modesetting is needed for most Wayland compositors
     modesetting.enable = true;
@@ -80,11 +93,17 @@
     # Enable the nvidia settings menu
     nvidiaSettings = true;
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
-    package = config.boot.kernelPackages.nvidiaPackages.production;
+    package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+
+    prime = {
+      sync.enable = true;
+      intelBusId = intel_bus;
+      nvidiaBusId = nvidia_bus;
+    };
   };
   specialisation = {
-    on-the-go.configuration = {
-      system.nixos.tags = [ "on-the-go" ];
+    prime-offload.configuration = {
+      system.nixos.tags = [ "prime-offload" ];
       hardware.nvidia = {
         prime = {
           offload = {
@@ -92,10 +111,34 @@
             enableOffloadCmd = lib.mkForce true;
           };
           sync.enable = lib.mkForce false;
-          intelBusId = "PCI:0:2:0";
-          nvidiaBusId = "PCI:1:0:0";
+          intelBusId = intel_bus;
+          nvidiaBusId = nvidia_bus;
         };
       };
+    };
+    blacklist-intel.configuration = {
+      system.nixos.tags = [ "blacklist-intel" ];
+      boot.kernelParams = [ "module_blacklist=i915" ];
+    };
+    blacklist-nvidia.configuration = {
+      system.nixos.tags = [ "blacklist-nvidia" ];
+      boot = {
+        extraModprobeConfig = ''
+          blacklist nouveau
+          options nouveau modeset=0
+        '';
+        blacklistedKernelModules = [ "nouveau" "nvidia" "nvidia_drm" "nvidia_modeset" ];
+      };
+      services.udev.extraRules = ''
+        # Remove NVIDIA USB xHCI Host Controller devices, if present
+        ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c0330", ATTR{power/control}="auto", ATTR{remove}="1"
+        # Remove NVIDIA USB Type-C UCSI devices, if present
+        ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x0c8000", ATTR{power/control}="auto", ATTR{remove}="1"
+        # Remove NVIDIA Audio devices, if present
+        ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x040300", ATTR{power/control}="auto", ATTR{remove}="1"
+        # Remove NVIDIA VGA/3D controller devices
+        ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x03[0-9]*", ATTR{power/control}="auto", ATTR{remove}="1"
+      '';
     };
   };
 
@@ -151,7 +194,7 @@
 
   environment = {
     sessionVariables = {
-      WLR_NO_HARDWARE_CURSORS = "1"; # fixes disappearing cursor
+      # WLR_NO_HARDWARE_CURSORS = "1"; # fixes disappearing cursor
       NIXOS_OZONE_WL = "1"; # tells electron apps to use wayland
     };
   };

@@ -136,7 +136,7 @@
       ];
     };
     # "org/gnome/shell/extensions/user-theme" = {
-    #   name = "Gruvbox-Dark";
+    #   name = "Adwaita Dark";
     # };
 
     # keybindings
