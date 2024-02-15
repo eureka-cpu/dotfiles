@@ -22,7 +22,9 @@
     xfce.thunar
     networkmanagerapplet
     wl-clipboard
-    brave
+    (brave.override {
+      commandLineArgs = "--disable-gpu --enable-chrome-browser-cloud-management ";
+    })
     kitty
     # pwvucontrol
     # shell
@@ -89,7 +91,6 @@
     theme = "Gruvbox Material Dark Medium";
     font = {
       name = "JetBrainsMono Nerd Font";
-      size = 16;
     };
     settings = {
       hide_window_decorations = true;
@@ -125,45 +126,6 @@
     };
     themes = inputs.helix-themes.outputs.themes;
   };
-
-  # dconf.settings = {
-  #   # shell extensions
-  #   "org/gnome/shell" = {
-  #     disable-user-extensions = false;
-  #     enabled-extensions = [
-  #       "pop-shell@system76.com"
-  #       "user-theme@gnome-shell-extensions.gcampax.github.com"
-  #     ];
-  #   };
-  #   # "org/gnome/shell/extensions/user-theme" = {
-  #   #   name = "Adwaita Dark";
-  #   # };
-
-  #   # keybindings
-  #   "org/gnome/shell/keybindings" = {
-  #     toggle-quick-settings = []; # turn off focus power menu
-  #     toggle-message-tray = ["<Super>n"];
-  #     focus-active-notification = [];
-  #   };
-  #   "org/gnome/desktop/wm/keybindings" = {
-  #     close = ["<Super>q"];
-  #     minimize = [];
-  #     maximize = [];
-  #     toggle-maximized = ["<Super>m"];
-  #     # workspace/monitor settings
-  #     switch-to-workspace-left = ["<Alt>h"];
-  #     switch-to-workspace-right = ["<Alt>l"];
-  #     move-to-workspace-left = ["<Shift><Alt>h"];
-  #     move-to-workspace-right = ["<Shift><Alt>l"];
-  #     move-to-monitor-down = [];  # handled by pop-shell
-  #     move-to-monitor-left = [];  #
-  #     move-to-monitor-right = []; #
-  #     move-to-monitor-up = [];    #
-  #   };
-  #   "org/gnome/settings-daemon/plugins/media-keys" = {
-  #     screensaver = []; # turn off lock screen
-  #   };
-  # };
 
   # zsh & oh-my-zsh configurations
   programs.zsh = {
@@ -211,8 +173,8 @@
   };
 
   home.sessionVariables = {
-    GTK_THEME = "Gruvbox-Dark";
-    # XCURSOR_SIZE = "20";
+    GTK_THEME = "gruvbox-dark";
+    XCURSOR_SIZE = "20";
   };
 
   # Let Home Manager install and manage itself.

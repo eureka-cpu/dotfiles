@@ -10,17 +10,8 @@ in
   ];
 
   # Pinned Kernel Version
-  boot.kernelPackages = pkgs.linuxPackagesFor (pkgs.linux_6_5.override {
-    argsOverride = rec {
-      src = pkgs.fetchurl {
-            url = "mirror://kernel/linux/kernel/v6.x/linux-${version}.tar.xz";
-            sha256 = "sha256-jPEDefffjqcx4Jv/PQgnQU5LZD3UHcmdCvM5ZpZG75U=";
-      };
-      version = "6.5.5";
-      modDirVersion = "6.5.5";
-    };
-  });
-
+  boot.kernelPackages = pkgs.linuxPackages_zen;
+  
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -28,6 +19,8 @@ in
   boot.extraModprobeConfig = ''
     options snd-sof-pci tplg_filename=sof-hda-generic-2ch-pdm1.tplg
   '';
+  boot.initrd.kernelModules = [ "nvidia" ];
+  boot.blacklistedKernelModules = [ "nouveau" ];
   
   networking.hostName = "tensorbook"; # Define your hostname.
 
@@ -52,27 +45,33 @@ in
     LC_TIME = "en_US.UTF-8";
   };
 
-  # Enable the X11 windowing system.
+  # Display & Desktop Settings
   services.xserver = {
     enable = true;
     desktopManager = {
       xterm.enable = false;
     };
-    # fallback for when things don't work
     displayManager.gdm.enable = true;
-    # desktopManager.gnome.enable = true;
   };
+  programs.hyprland.enable = true;
 
-  # hyprland
-  programs.hyprland = {
-    enable = true;
+  # Nvidia/Intel GPU Settings
+  nixpkgs.config.packageOverrides = pkgs: {
+    vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
   };
-
-  # Nvidia settings
   hardware.opengl = {
     enable = true; # Must be enabled
     driSupport = true;
     driSupport32Bit = true;
+    # Accelerated Video Playback
+    extraPackages = with pkgs; [
+      intel-media-driver # LIBVA_DRIVER_NAME=iHD
+      vaapiIntel         # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
+      vaapiVdpau
+      libvdpau-va-gl
+      rocm-opencl-icd
+      rocm-opencl-runtime
+    ];
   };
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
@@ -84,8 +83,13 @@ in
     # Enable the nvidia settings menu
     nvidiaSettings = true;
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
-    package = config.boot.kernelPackages.nvidiaPackages.production;
-
+    package = (config.boot.kernelPackages.nvidiaPackages.beta.overrideAttrs {
+      src = pkgs.fetchurl {
+        url = "https://us.download.nvidia.com/XFree86/Linux-x86_64/550.40.07/NVIDIA-Linux-x86_64-550.40.07.run";
+        sha256 = "sha256-KYk2xye37v7ZW7h+uNJM/u8fNf7KyGTZjiaU03dJpK0=";
+      };
+    });
+    # Optimus PRIME: Bus ID Values (Mandatory for laptop dGPUs)
     prime = {
       sync.enable = true;
       intelBusId = intel_bus;
@@ -101,6 +105,17 @@ in
             enable = lib.mkForce true;
             enableOffloadCmd = lib.mkForce true;
           };
+          sync.enable = lib.mkForce false;
+          intelBusId = intel_bus;
+          nvidiaBusId = nvidia_bus;
+        };
+      };
+    };
+    prime-reverse-sync.configuration = {
+      system.nixos.tags = [ "prime-reverse-sync" ];
+      hardware.nvidia = {
+        prime = {
+          reverseSync.enable = lib.mkForce true;
           sync.enable = lib.mkForce false;
           intelBusId = intel_bus;
           nvidiaBusId = nvidia_bus;
@@ -187,6 +202,7 @@ in
     sessionVariables = {
       WLR_NO_HARDWARE_CURSORS = "1"; # fixes disappearing cursor
       NIXOS_OZONE_WL = "1"; # tells electron apps to use wayland
+      LIBVA_DRIVER_NAME = "i965";
     };
   };
 
