@@ -18,7 +18,7 @@
   networking.networkmanager.enable = true;
 
   # Set your time zone.
-  time.timeZone = "America/Chicago";
+  time.timeZone = "America/Los_Angeles";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -48,7 +48,6 @@
   # hyprland
   programs.hyprland = {
     enable = true;
-    enableNvidiaPatches = true;
   };
 
   # Nvidia settings
@@ -71,9 +70,9 @@
   };
 
   # Configure keymap in X11
-  services.xserver = {
+  services.xserver.xkb = {
     layout = "us";
-    xkbVariant = "";
+    variant = "";
   };
 
   # Enable CUPS to print documents.

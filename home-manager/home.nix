@@ -57,7 +57,6 @@
     v4l-utils
     gphoto2
     linuxKernel.packages.linux_6_1.v4l2loopback
-    gruvbox-dark-gtk
     kitty-themes
     simp1e-cursors
     zathura
@@ -268,8 +267,6 @@
     #   org.gradle.daemon.idletimeout=3600000
     # '';
   };
-
-  home.sessionVariables = {};
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
