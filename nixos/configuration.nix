@@ -9,30 +9,34 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "critter-tank"; # Define your hostname.
+  networking = {
+    hostName = "critter-tank"; # Define your hostname.
+    networkmanager.enable = true;
+    firewall = {
+      enable = true;
+    };
+  };
 
   boot.kernelModules = [ "v4l2loopback" ];
   boot.extraModulePackages = [ pkgs.linuxPackages.v4l2loopback ];
-
-  # Enable networking
-  networking.networkmanager.enable = true;
 
   # Set your time zone.
   time.timeZone = "America/Los_Angeles";
 
   # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
+    extraLocaleSettings = {
+      LC_ADDRESS = "en_US.UTF-8";
+      LC_IDENTIFICATION = "en_US.UTF-8";
+      LC_MEASUREMENT = "en_US.UTF-8";
+      LC_MONETARY = "en_US.UTF-8";
+      LC_NAME = "en_US.UTF-8";
+      LC_NUMERIC = "en_US.UTF-8";
+      LC_PAPER = "en_US.UTF-8";
+      LC_TELEPHONE = "en_US.UTF-8";
+      LC_TIME = "en_US.UTF-8";
+    };
   };
 
   # Enable the X11 windowing system.
@@ -41,7 +45,6 @@
     desktopManager = {
       xterm.enable = false;
     };
-    # used for logging in and shutting down for now
     displayManager.gdm.enable = true;
   };
 
@@ -56,7 +59,9 @@
     driSupport = true;
     driSupport32Bit = true;
   };
-  services.xserver.videoDrivers = ["nvidia"];
+  services.xserver = {
+    videoDrivers = [ "nvidia" ];
+  };
   hardware.nvidia = {
     # Modesetting is needed for most Wayland compositors
     modesetting.enable = true;
@@ -66,7 +71,12 @@
     # Enable the nvidia settings menu
     nvidiaSettings = true;
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
-    package = config.boot.kernelPackages.nvidiaPackages.production;
+    package = (config.boot.kernelPackages.nvidiaPackages.production.overrideAttrs {
+      src = pkgs.fetchurl {
+        url = "https://us.download.nvidia.com/XFree86/Linux-x86_64/535.129.03/NVIDIA-Linux-x86_64-535.129.03.run";
+        sha256 = "sha256-5tylYmomCMa7KgRs/LfBrzOLnpYafdkKwJu4oSb/AC4=";
+      };
+    });
   };
 
   # Configure keymap in X11
@@ -118,18 +128,16 @@
     };
   };
 
-  environment = {
-    sessionVariables = {
-      WLR_NO_HARDWARE_CURSORS = "1"; # fixes disappearing cursor
-      NIXOS_OZONE_WL = "1"; # tells electron apps to use wayland
-    };
+  environment.sessionVariables = {
+    WLR_NO_HARDWARE_CURSORS = "1"; # fixes disappearing cursor
+    NIXOS_OZONE_WL = "1"; # tells electron apps to use wayland
   };
 
-  fonts = {
-    packages = with pkgs; [
-      (nerdfonts.override { fonts = [ "FiraCode" "JetBrainsMono" ]; })
-    ];
-  };
+  fonts.packages = with pkgs; [
+    (nerdfonts.override {
+      fonts = [ "JetBrainsMono" ];
+    })
+  ];
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
