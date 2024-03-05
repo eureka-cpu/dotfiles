@@ -10,11 +10,9 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking = {
-    hostName = "critter-tank"; # Define your hostname.
+    hostName = "critter-tank";
     networkmanager.enable = true;
-    firewall = {
-      enable = true;
-    };
+    firewall.enable = true;
   };
 
   boot.kernelModules = [ "v4l2loopback" ];
@@ -70,7 +68,9 @@
     open = false;
     # Enable the nvidia settings menu
     nvidiaSettings = true;
-    # Optionally, you may need to select the appropriate driver version for your specific GPU.
+    # Optionally, you may need to select the appropriate driver version for your specific GPU
+    #
+    # This is the most stable driver for Nvidia's GeForce RTX 4080 OC
     package = (config.boot.kernelPackages.nvidiaPackages.production.overrideAttrs {
       src = pkgs.fetchurl {
         url = "https://us.download.nvidia.com/XFree86/Linux-x86_64/535.129.03/NVIDIA-Linux-x86_64-535.129.03.run";
