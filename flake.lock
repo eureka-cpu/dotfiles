@@ -18,11 +18,11 @@
     },
     "helix-themes": {
       "locked": {
-        "lastModified": 1704445274,
-        "narHash": "sha256-Qpged9pY3ik+LzUi8GUcfMHckzn23IF4lLBXBpUSGbY=",
+        "lastModified": 1709716471,
+        "narHash": "sha256-iu++6+2Ejaob69Ps7tb5NUDkW6u3+jKIAeh2a4oYN+g=",
         "owner": "eureka-cpu",
         "repo": "helix-themes.nix",
-        "rev": "3e25a712091e42702333a4126ed0e57a30016793",
+        "rev": "c108e6418651a33bad745f0068ab3f878a095478",
         "type": "github"
       },
       "original": {
