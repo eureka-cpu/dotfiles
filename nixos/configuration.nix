@@ -3,6 +3,12 @@
 let
   intel_bus = "PCI:0:2:0";
   nvidia_bus = "PCI:1:0:0";
+  nvidia_driver = (config.boot.kernelPackages.nvidiaPackages.beta.overrideAttrs {
+    src = pkgs.fetchurl {
+      url = "https://us.download.nvidia.com/XFree86/Linux-x86_64/550.40.07/NVIDIA-Linux-x86_64-550.40.07.run";
+      sha256 = "sha256-KYk2xye37v7ZW7h+uNJM/u8fNf7KyGTZjiaU03dJpK0=";
+    };
+  });
 in
 {
   imports = [
@@ -19,16 +25,13 @@ in
   boot.extraModprobeConfig = ''
     options snd-sof-pci tplg_filename=sof-hda-generic-2ch-pdm1.tplg
   '';
-  boot.initrd.kernelModules = [ "nvidia" ];
-  boot.blacklistedKernelModules = [ "nouveau" ];
-  
-  networking.hostName = "tensorbook"; # Define your hostname.
 
   # Enable networking
   networking.networkmanager.enable = true;
+  networking.hostName = "tensorbook"; # Define your hostname.
 
   # Set your time zone.
-  time.timeZone = "America/Chicago";
+  time.timeZone = "America/Los_Angeles";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -56,24 +59,41 @@ in
   programs.hyprland.enable = true;
 
   # Nvidia/Intel GPU Settings
-  nixpkgs.config.packageOverrides = pkgs: {
-    vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+  boot = {
+    # kernelParams = [ "acpi_rev_override" "mem_sleep_default=deep" "intel_iommu=igfx_off" "nvidia-drm.modeset=1" ];
+    initrd.kernelModules = [ "nvidia" ];       # Probably redundant
+    blacklistedKernelModules = [ "nouveau" ];  #
   };
   hardware.opengl = {
     enable = true; # Must be enabled
     driSupport = true;
     driSupport32Bit = true;
-    # Accelerated Video Playback
-    extraPackages = with pkgs; [
-      intel-media-driver # LIBVA_DRIVER_NAME=iHD
-      vaapiIntel         # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
-      vaapiVdpau
-      libvdpau-va-gl
-      rocm-opencl-icd
-      rocm-opencl-runtime
-    ];
   };
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver = {
+    videoDrivers = [ "nvidia" ];
+    config = ''
+      Section "Device"
+          Identifier "Intel Graphics"
+          Driver     "intel"
+          Option     "TearFree"        "true"
+          Option     "AccelMethod"     "sna"
+          # Option     "SwapbuffersWait" "true"
+          BusID      "PCI:0:2:0"
+      EndSection
+
+      Section "Device"
+          Identifier "nvidia"
+          Driver     "nvidia"
+          BusID      "PCI:1:0:0"
+          Option     "AllowEmptyInitialConfiguration"
+      EndSection
+    '';
+    screenSection = ''
+      Option         "metamodes" "nvidia-auto-select +0+0 {ForceCompositionPipeline=On}"
+      Option         "AllowIndirectGLXProtocol" "off"
+      Option         "TripleBuffer" "on"
+    '';
+  };
   hardware.nvidia = {
     # Modesetting is needed for most Wayland compositors
     modesetting.enable = true;
@@ -83,12 +103,7 @@ in
     # Enable the nvidia settings menu
     nvidiaSettings = true;
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
-    package = (config.boot.kernelPackages.nvidiaPackages.beta.overrideAttrs {
-      src = pkgs.fetchurl {
-        url = "https://us.download.nvidia.com/XFree86/Linux-x86_64/550.40.07/NVIDIA-Linux-x86_64-550.40.07.run";
-        sha256 = "sha256-KYk2xye37v7ZW7h+uNJM/u8fNf7KyGTZjiaU03dJpK0=";
-      };
-    });
+    package = nvidia_driver;
     # Optimus PRIME: Bus ID Values (Mandatory for laptop dGPUs)
     prime = {
       sync.enable = true;
@@ -202,7 +217,7 @@ in
     sessionVariables = {
       WLR_NO_HARDWARE_CURSORS = "1"; # fixes disappearing cursor
       NIXOS_OZONE_WL = "1"; # tells electron apps to use wayland
-      LIBVA_DRIVER_NAME = "i965";
+      # LIBVA_DRIVER_NAME = "i965";
     };
   };
 
