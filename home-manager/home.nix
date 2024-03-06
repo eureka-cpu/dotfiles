@@ -3,6 +3,7 @@
 {
   imports = [
     ./gtk.nix
+    inputs.nix-colors.homeManagerModules.default
   ];
 
   # Home Manager needs a bit of information about you and the paths it should
@@ -78,6 +79,12 @@
     enable = true;
     theme = "Gruvbox Material Dark Medium";
     font.name = "JetBrainsMono Nerd Font";
+    settings = {
+      # The window padding (in pts) (blank area between the text and the window border).
+      # A single value sets all four sides. Two values set the vertical and horizontal sides.
+      # Three values set top, horizontal and bottom. Four values set top, right, bottom and left.
+      window_padding_width = "8 0 8 8";
+    };
   };
   programs.helix = {
     enable = true;

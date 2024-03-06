@@ -8,6 +8,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     helix-themes.url = "github:eureka-cpu/helix-themes.nix";
+    nix-colors.url = "github:misterio77/nix-colors";
   };
 
   outputs = { nixpkgs, home-manager, ... } @inputs:

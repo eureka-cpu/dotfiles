@@ -1,16 +1,21 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 let
+  inherit (inputs.nix-colors.lib-contrib { inherit pkgs; }) gtkThemeFromScheme colorSchemeFromPicture;
   cursorName = "Adwaita";
   cursorPkg = pkgs.gnome.adwaita-icon-theme;
   cursorSize = 22;
+  colorScheme = colorSchemeFromPicture {
+    path = ./wallpapers/gruvbox-mountain-village.jpg;
+    variant = "dark";
+  };
 in
 {
   gtk = {
     enable = true;
     theme = {
-      name = "gruvbox-dark";
-      package = pkgs.gruvbox-dark-gtk;
+      name = "${colorScheme.slug}";
+      package = gtkThemeFromScheme { scheme = colorScheme; };
     };
 
     iconTheme = {
