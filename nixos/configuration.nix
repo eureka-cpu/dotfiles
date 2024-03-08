@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   imports =
@@ -18,18 +18,16 @@
   boot.kernelModules = [ "v4l2loopback" ];
   boot.extraModulePackages = [ pkgs.linuxPackages.v4l2loopback ];
 
+  # Enable networking
+  networking.networkmanager.enable = true;
   networking.hostName = "dev-one"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
-  # Enable networking
-  networking.networkmanager.enable = true;
-
   # Set your time zone.
-  time.timeZone = "America/Chicago";
+  time.timeZone = "America/Los_Angeles";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -47,8 +45,25 @@
   };
 
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
-  services.xserver.videoDrivers = [ "amdgpu" "radeon" ];
+  services.xserver = {
+    enable = true;
+    videoDrivers = [ "amdgpu" "radeon" ];
+
+    # Enable the GNOME Desktop Environment.
+    displayManager = {
+      gdm.enable = true;
+      # Enable automatic login for the user.
+      autoLogin.enable = true;
+      autoLogin.user = "eureka";
+    };
+    desktopManager.gnome.enable = true;
+
+    # Configure keymap in X11
+    xkb = {
+      layout = "us";
+      variant = "";
+    };
+  };
   boot.initrd.kernelModules = [ "amdgpu" "radeon" ];
   hardware.opengl = {
     enable = true;
@@ -59,18 +74,10 @@
     ];
   };
   
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-
-  # Configure keymap in X11
-  services.xserver = {
-    layout = "us";
-    xkbVariant = "";
-  };
-
   # Enable CUPS to print documents.
   services.printing.enable = true;
+  # Enable power management.
+  services.auto-cpufreq.enable = true;
 
   # Enable sound with pipewire.
   sound.enable = true;
@@ -86,13 +93,7 @@
   };
 
   # Enabling due to issues with Wayland & screen sharing
-  xdg = {
-    portal = {
-      enable = true;
-    };
-  };
-
-  services.auto-cpufreq.enable = true;
+  xdg.portal.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.eureka = {
@@ -119,10 +120,6 @@
     plugins = [ "git" ];
     theme = "dst";
   };
-
-  # Enable automatic login for the user.
-  services.xserver.displayManager.autoLogin.enable = true;
-  services.xserver.displayManager.autoLogin.user = "eureka";
 
   # Workaround for GNOME autologin
   systemd.services."getty@tty1".enable = false;
