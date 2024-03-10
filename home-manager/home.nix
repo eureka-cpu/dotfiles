@@ -60,8 +60,6 @@
     ffmpeg # video formatter
     v4l-utils
     gphoto2
-    #    fix kernel header vvvvvvvvvv
-    # linuxKernel.packages.linux_5_15.vrl2loopback
     kitty-themes
     # simp1e-cursors
     zathura
