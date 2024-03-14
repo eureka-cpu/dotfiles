@@ -26,6 +26,10 @@ in
     options snd-sof-pci tplg_filename=sof-hda-generic-2ch-pdm1.tplg
   '';
 
+  # video capture from external device
+  boot.kernelModules = [ "v4l2loopback" ];
+  boot.extraModulePackages = [ pkgs.linuxPackages_zen.v4l2loopback ];
+
   # Enable networking
   networking.networkmanager.enable = true;
   networking.hostName = "tensorbook"; # Define your hostname.
