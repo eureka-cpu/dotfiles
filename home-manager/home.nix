@@ -119,7 +119,7 @@
         };
         indent-guides = {
           render = true;
-          characeter = "┆";
+          characeter = "╎";
           skip-levels = 1;
         };
         lsp = {

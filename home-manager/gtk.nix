@@ -4,7 +4,7 @@ let
   inherit (inputs.nix-colors.lib-contrib { inherit pkgs; }) gtkThemeFromScheme colorSchemeFromPicture;
   cursorName = "Adwaita";
   cursorPkg = pkgs.gnome.adwaita-icon-theme;
-  cursorSize = 22;
+  cursorSize = 16;
   colorScheme = colorSchemeFromPicture {
     path = ./wallpapers/witch-queen-02.jpg;
     variant = "light";
