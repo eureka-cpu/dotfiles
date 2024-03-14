@@ -87,7 +87,7 @@
 
   programs.kitty = {
     enable = true;
-    theme = "Gruvbox Material Dark Medium";
+    theme = "Leaf Light";
     font = {
       name = "JetBrainsMono Nerd Font";
     };
@@ -103,7 +103,7 @@
     enable = true;
     defaultEditor = true;
     settings = {
-      theme = "gruvbox_material_dark_medium";
+      theme = "base16_default";
       editor = {
         cursor-shape = {
           insert = "underline";
@@ -119,7 +119,8 @@
         };
         indent-guides = {
           render = true;
-          characeter = "|";
+          characeter = "┆";
+          skip-levels = 1;
         };
         lsp = {
           display-messages = true;
