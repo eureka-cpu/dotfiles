@@ -176,10 +176,7 @@
     # '';
   };
 
-  home.sessionVariables = {
-    GTK_THEME = "gruvbox-dark";
-    XCURSOR_SIZE = "20";
-  };
+  home.sessionVariables = {};
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;

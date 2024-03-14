@@ -221,7 +221,6 @@ in
     sessionVariables = {
       WLR_NO_HARDWARE_CURSORS = "1"; # fixes disappearing cursor
       NIXOS_OZONE_WL = "1"; # tells electron apps to use wayland
-      # LIBVA_DRIVER_NAME = "i965";
     };
   };
 
