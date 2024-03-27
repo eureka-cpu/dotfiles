@@ -36,14 +36,11 @@
       ];
     })
     nil
-    rust-analyzer
     # studio
     obs-studio
     ffmpeg # video formatter
     v4l-utils
     gphoto2
-    #    fix kernel header vvvvvvvvvv
-    # linuxKernel.packages.linux_5_15.vrl2loopbacko
     gnomeExtensions.color-picker
     gnomeExtensions.pop-shell
     gnomeExtensions.user-themes
