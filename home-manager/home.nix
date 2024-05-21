@@ -36,7 +36,11 @@
       ];
     })
     nil
+    ansible
+    ansible-language-server
+    yaml-language-server
     # studio
+    reaper
     obs-studio
     ffmpeg # video formatter
     v4l-utils
