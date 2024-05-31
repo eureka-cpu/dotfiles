@@ -6,8 +6,7 @@
     inputs.nix-colors.homeManagerModules.default
   ];
 
-  # Home Manager needs a bit of information about you and the paths it should
-  # manage.
+  # Home Manager needs a bit of information about you and the paths it should manage.
   home.username = "eureka";
   home.homeDirectory = "/home/eureka";
 
@@ -27,7 +26,7 @@
     # shell
     zsh
     oh-my-zsh
-    neofetch
+    fastfetch
     # comms
     telegram-desktop
     # code
@@ -50,8 +49,6 @@
         eamodio.gitlens # git lens
       ];
     })
-    nil
-    rust-analyzer
     # studio
     obs-studio
     ffmpeg # video formatter

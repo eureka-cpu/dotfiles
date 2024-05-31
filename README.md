@@ -30,16 +30,23 @@ I'm creating this for my own use cases, and I don't have need
 of many widgets, but I would like to eventually expand upon
 this list.
 
-- [ ] setup
+- [x] setup
   - [x] main flake
-- [ ] nix-colors
-- [ ] widgets (eww)
-  - [ ] top-bar
-  - [ ] launcher
-  - [ ] powermenu
+- [x] nix-colors
+- [x] widgets (eww)
+  - [x] top-bar
+  - [x] launcher
+  - [x] powermenu
 
 - [ ] dots
-  - [ ] home-manager
+  - [x] home-manager
   - [ ] snowfall
-  - [ ] hypr.conf
-  - [ ] start.sh
+  - [x] hyprland.conf
+  - [x] start.sh
+
+- [ ] hyprland
+  - [ ] plugins
+    - [ ] hyprlock
+    - [ ] hyprcursor
+  - [ ] home-manager module
+  - [ ] nix hyprland.conf
