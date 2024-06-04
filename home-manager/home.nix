@@ -61,6 +61,7 @@
     ffmpeg # video formatter
     v4l-utils
     gphoto2
+    davinci-resolve
     kitty-themes
     # simp1e-cursors
     zathura
@@ -87,7 +88,7 @@
 
   programs.kitty = {
     enable = true;
-    theme = "Leaf Light";
+    theme = "Ayu Mirage";
     font = {
       name = "JetBrainsMono Nerd Font";
     };
@@ -103,7 +104,7 @@
     enable = true;
     defaultEditor = true;
     settings = {
-      theme = "base16_default";
+      theme = "ayu_mirage";
       editor = {
         cursor-shape = {
           insert = "underline";

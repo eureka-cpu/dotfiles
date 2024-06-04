@@ -6,8 +6,8 @@ let
   cursorPkg = pkgs.gnome.adwaita-icon-theme;
   cursorSize = 16;
   colorScheme = colorSchemeFromPicture {
-    path = ./wallpapers/witch-queen-02.jpg;
-    variant = "light";
+    path = ./wallpapers/swirl.jpg;
+    variant = "dark";
   };
 in
 {

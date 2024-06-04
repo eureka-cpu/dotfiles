@@ -238,6 +238,7 @@ in
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
 
+  nix.package = pkgs.nixVersions.nix_2_22;
   nix.gc = {
     automatic = true;
     dates = "weekly";
