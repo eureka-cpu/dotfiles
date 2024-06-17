@@ -105,10 +105,11 @@
   users.users.eureka = {
     isNormalUser = true;
     description = "Chris O'Brien";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     shell = pkgs.zsh;
   };
   programs.zsh.enable = true;
+  virtualisation.docker.enable = true;
   
   # Enable automatic login for the user.
   services.xserver.displayManager.autoLogin.enable = false;

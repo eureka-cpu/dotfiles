@@ -49,6 +49,7 @@
         eamodio.gitlens # git lens
       ];
     })
+    docker
     # studio
     obs-studio
     ffmpeg # video formatter
