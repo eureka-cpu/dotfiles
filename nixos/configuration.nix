@@ -54,8 +54,6 @@
   # Nvidia settings
   hardware.opengl = {
     enable = true; # Must be enabled
-    driSupport = true;
-    driSupport32Bit = true;
   };
   services.xserver = {
     videoDrivers = [ "nvidia" ];

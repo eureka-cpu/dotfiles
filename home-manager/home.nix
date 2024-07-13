@@ -35,7 +35,7 @@
     (vscode-with-extensions.override {
       vscodeExtensions = with vscode-extensions; [
         bbenoist.nix # nix syntax highlighting
-        matklad.rust-analyzer
+        rust-lang.rust-analyzer
         vadimcn.vscode-lldb # lldb for rust
         pkief.material-product-icons
         tamasfe.even-better-toml
