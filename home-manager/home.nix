@@ -184,9 +184,8 @@ in
         # Default:
         # monitor = ",preferred,auto,auto";
         monitor = [
-          ",preferred,auto,auto"
           # TODO: Fix multi-monitor setup
-          # "desc:HP Inc. HP Z32 CN42411R5T, preferred, 0x0, 1.5"
+          "desc:HP Inc. HP Z32 CN42411R5T, preferred, 0x0, 1.5"
           # "desc:ESP eD15T(2022), preferred, -1080x0, 1, transform, 1"
         ];
 
