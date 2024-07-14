@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, users, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -46,10 +46,7 @@
   };
 
   # hyprland
-  programs.hyprland = {
-    enable = true;
-    # package = inputs.hyprland.packages.${pkgs.system}.hyprland;
-  };
+  programs.hyprland.enable = true;
 
   # Nvidia settings
   hardware.graphics.enable = true;
@@ -96,7 +93,7 @@
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.eureka = {
+  users.users.${users.eureka.name} = {
     isNormalUser = true;
     description = "Chris O'Brien";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
@@ -108,7 +105,7 @@
   # Enable automatic login for the user.
   services.displayManager.autoLogin = {
     enable = false;
-    user = "eureka";
+    user = users.eureka.name;
   };
 
   # Allow unfree packages

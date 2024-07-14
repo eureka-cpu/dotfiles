@@ -1,7 +1,6 @@
-{ pkgs, inputs, ... }:
-
+{ pkgs, nix-colors, ... }:
 let
-  inherit (inputs.nix-colors.lib-contrib { inherit pkgs; }) gtkThemeFromScheme;# colorSchemeFromPicture;
+  inherit (nix-colors.lib-contrib { inherit pkgs; }) gtkThemeFromScheme;# colorSchemeFromPicture;
   cursorName = "Adwaita";
   cursorPkg = pkgs.adwaita-icon-theme;
   cursorSize = 22;
@@ -9,7 +8,7 @@ let
   #   path = ./wallpapers/gruvbox-mountain-village.jpg;
   #   variant = "dark";
   # };
-  colorScheme = inputs.nix-colors.colorSchemes.gruvbox-material-dark-medium;
+  colorScheme = nix-colors.colorSchemes.gruvbox-material-dark-medium;
 in
 {
   gtk = {

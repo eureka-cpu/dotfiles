@@ -7,19 +7,28 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    hyprland.url = "github:hyprwm/Hyprland";
-    hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins";
-      inputs.hyprland.follows = "hyprland";
-    };
     helix-themes.url = "github:eureka-cpu/helix-themes.nix";
     nix-colors.url = "github:misterio77/nix-colors";
   };
 
-  outputs = { nixpkgs, home-manager, ... } @inputs:
+  outputs = { nixpkgs, home-manager, helix-themes, nix-colors, ... }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+      # Useful for maintaining user data across home-manager modules
+      # and configuration.nix
+      # TODO: map user modules based on name.
+      users = {
+        eureka =
+          let
+            name = "eureka";
+          in
+          {
+            inherit name;
+            homeDirectory = "/home/${name}";
+            home-manager.modulePath = ./home-manager/home.nix;
+          };
+      };
     in
     {
       nixosConfigurations = {
@@ -32,12 +41,17 @@
               home-manager = {
                 useUserPackages = true;
                 useGlobalPkgs = true;
-                extraSpecialArgs = { inherit inputs; };
-                users.eureka = ./home-manager/home.nix;
+                extraSpecialArgs = {
+                  inherit
+                  helix-themes
+                  nix-colors;
+                  user = users.eureka;
+                };
+                users.eureka = users.eureka.home-manager.modulePath;
               };
             }
           ];
-          specialArgs = { inherit inputs; };
+          specialArgs = { inherit users; };
         };
       };
 
