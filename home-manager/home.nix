@@ -160,6 +160,8 @@ in
           # start notification daemon
           ${mako}
         '';
+        # Stolen from @iynaix :^)
+        # openOnWorkspace = workspace: program: "[workspace ${builtins.toString workspace} silent] ${program}";
       in
       {
         # This is an example Hyprland config file.
@@ -210,8 +212,8 @@ in
         # exec-once = waybar & hyprpaper & firefox
         exec-once = [
           "${onStart}/bin/start.sh"
-          "$terminal"
-          "$browser"
+          # (openOnWorkspace 1 "$browser")
+          # (openOnWorkspace 2 "$terminal")
         ];
 
         #############################
@@ -310,6 +312,10 @@ in
         # https://wiki.hyprland.org/Configuring/Variables/#input
         input = {
           kb_layout = "us";
+          kb_variant = "";
+          kb_model = "";
+          kb_options = "";
+          kb_rules = "";
           follow_mouse = 1;
           natural_scroll = true;
           sensitivity = 0; # -1.0 - 1.0, 0 means no modification.
