@@ -1,5 +1,4 @@
-{ config, pkgs, ... }:
-
+{ config, pkgs, inputs, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -49,15 +48,12 @@
   # hyprland
   programs.hyprland = {
     enable = true;
+    # package = inputs.hyprland.packages.${pkgs.system}.hyprland;
   };
 
   # Nvidia settings
-  hardware.opengl = {
-    enable = true; # Must be enabled
-  };
-  services.xserver = {
-    videoDrivers = [ "nvidia" ];
-  };
+  hardware.graphics.enable = true;
+  services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
     # Modesetting is needed for most Wayland compositors
     modesetting.enable = true;
@@ -108,24 +104,18 @@
   };
   programs.zsh.enable = true;
   virtualisation.docker.enable = true;
-  
+
   # Enable automatic login for the user.
-  services.xserver.displayManager.autoLogin.enable = false;
-  services.xserver.displayManager.autoLogin.user = "eureka";
+  services.displayManager.autoLogin = {
+    enable = false;
+    user = "eureka";
+  };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-  
+
   # Experimental nix features
-  nix = {
-    settings = {
-      experimental-features = [ "nix-command" "flakes" ];
-      extra-substituters = [ "https://fuellabs.cachix.org" ];
-      extra-trusted-public-keys = [
-        "fuellabs.cachix.org-1:3gOmll82VDbT7EggylzOVJ6dr0jgPVU/KMN6+Kf8qx8="
-      ];
-    };
-  };
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   environment.sessionVariables = {
     WLR_NO_HARDWARE_CURSORS = "1"; # fixes disappearing cursor
@@ -134,7 +124,17 @@
 
   fonts.packages = with pkgs; [
     (nerdfonts.override {
-      fonts = [ "JetBrainsMono" ];
+      fonts = [
+        "JetBrainsMono"
+        "FiraCode"
+        "GeistMono"
+        "Hasklig"
+        "Iosevka"
+        "Lilex"
+        "Monoid"
+        "VictorMono"
+        "ZedMono"
+      ];
     })
   ];
 
