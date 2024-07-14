@@ -48,5 +48,5 @@ this list.
   - [ ] plugins
     - [ ] hyprlock
     - [ ] hyprcursor
-  - [ ] home-manager module
-  - [ ] nix hyprland.conf
+  - [x] home-manager module
+  - [x] nix hyprland.conf

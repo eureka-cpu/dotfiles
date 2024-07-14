@@ -94,7 +94,7 @@ in
         };
         indent-guides = {
           render = true;
-          character = "╎";
+          character = "|";
           skip-levels = 1;
         };
         lsp = {
@@ -142,7 +142,6 @@ in
 
   wayland.windowManager.hyprland = {
     enable = true;
-    # package = inputs.hyprland.packages.${pkgs.system}.hyprland;
     settings =
       let
         swww = "${pkgs.swww}/bin/swww";
