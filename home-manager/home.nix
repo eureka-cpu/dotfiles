@@ -29,7 +29,7 @@ in
     # shell
     zsh
     oh-my-zsh
-    fastfetch
+    pfetch
     # comms
     telegram-desktop
     # code
