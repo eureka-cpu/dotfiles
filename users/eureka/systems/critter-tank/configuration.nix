@@ -1,4 +1,8 @@
 { config, pkgs, users, ... }:
+let
+  user = users.eureka;
+  host = user.systems.critter-tank;
+in
 {
   imports = [
     ./hardware-configuration.nix
@@ -9,7 +13,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   networking = {
-    hostName = "critter-tank";
+    hostName = host.networking.hostName;
     networkmanager.enable = true;
     firewall.enable = true;
   };
@@ -93,9 +97,9 @@
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.${users.eureka.name} = {
+  users.users.${user.name} = {
     isNormalUser = true;
-    description = "Chris O'Brien";
+    description = user.description;
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     shell = pkgs.zsh;
   };
@@ -105,7 +109,7 @@
   # Enable automatic login for the user.
   services.displayManager.autoLogin = {
     enable = false;
-    user = users.eureka.name;
+    user = user.name;
   };
 
   # Allow unfree packages

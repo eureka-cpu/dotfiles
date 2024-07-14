@@ -11,31 +11,20 @@
     nix-colors.url = "github:misterio77/nix-colors";
   };
 
+  # TODO: Use flake-utils
   outputs = { nixpkgs, home-manager, helix-themes, nix-colors, ... }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-      # Useful for maintaining user data across home-manager modules
-      # and configuration.nix
-      # TODO: map user modules based on name.
-      users = {
-        eureka =
-          let
-            name = "eureka";
-          in
-          {
-            inherit name;
-            homeDirectory = "/home/${name}";
-            home-manager.modulePath = ./home-manager/home.nix;
-          };
-      };
+      users = import ./users.nix;
     in
     {
+      # TODO: Map user/host to nixosSystem
       nixosConfigurations = {
         critter-tank = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
-            ./nixos/configuration.nix
+            users.eureka.systems.critter-tank.modulePath
             home-manager.nixosModules.home-manager
             {
               home-manager = {
@@ -43,8 +32,8 @@
                 useGlobalPkgs = true;
                 extraSpecialArgs = {
                   inherit
-                  helix-themes
-                  nix-colors;
+                    helix-themes
+                    nix-colors;
                   user = users.eureka;
                 };
                 users.eureka = users.eureka.home-manager.modulePath;
