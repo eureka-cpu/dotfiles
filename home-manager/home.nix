@@ -184,8 +184,10 @@ in
         # Default:
         # monitor = ",preferred,auto,auto";
         monitor = [
-          "desc:HP Inc. HP Z32 CN42411R5T, preferred, 0x0, 1.5"
-          "desc:ESP eD15T(2022), preferred, -1080x0, 1, transform, 1"
+          ",preferred,auto,auto"
+          # TODO: Fix multi-monitor setup
+          # "desc:HP Inc. HP Z32 CN42411R5T, preferred, 0x0, 1.5"
+          # "desc:ESP eD15T(2022), preferred, -1080x0, 1, transform, 1"
         ];
 
         ###################
@@ -195,8 +197,8 @@ in
         # See https://wiki.hyprland.org/Configuring/Keywords/
 
         # Set programs that you use
-        "$browser" = "brave";
         "$terminal" = "kitty";
+        "$browser" = "brave";
 
         #################
         ### AUTOSTART ###
@@ -210,8 +212,8 @@ in
         # exec-once = waybar & hyprpaper & firefox
         exec-once = [
           "${onStart}/bin/start.sh"
-          "$browser"
           "$terminal"
+          "$browser"
         ];
 
         #############################
@@ -224,7 +226,6 @@ in
           "XCURSOR_SIZE,24"
           "HYPRCURSOR_SIZE,24"
         ];
-
 
         #####################
         ### LOOK AND FEEL ###
@@ -304,7 +305,6 @@ in
           disable_hyprland_logo = false; # If true disables the random hyprland logo / anime girl background. :(
         };
 
-
         #############
         ### INPUT ###
         #############
@@ -313,6 +313,7 @@ in
         input = {
           kb_layout = "us";
           follow_mouse = 1;
+          natural_scroll = true;
           sensitivity = 0; # -1.0 - 1.0, 0 means no modification.
           touchpad = {
             natural_scroll = true;
@@ -330,7 +331,6 @@ in
           name = "epic-mouse-v1";
           sensitivity = "-0.5";
         };
-
 
         ####################
         ### KEYBINDINGSS ###
