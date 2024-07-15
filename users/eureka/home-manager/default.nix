@@ -1,35 +1,20 @@
-{ pkgs, nix-colors, helix-themes, user, ... }:
+{ pkgs, helix-themes, user, ... }:
 {
-  imports = [
-    ./gtk.nix
-    ./hypr.nix
-    nix-colors.homeManagerModules.default
-  ];
-
   # Home Manager needs a bit of information about you and the paths it should manage.
   home.username = user.name;
   home.homeDirectory = user.homeDirectory;
 
   home.packages = with pkgs; [
     home-manager
-    nvtopPackages.full
-    # Hyprland
-    grim
-    eww
-    rofi-wayland
-    mako
-    swww
-    xfce.thunar
     wl-clipboard
     # TODO: override to always use the latest version
     brave
     kitty
+    kitty-themes
     # shell
     zsh
     oh-my-zsh
     pfetch
-    # comms
-    telegram-desktop
     # code
     git
     helix
@@ -55,28 +40,21 @@
     obs-studio
     ffmpeg # video formatter
     gphoto2
-    kitty-themes
-    zathura
-    image-roll
-    celluloid
   ];
 
   programs.kitty = {
     enable = true;
-    theme = "Gruvbox Material Dark Medium";
-    font.name = "JetBrainsMono Nerd Font";
     settings = {
       # The window padding (in pts) (blank area between the text and the window border).
       # A single value sets all four sides. Two values set the vertical and horizontal sides.
       # Three values set top, horizontal and bottom. Four values set top, right, bottom and left.
-      window_padding_width = "8 0 8 8";
+      window_padding_width = "8 0 8 8"; # extra padding for oh-my-zsh dst theme
     };
   };
   programs.helix = {
     enable = true;
     defaultEditor = true;
     settings = {
-      theme = "gruvbox_material_dark_medium";
       editor = {
         cursor-shape = {
           insert = "underline";
@@ -112,7 +90,6 @@
     oh-my-zsh = {
       enable = true;
       plugins = [ "git" ];
-      theme = "dst";
     };
   };
   programs.git = {
@@ -121,32 +98,6 @@
     userEmail = "github.eureka@gmail.com";
   };
 
-  xdg = {
-    configFile = {
-      rofi = {
-        source = ./rofi;
-        recursive = true;
-      };
-    };
-    mimeApps.defaultApplications = {
-      "text/plain" = [ "helix.desktop" ];
-      "application/pdf" = [ "zathura.desktop" ];
-      "image/*" = [ "image-roll.desktop" ];
-      "video/png" = [ "celluloid.desktop" ];
-      "video/jpg" = [ "celluloid.desktop" ];
-      "video/*" = [ "celluloid.desktop" ];
-    };
-  };
-
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
-
-  # This value determines the Home Manager release that your configuration is
-  # compatible with. This helps avoid breakage when a new Home Manager release
-  # introduces backwards incompatible changes.
-  #
-  # You should not change this value, even if you update Home Manager. If you do
-  # want to update the value, then make sure to first check the Home Manager
-  # release notes.
-  home.stateVersion = "23.05"; # Please read the comment before changing.
 }

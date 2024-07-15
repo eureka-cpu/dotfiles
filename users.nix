@@ -11,8 +11,9 @@
   foldUserl = userl:
     let
       # Creates an attrset of hosts for a user from a list of host systems.
-      foldHostl = user: hostl:
+      foldHostl = user:
         let
+          hostl = user.hostl;
           hosts' = { };
         in
         builtins.foldl'
@@ -20,7 +21,8 @@
             hosts' // {
               ${host} = {
                 networking.hostName = host;
-                modulePath = ./users/${user}/systems/${host}/configuration.nix;
+                modulePath = ./users/${user.name}/systems/${host}/configuration.nix;
+                home-manager.modulePath = ./users/${user.name}/systems/${host}/home-manager;
               };
             })
           hosts'
@@ -35,8 +37,7 @@
             github = user.github;
             description = user.description;
             homeDirectory = "/home/${user.name}";
-            home-manager.modulePath = ./users/${user.name}/home-manager;
-            systems = foldHostl user.name user.hostl;
+            systems.hosts = foldHostl user;
           };
         })
       users'
