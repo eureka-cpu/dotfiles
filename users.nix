@@ -55,6 +55,10 @@
       description = "Chris O'Brien";
       hostl = [
         "critter-tank"
+        "dev-one"
+        # "tensorbook"
+        # "pop-os"
+        # "yabai"
       ];
     }
   ];
