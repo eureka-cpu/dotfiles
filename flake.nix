@@ -16,33 +16,58 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-      users = import ./users.nix;
+
+      userLib = import ./users.nix;
+      userl = userLib.userl;
+      users = userLib.foldUserl userl;
+      # Create an attrset of nixos system configurations for a user's systems.
+      foldUserSysteml = user: hostl:
+        let
+          nixosSystems' = { };
+        in
+        builtins.foldl'
+          (nixosSystems': host: nixosSystems' // {
+            ${host} = nixpkgs.lib.nixosSystem {
+              inherit system;
+              modules = [
+                users.${user}.systems.${host}.modulePath
+                home-manager.nixosModules.home-manager
+                {
+                  home-manager = {
+                    useUserPackages = true;
+                    useGlobalPkgs = true;
+                    extraSpecialArgs = {
+                      inherit
+                        helix-themes
+                        nix-colors;
+                      user = users.${user};
+                    };
+                    users.${user} = users.${user}.home-manager.modulePath;
+                  };
+                }
+              ];
+              specialArgs = {
+                user = users.${user};
+                host = users.${user}.systems.${host};
+              };
+            };
+          })
+          nixosSystems'
+          hostl;
+      # Combine all users system configurations into an attrset.
+      foldSysteml = userl:
+        let
+          nixosSystems' = { };
+        in
+        builtins.foldl'
+          (nixosSystems': user:
+            nixosSystems' // foldUserSysteml user.name user.hostl
+          )
+          nixosSystems'
+          userl;
     in
     {
-      # TODO: Map user/host to nixosSystem
-      nixosConfigurations = {
-        critter-tank = nixpkgs.lib.nixosSystem {
-          inherit system;
-          modules = [
-            users.eureka.systems.critter-tank.modulePath
-            home-manager.nixosModules.home-manager
-            {
-              home-manager = {
-                useUserPackages = true;
-                useGlobalPkgs = true;
-                extraSpecialArgs = {
-                  inherit
-                    helix-themes
-                    nix-colors;
-                  user = users.eureka;
-                };
-                users.eureka = users.eureka.home-manager.modulePath;
-              };
-            }
-          ];
-          specialArgs = { inherit users; };
-        };
-      };
+      nixosConfigurations = foldSysteml userl;
 
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = with pkgs; [

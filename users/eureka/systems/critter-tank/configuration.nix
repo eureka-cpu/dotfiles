@@ -1,8 +1,4 @@
-{ config, pkgs, users, ... }:
-let
-  user = users.eureka;
-  host = user.systems.critter-tank;
-in
+{ config, pkgs, user, host, ... }:
 {
   imports = [
     ./hardware-configuration.nix
