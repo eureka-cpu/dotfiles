@@ -21,7 +21,7 @@
     (vscode-with-extensions.override {
       vscodeExtensions = with vscode-extensions; [
         bbenoist.nix # nix syntax highlighting
-        matklad.rust-analyzer
+        rust-lang.rust-analyzer
         vadimcn.vscode-lldb # lldb for rust
         pkief.material-product-icons
         tamasfe.even-better-toml
@@ -103,7 +103,7 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    enableAutosuggestions = true;
+    autosuggestion.enable = true;
     shellAliases = {
       swaydev = "nix develop github:fuellabs/fuel.nix#sway-dev -c zsh";
     };

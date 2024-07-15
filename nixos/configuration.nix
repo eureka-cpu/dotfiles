@@ -52,9 +52,6 @@
     # Enable the GNOME Desktop Environment.
     displayManager = {
       gdm.enable = true;
-      # Enable automatic login for the user.
-      autoLogin.enable = true;
-      autoLogin.user = "eureka";
     };
     desktopManager.gnome.enable = true;
 
@@ -64,10 +61,14 @@
       variant = "";
     };
   };
+  services.displayManager = {
+    # Enable automatic login for the user.
+    autoLogin.enable = true;
+    autoLogin.user = "eureka";
+  };
   boot.initrd.kernelModules = [ "amdgpu" "radeon" ];
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    driSupport = true;
     extraPackages = with pkgs; [
       rocm-opencl-icd
       rocm-opencl-runtime
@@ -78,6 +79,7 @@
   services.printing.enable = true;
   # Enable power management.
   services.auto-cpufreq.enable = true;
+  services.power-profiles-daemon.enable = false;
 
   # Enable sound with pipewire.
   sound.enable = true;
@@ -147,14 +149,14 @@
     };
 
     gnome.excludePackages = with pkgs; [
-      gnome.cheese
+      cheese
       gnome.gnome-music
       gnome-tour
       epiphany
-      gnome.geary
+      geary
       gnome-text-editor
       gnome.gnome-contacts
-      gnome.yelp
+      yelp
     ];
   };
 
