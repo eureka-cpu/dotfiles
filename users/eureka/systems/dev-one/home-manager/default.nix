@@ -11,8 +11,6 @@
     telegram-desktop
     # studio
     reaper
-    tlp
-    auto-cpufreq
     discord
     blender
     steam
