@@ -25,7 +25,7 @@
         openOnWorkspace = workspace: program: "[workspace ${builtins.toString workspace} silent] ${program}";
       in
       # Taken from the below auto-generated config file, updated with some personal touches:
-      # https://github.com/hyprwm/Hyprland/blob/bc6b0880dda2607a80f000c134f573c970452a0f/example/hyprland.conf
+        # https://github.com/hyprwm/Hyprland/blob/bc6b0880dda2607a80f000c134f573c970452a0f/example/hyprland.conf
       {
         # This is an example Hyprland config file.
         # Refer to the wiki for more information.

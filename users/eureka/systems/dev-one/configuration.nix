@@ -1,4 +1,7 @@
 { pkgs, lib, user, ... }:
+let
+  gpu_drivers = [ "amdgpu" "radeon" ];
+in
 {
   imports = [
     ./hardware-configuration.nix
@@ -10,8 +13,6 @@
 
   # Enable the X11 windowing system.
   services.xserver = {
-    videoDrivers = [ "amdgpu" "radeon" ];
-
     # Enable the GNOME Desktop Environment.
     displayManager.gdm.enable = true;
     desktopManager.gnome.enable = true;
@@ -22,10 +23,14 @@
     autoLogin.user = user.name;
   };
   # Workaround for GNOME autologin
-  systemd.services."getty@tty1".enable = false;
-  systemd.services."autovt@tty1".enable = false;
+  systemd.services = {
+    "getty@tty1".enable = false;
+    "autovt@tty1".enable = false;
+  };
 
-  boot.initrd.kernelModules = [ "amdgpu" "radeon" ];
+  # Extra GPU settings
+  boot.initrd.kernelModules = gpu_drivers;
+  services.xserver.videoDrivers = gpu_drivers;
   hardware.graphics = {
     extraPackages = with pkgs; [
       rocm-opencl-icd

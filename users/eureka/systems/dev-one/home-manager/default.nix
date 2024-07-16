@@ -18,7 +18,7 @@
     steam
     libreoffice
   ];
-  
+
   programs.kitty = {
     theme = "kanagawabones";
     font.name = "JetBrainsMono Nerd Font";
