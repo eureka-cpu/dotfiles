@@ -1,3 +1,5 @@
 {
-  
+  services.pipewire.extraConfig.pipewire = {
+    
+  };  
 }
