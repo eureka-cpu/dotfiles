@@ -3,7 +3,6 @@
   imports = [
     ./gtk.nix
     ../../../home-manager/gnome.nix
-    ../../../home-manager/laptop.nix
     ../../../home-manager/default.nix
   ];
 
