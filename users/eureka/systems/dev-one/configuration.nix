@@ -31,12 +31,6 @@ in
   # Extra GPU settings
   boot.initrd.kernelModules = gpu_drivers;
   services.xserver.videoDrivers = gpu_drivers;
-  hardware.graphics = {
-    extraPackages = with pkgs; [
-      rocm-opencl-icd
-      rocm-opencl-runtime
-    ];
-  };
 
   # Enabling due to issues with Wayland & screen sharing
   xdg.portal.enable = true;
