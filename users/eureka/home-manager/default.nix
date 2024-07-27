@@ -18,6 +18,7 @@
     # code
     git
     helix
+    obsidian
     (vscode-with-extensions.override {
       vscodeExtensions = with vscode-extensions; [
         bbenoist.nix # nix syntax highlighting
