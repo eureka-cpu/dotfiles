@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -11,11 +12,12 @@
     nix-colors.url = "github:misterio77/nix-colors";
   };
 
-  # TODO: Use flake-utils
-  outputs = { nixpkgs, home-manager, helix-themes, nix-colors, ... }:
+  outputs = { nixpkgs, flake-utils, home-manager, helix-themes, nix-colors, ... }:
     let
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
+      # TODO: Related to the comment below, the system will be whatever system
+      # is passed to the function that creates the configuration.
+      # It doesn't belong here and should be removed.
+      system = flake-utils.lib.system.x86_64-linux;
 
       userLib = import ./users.nix;
       userl = userLib.userl;
@@ -65,16 +67,22 @@
           { }
           userl;
     in
-    {
-      nixosConfigurations = foldSysteml userl;
+    { nixosConfigurations = foldSysteml userl; } //
+    # Configurations rely on the system that is set in hardware-configuration.nix
+    # so there's no need to include `system`, except for when developing the parent
+    # flake.nix itself, or working on one system configuration from another.
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in
+      {
+        devShells.default = pkgs.mkShell {
+          buildInputs = with pkgs; [
+            nil
+            nixpkgs-fmt
+          ];
+        };
 
-      devShells.${system}.default = pkgs.mkShell {
-        buildInputs = with pkgs; [
-          nil
-          nixpkgs-fmt
-        ];
-      };
-
-      formatter.${system} = pkgs.nixpkgs-fmt;
-    };
+        formatter = pkgs.nixpkgs-fmt;
+      });
 }
