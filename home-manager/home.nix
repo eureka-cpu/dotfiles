@@ -13,10 +13,10 @@
 
   home.packages = with pkgs; [
     home-manager
-    nvtop
+    nvtopPackages.full
     # Hyprland
     grim
-    eww-wayland
+    eww
     rofi-wayland
     mako
     swww
@@ -40,7 +40,7 @@
     (vscode-with-extensions.override {
       vscodeExtensions = with vscode-extensions; [
         bbenoist.nix # nix syntax highlighting
-        matklad.rust-analyzer
+        rust-lang.rust-analyzer
         vadimcn.vscode-lldb # lldb for rust
         pkief.material-product-icons
         tamasfe.even-better-toml
@@ -58,6 +58,7 @@
     rust-analyzer
     # studio
     obs-studio
+    reaper
     ffmpeg # video formatter
     v4l-utils
     gphoto2
@@ -136,7 +137,7 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    enableAutosuggestions = true;
+    autosuggestion.enable = true;
     shellAliases = {
       swaydev = "nix develop github:fuellabs/fuel.nix#sway-dev -c zsh";
     };

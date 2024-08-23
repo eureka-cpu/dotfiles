@@ -3,7 +3,7 @@
 let
   inherit (inputs.nix-colors.lib-contrib { inherit pkgs; }) gtkThemeFromScheme colorSchemeFromPicture;
   cursorName = "Adwaita";
-  cursorPkg = pkgs.gnome.adwaita-icon-theme;
+  cursorPkg = pkgs.adwaita-icon-theme;
   cursorSize = 16;
   colorScheme = colorSchemeFromPicture {
     path = ./wallpapers/swirl.jpg;

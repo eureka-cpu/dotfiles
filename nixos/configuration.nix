@@ -3,12 +3,12 @@
 let
   intel_bus = "PCI:0:2:0";
   nvidia_bus = "PCI:1:0:0";
-  nvidia_driver = (config.boot.kernelPackages.nvidiaPackages.beta.overrideAttrs {
-    src = pkgs.fetchurl {
-      url = "https://us.download.nvidia.com/XFree86/Linux-x86_64/550.40.07/NVIDIA-Linux-x86_64-550.40.07.run";
-      sha256 = "sha256-KYk2xye37v7ZW7h+uNJM/u8fNf7KyGTZjiaU03dJpK0=";
-    };
-  });
+  nvidia_driver = config.boot.kernelPackages.nvidiaPackages.stable; # overrideAttrs {
+  #   src = pkgs.fetchurl {
+  #     url = "https://us.download.nvidia.com/XFree86/Linux-x86_64/550.40.07/NVIDIA-Linux-x86_64-550.40.07.run";
+  #     sha256 = "sha256-KYk2xye37v7ZW7h+uNJM/u8fNf7KyGTZjiaU03dJpK0=";
+  #   };
+  # });
 in
 {
   imports = [
@@ -68,10 +68,9 @@ in
     initrd.kernelModules = [ "nvidia" ];       # Probably redundant
     blacklistedKernelModules = [ "nouveau" ];  #
   };
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true; # Must be enabled
-    driSupport = true;
-    driSupport32Bit = true;
+    enable32Bit = true;
   };
   services.xserver = {
     videoDrivers = [ "nvidia" ];
@@ -179,7 +178,6 @@ in
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -200,8 +198,10 @@ in
   programs.zsh.enable = true;
   
   # Enable automatic login for the user.
-  services.xserver.displayManager.autoLogin.enable = false;
-  services.xserver.displayManager.autoLogin.user = "eureka";
+  services.displayManager.autoLogin = {
+    enable = false;
+    user = "eureka";
+  };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
