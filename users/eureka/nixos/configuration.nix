@@ -92,20 +92,16 @@
     NIXOS_OZONE_WL = "1"; # tells electron apps to use wayland
   };
 
-  fonts.packages = with pkgs; [
-    (nerdfonts.override {
-      fonts = [
-        "JetBrainsMono"
-        "FiraCode"
-        "GeistMono"
-        "Hasklig"
-        "Iosevka"
-        "Lilex"
-        "Monoid"
-        "VictorMono"
-        "ZedMono"
-      ];
-    })
+  fonts.packages = with pkgs.nerd-fonts; [
+    jetbrains-mono 
+    fira-code
+    geist-mono
+    hasklug
+    iosevka
+    lilex
+    monoid
+    victor-mono
+    zed-mono
   ];
 
   nix.gc = {

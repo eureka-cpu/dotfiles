@@ -2,7 +2,7 @@
   description = "one flake to rule them all";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -10,22 +10,36 @@
     };
     helix-themes.url = "github:eureka-cpu/helix-themes.nix";
     nix-colors.url = "github:misterio77/nix-colors";
+
+    x1e-nixos-config.url = "github:kuruczgy/x1e-nixos-config";
+    x1e-nixos-config.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { nixpkgs, flake-utils, home-manager, helix-themes, nix-colors, ... }:
+  outputs =
+    { nixpkgs
+    , flake-utils
+    , home-manager
+    , x1e-nixos-config
+    , helix-themes
+    , nix-colors
+    , ...
+    }:
     let
-      # TODO: Related to the comment below, the system will be whatever system
-      # is passed to the function that creates the configuration.
-      # It doesn't belong here and should be removed.
-      system = flake-utils.lib.system.x86_64-linux;
-
       userLib = import ./users.nix;
       userl = userLib.userl;
       users = userLib.foldUserl userl;
       # Create an attrset of nixos system configurations for a user's host systems.
       foldUserSysteml = user: hostl:
         builtins.foldl'
-          (nixosSystems': host: nixosSystems' // {
+          (nixosSystems': host:
+          let
+            # TODO: Related to the comment below, the system will be whatever system
+            # is passed to the function that creates the configuration.
+            # It doesn't belong here and should be removed.
+            system = with flake-utils.lib.system; if host == "xie" then aarch64-linux else x86_64-linux;
+            inherit (nixpkgs.legacyPackages.${system}) lib;
+          in
+          nixosSystems' // {
             # TODO: Get this block reduced to `users.${user}.systems.hosts.${host}.nixosSystem`
             # We want to improve readability but also not force top-level inputs on any one system.
             # If each system has its own flake then it gives more independence to that system
@@ -49,7 +63,9 @@
                     users.${user} = users.${user}.systems.hosts.${host}.home-manager.modulePath;
                   };
                 }
-              ];
+              ] ++ (lib.optionals (host == "xie") [
+                x1e-nixos-config.nixosModules.x1e
+              ]);
               specialArgs = {
                 user = users.${user};
                 host = users.${user}.systems.hosts.${host};

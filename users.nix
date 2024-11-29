@@ -56,6 +56,7 @@
       hostl = [
         "critter-tank"
         "dev-one"
+        "xie"
         # "tensorbook"
         # "pop-os"
         # "yabai"
