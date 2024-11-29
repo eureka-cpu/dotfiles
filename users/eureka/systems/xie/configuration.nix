@@ -5,6 +5,11 @@
     ../../nixos/laptop-configuration.nix
   ];
 
+  # Enable the X11 windowing system.
+  services.xserver.displayManager.gdm.enable = true;
+
+  programs.sway.enable = true;
+
   boot.loader.systemd-boot = {
     enable = true;
 
@@ -49,8 +54,6 @@
   networking.networkmanager.plugins = lib.mkForce [ ];
 
   hardware.bluetooth.enable = true;
-
-  programs.sway.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
