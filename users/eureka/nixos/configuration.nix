@@ -11,8 +11,8 @@
     networkmanager.enable = true;
   };
 
-  boot.kernelModules = [ "v4l2loopback" ];
-  boot.extraModulePackages = [ pkgs.linuxPackages.v4l2loopback ];
+  # boot.kernelModules = [ "v4l2loopback" ];
+  # boot.extraModulePackages = [ pkgs.linuxPackages.v4l2loopback ];
 
   # Set your time zone.
   time.timeZone = "America/Los_Angeles";
