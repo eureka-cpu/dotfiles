@@ -10,7 +10,7 @@
   ];
 
   programs.kitty = {
-    # theme = "catppuccin_mocha";
+    theme = "Catppuccin-Mocha";
     font.name = "JetBrainsMono Nerd Font";
   };
 

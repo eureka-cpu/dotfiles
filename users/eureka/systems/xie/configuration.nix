@@ -38,15 +38,6 @@
     };
   };
 
-  users.users = {
-    user = {
-      isNormalUser = true;
-      # Default password, should be changed using `passwd` after first login.
-      password = "nixos";
-      extraGroups = [ "wheel" "networkmanager" ];
-    };
-  };
-
   # Enable some SysRq keys (80 = sync + process kill)
   # See: https://docs.kernel.org/admin-guide/sysrq.html
   boot.kernel.sysctl."kernel.sysrq" = 80;
