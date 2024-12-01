@@ -2,11 +2,14 @@
 {
   imports = [
     ../../../home-manager/default.nix
+    ../../../home-manager/sway.nix
   ];
 
   home.packages = with pkgs; [
-    # comms
     telegram-desktop
+    wofi
+    wl-clipboard
+    mako
   ];
 
   programs.kitty = {

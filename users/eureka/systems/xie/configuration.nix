@@ -8,7 +8,8 @@
   # Enable the X11 windowing system.
   services.xserver.displayManager.gdm.enable = true;
 
-  programs.sway.enable = true;
+  # Must be enabled to use sway with home-manager
+  security.polkit.enable = true;
 
   boot.loader.systemd-boot = {
     enable = true;
