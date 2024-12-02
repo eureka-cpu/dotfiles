@@ -6,10 +6,14 @@
     config = {
       modifier = "Mod4";
       terminal = "kitty"; 
+      defaultWorkspace = "workspace number 1";
       startup = [
         { command = "kitty"; }
         { command = "brave"; }
       ];
+      seat."*" = {
+        xcursor_theme = "Adwaita 18";
+      };
     };
     extraConfig = ''
       input type:touchpad {
@@ -18,9 +22,12 @@
     '';
   };
 
+  programs.wofi.enable = true;
+
   services.gnome-keyring.enable = true;
 
   home.pointerCursor = {
+    gtk.enable = true;
     name = "Adwaita";
     package = pkgs.adwaita-icon-theme;
     size = 18;

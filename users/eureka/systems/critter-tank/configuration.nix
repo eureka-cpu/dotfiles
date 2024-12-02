@@ -7,7 +7,10 @@
   ];
 
   # Enable the X11 windowing system.
-  services.xserver.displayManager.gdm.enable = true;
+  services.xserver = {
+    enable = true;
+    displayManager.gdm.enable = true;
+  };
 
   # Hyprland
   programs.hyprland.enable = true;
