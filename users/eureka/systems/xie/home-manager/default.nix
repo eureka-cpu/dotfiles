@@ -10,11 +10,15 @@
     wofi
     wl-clipboard
     mako
+    swaybg
   ];
 
   programs.kitty = {
     theme = "Catppuccin-Mocha";
-    font.name = "JetBrainsMono Nerd Font";
+    font = {
+      name = "JetBrainsMono Nerd Font";
+      size = 14;
+    };
   };
 
   programs.helix.settings.theme = "catppuccin_mocha";
