@@ -14,30 +14,37 @@ in
       gtk = true; # Fixes common issues with GTK 3 apps
     };
     config = {
-      modifier = "Mod4";
+      modifier = "Mod4"; # Super Key
       menu = "wofi --show=drun --gtk-dark";
       terminal = "kitty";
       defaultWorkspace = "workspace number 1";
       startup = [
-        { command = "swaybg -i $HOME/Downloads/nixos-wallpaper-catppuccin-mocha.png"; }
+        { command = "swaybg -i $HOME/Downloads/bunnies-road.png"; }
         { command = "kitty"; }
         { command = "brave"; }
       ];
       seat."*" = {
         xcursor_theme = "${cursor.name} ${builtins.toString cursor.size}";
       };
-      output = {
+      input = {
         "*" = {
-          scale = "1.4";
+          # natty scroll master race
+          natural_scroll = "enabled";
         };
+        "type:touchpad" = {
+          # Default uses button areas instead of
+          # the entire touchpad area as the input
+          click_method = "clickfinger";
+          # 'lrm' treats 1 finger as left click,
+          # 2 fingers as right click, and 3 fingers as middle click
+          clickfinger_button_map = "lrm";
+        };
+      };
+      output."*" = {
+        scale = "1.4";
       };
       window.titlebar = false;
     };
-    extraConfig = ''
-      input type:touchpad {
-        natural_scroll enabled
-      }
-    '';
   };
 
   programs.wofi.enable = true;

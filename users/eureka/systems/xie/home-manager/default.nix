@@ -11,6 +11,7 @@
     wl-clipboard
     mako
     swaybg
+    nautilus
   ];
 
   programs.kitty = {
