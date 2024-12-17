@@ -31,7 +31,7 @@
     # shell
     zsh
     oh-my-zsh
-    neofetch
+    fastfetch
     # comms
     telegram-desktop
     # code
@@ -64,7 +64,6 @@
     gphoto2
     davinci-resolve
     kitty-themes
-    # simp1e-cursors
     zathura
     image-roll
     celluloid
@@ -89,7 +88,7 @@
 
   programs.kitty = {
     enable = true;
-    theme = "Ayu Mirage";
+    theme = "Gruvbox Material Dark Medium";
     font = {
       name = "JetBrainsMono Nerd Font";
     };
@@ -105,7 +104,7 @@
     enable = true;
     defaultEditor = true;
     settings = {
-      theme = "ayu_mirage";
+      theme = "gruvbox_material_dark_medium";
       editor = {
         cursor-shape = {
           insert = "underline";
@@ -121,7 +120,7 @@
         };
         indent-guides = {
           render = true;
-          characeter = "╎";
+          characeter = "|";
           skip-levels = 1;
         };
         lsp = {

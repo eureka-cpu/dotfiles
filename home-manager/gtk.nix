@@ -4,9 +4,9 @@ let
   inherit (inputs.nix-colors.lib-contrib { inherit pkgs; }) gtkThemeFromScheme colorSchemeFromPicture;
   cursorName = "Adwaita";
   cursorPkg = pkgs.adwaita-icon-theme;
-  cursorSize = 16;
+  cursorSize = 20;
   colorScheme = colorSchemeFromPicture {
-    path = ./wallpapers/swirl.jpg;
+    path = ./wallpapers/bathtub.jpg;
     variant = "dark";
   };
 in

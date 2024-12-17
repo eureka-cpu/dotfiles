@@ -3,12 +3,7 @@
 let
   intel_bus = "PCI:0:2:0";
   nvidia_bus = "PCI:1:0:0";
-  nvidia_driver = config.boot.kernelPackages.nvidiaPackages.stable; # overrideAttrs {
-  #   src = pkgs.fetchurl {
-  #     url = "https://us.download.nvidia.com/XFree86/Linux-x86_64/550.40.07/NVIDIA-Linux-x86_64-550.40.07.run";
-  #     sha256 = "sha256-KYk2xye37v7ZW7h+uNJM/u8fNf7KyGTZjiaU03dJpK0=";
-  #   };
-  # });
+  nvidia_driver = config.boot.kernelPackages.nvidiaPackages.stable;
 in
 {
   imports = [
@@ -205,6 +200,7 @@ in
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.nvidia.acceptLicense = true;
   
   # Experimental nix features
   nix = {
@@ -225,8 +221,9 @@ in
   };
 
   fonts = {
-    packages = with pkgs; [
-      (nerdfonts.override { fonts = [ "FiraCode" "JetBrainsMono" ]; })
+    packages = with pkgs.nerd-fonts; [
+      fira-code
+      jetbrains-mono
     ];
   };
 
@@ -238,7 +235,7 @@ in
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
 
-  nix.package = pkgs.nixVersions.nix_2_22;
+  nix.package = pkgs.nixVersions.latest;
   nix.gc = {
     automatic = true;
     dates = "weekly";
