@@ -48,12 +48,12 @@ in
   environment = {
     gnome.excludePackages = with pkgs; [
       cheese
-      gnome.gnome-music
+      gnome-music
       gnome-tour
       epiphany
       geary
       gnome-text-editor
-      gnome.gnome-contacts
+      gnome-contacts
       yelp
     ];
   };
