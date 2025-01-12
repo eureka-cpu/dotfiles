@@ -15,6 +15,7 @@
     zsh
     oh-my-zsh
     pfetch
+    fastfetch
     # code
     git
     helix

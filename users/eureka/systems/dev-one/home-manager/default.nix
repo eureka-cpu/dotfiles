@@ -9,7 +9,9 @@
   home.packages = with pkgs; [
     # comms
     telegram-desktop
+    zoom-us
     # studio
+    inkscape
     reaper
     discord
     blender
