@@ -187,7 +187,7 @@ in
   users.users.eureka = {
     isNormalUser = true;
     description = "Chris O'Brien";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "openrazer" ];
     shell = pkgs.zsh;
   };
   programs.zsh.enable = true;
@@ -213,7 +213,12 @@ in
     };
   };
 
+  hardware.openrazer.enable = true;
   environment = {
+    systemPackages = with pkgs; [
+      openrazer-daemon
+      polychromatic
+    ];
     sessionVariables = {
       WLR_NO_HARDWARE_CURSORS = "1"; # fixes disappearing cursor
       NIXOS_OZONE_WL = "1"; # tells electron apps to use wayland
