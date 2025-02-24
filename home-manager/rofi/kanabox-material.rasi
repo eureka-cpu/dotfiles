@@ -1,5 +1,5 @@
 /**
- * Gruvbox Material rofi theme
+ * Kanabox Material rofi theme
  *
  * Color palette imported from https://github.com/sainnhe/gruvbox-material
  * and edited by eureka-cpu.
@@ -7,39 +7,26 @@
  */
 
 * {
-	gruv0:  #282828;
-	gruv1:  #32302f;
-	gruv2:  #45403d;
-	gruv3:  #5a524c;
+	offwhite:  #E4E5E7; // offwhite/grey
+	greyblue:  #A8AAAF; // grey blue
 
-	gruv4:  #fbf1c7;
-	gruv5:  #f4e8be;
-	gruv6:  #eee0b7;
+	darkdarkblue:  #191B23; // dark blue
 
-	gruv7:  #a89984;
-	gruv8:  #928374;
-	gruv9:  #7c6f64;
-	gruv10: #504945;
+	gruv7:  #FEFEFF; // white
+	darkgreyblue:  #222631;
 
-	red:     #ea6962;
-	orange:  #e78a4e;
-	yellow:  #d8a657;
-	aqua:    #89b482;
-	purple:  #d3869b;
-    purple2: #b16286;
-    purple3: #d3869b;
-    blue:    #458588;
-    black:   #1d2021;
+	red:     #585E69; // dark grey
+	yellow:  #545963;
+    blue:    #FEFEFF;
 
-    bluedark:   #076678;
-    reddark:    #c14a4a;
-    yellowdark: #b47109;
-    purpledark: #8f3f71;
+    bluedark:   #585E69;
+    reddark:    #585E69;
+    yellowdark: #585E69;
 
-    foreground:        @gruv9;
-    background-color:  transparent;    
-    highlight:         underline bold #eee0b7;
-    transparent:       rgba(46,52,64,0);
+    foreground:        @darkgreyblue;
+    background-color:  transparent;
+    highlight:         underline bold #585E69;
+    transparent:       #222631; // @darkgreyblue;
 }
 
 window {
@@ -47,7 +34,7 @@ window {
     anchor:           center;
     border:           2px;
     border-radius:    10px;
-    border-color:     @bluedark;
+    border-color:     @darkdarkblue;
     height:           360px;
     width:            600px;
     background-color: @transparent;
@@ -64,15 +51,15 @@ mainbox {
 message {
     padding: 10px;
     border:  0px 2px 2px 2px;
-    border-color: @gruv0;
+    border-color: @offwhite;
     background-color: @gruv7;
 }
 
 inputbar {
-    color: @gruv6;
+    color: @greyblue;
     padding: 14px;
-    background-color: @gruv0;
-    border-color: @gruv0;
+    background-color: @offwhite;
+    border-color: @offwhite;
 
     border: 1px;
     border-radius: 10px 10px 0px 0px;
@@ -80,7 +67,7 @@ inputbar {
 
 entry, prompt, case-indicator {
     text-font: inherit;
-    text-color: inherit;
+    text-color: @darkdarkblue;
 }
 
 prompt {
@@ -91,8 +78,8 @@ listview {
     padding: 8px;
     border-radius: 0px 0px 10px 10px;
     border: 2px 2px 2px 2px;
-    border-color: @gruv0;
-    background-color: @gruv0;
+    border-color: @offwhite;
+    background-color: @offwhite;
     dynamic: false;
 }
 
@@ -101,29 +88,20 @@ element {
     vertical-align: 0.5;
     border-radius: 10px;
     color: @foreground;
-    text-color: @gruv6;
-    background-color: @gruv1;
+    text-color: @offwhite;
+    background-color: #D9D8DB;
 }
 
 element.normal.active {
     background-color: @yellow;
 }
 
-element.normal.urgent {
-    background-color: @reddark;
-}
-
 element.selected.normal {
     background-color: @blue;
-    text-color: @gruv0;
 }
 
 element.selected.active {
     background-color: @yellowdark;
-}
-
-element.selected.urgent {
-    background-color: @red;
 }
 
 element.alternate.normal {
@@ -135,7 +113,7 @@ element-text, element-icon {
     margin: 0 10 0 0;
     vertical-align: 0.5;
     background-color: inherit;
-    text-color: @gruv6;
+    text-color: @greyblue;
 }
 
 button {

@@ -6,7 +6,7 @@ let
   cursorPkg = pkgs.adwaita-icon-theme;
   cursorSize = 20;
   colorScheme = colorSchemeFromPicture {
-    path = ./wallpapers/bathtub.jpg;
+    path = ./wallpapers/nord-glitch-circle.png;
     variant = "dark";
   };
 in

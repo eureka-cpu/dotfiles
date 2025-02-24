@@ -24,10 +24,9 @@
     networkmanagerapplet
     wl-clipboard
     (brave.override {
-      commandLineArgs = "--disable-gpu --enable-chrome-browser-cloud-management ";
+      commandLineArgs = "--disable-gpu --enable-chrome-browser-cloud-management";
     })
     kitty
-    # pwvucontrol
     # shell
     zsh
     oh-my-zsh
@@ -68,9 +67,6 @@
     image-roll
     celluloid
     auto-cpufreq
-    gnomeExtensions.pop-shell
-    gnomeExtensions.color-picker
-    gnomeExtensions.user-themes
     blender
     libreoffice
   ];
@@ -88,7 +84,7 @@
 
   programs.kitty = {
     enable = true;
-    theme = "Gruvbox Material Dark Medium";
+    theme = "Aquarium Dark";
     font = {
       name = "JetBrainsMono Nerd Font";
       size = 15;
@@ -105,7 +101,7 @@
     enable = true;
     defaultEditor = true;
     settings = {
-      theme = "gruvbox_material_dark_medium";
+      theme = "poimandres";
       editor = {
         cursor-shape = {
           insert = "underline";
@@ -138,9 +134,6 @@
     enable = true;
     enableCompletion = true;
     autosuggestion.enable = true;
-    shellAliases = {
-      swaydev = "nix develop github:fuellabs/fuel.nix#sway-dev -c zsh";
-    };
   };
   programs.zsh.oh-my-zsh = {
     enable = true;

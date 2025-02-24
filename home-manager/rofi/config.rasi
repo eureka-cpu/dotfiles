@@ -1,7 +1,6 @@
 configuration {
     show-icons: true;
     font: "JetBrainsMono Nerd Font 11";
-    // icon-theme: "Papirus-Dark";
 
     display-ssh:    "󰣀 :";
     display-run:    "󱓞 :";
@@ -13,4 +12,4 @@ configuration {
     dpi: 120;
 }
 
-@theme "gruvbox-material"
+@theme "kanabox-material"
