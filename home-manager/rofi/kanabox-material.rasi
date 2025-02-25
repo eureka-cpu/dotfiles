@@ -12,21 +12,17 @@
 
 	darkdarkblue:  #191B23; // dark blue
 
-	gruv7:  #FEFEFF; // white
+	white:  #FEFEFF; // white
 	darkgreyblue:  #222631;
 
-	red:     #585E69; // dark grey
 	yellow:  #545963;
-    blue:    #FEFEFF;
 
-    bluedark:   #585E69;
-    reddark:    #585E69;
-    yellowdark: #585E69;
+    darkgrey: #585E69;
 
     foreground:        @darkgreyblue;
     background-color:  transparent;
-    highlight:         underline bold #585E69;
-    transparent:       #222631; // @darkgreyblue;
+    highlight:         underline bold #585E69; // dark grey
+    transparent:       @darkgreyblue;
 }
 
 window {
@@ -52,7 +48,7 @@ message {
     padding: 10px;
     border:  0px 2px 2px 2px;
     border-color: @offwhite;
-    background-color: @gruv7;
+    background-color: @white;
 }
 
 inputbar {
@@ -89,7 +85,7 @@ element {
     border-radius: 10px;
     color: @foreground;
     text-color: @offwhite;
-    background-color: #D9D8DB;
+    background-color: #D9D8DB; // #D9D8DB I think this is light grey
 }
 
 element.normal.active {
@@ -97,15 +93,15 @@ element.normal.active {
 }
 
 element.selected.normal {
-    background-color: @blue;
+    background-color: @transparent;
 }
 
 element.selected.active {
-    background-color: @yellowdark;
+    background-color: @darkgrey;
 }
 
 element.alternate.normal {
-    background-color: @transparent;
+    background-color: @white;
 }
 
 element-text, element-icon {
