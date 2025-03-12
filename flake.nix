@@ -8,7 +8,6 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    musnix = { url = "github:musnix/musnix"; };
     helix-themes.url = "github:eureka-cpu/helix-themes.nix";
     nix-colors.url = "github:misterio77/nix-colors";
   };
@@ -17,7 +16,6 @@
     { nixpkgs
     , flake-utils
     , home-manager
-    , musnix
     , helix-themes
     , nix-colors
     , ...
@@ -58,10 +56,8 @@
                     users.${user} = users.${user}.systems.hosts.${host}.home-manager.modulePath;
                   };
                 }
-                musnix.nixosModules.musnix
               ];
               specialArgs = {
-                inherit musnix;
                 user = users.${user};
                 host = users.${user}.systems.hosts.${host};
               };

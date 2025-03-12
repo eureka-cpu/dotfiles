@@ -1,7 +1,4 @@
-{ pkgs, musnix, lib, user, ... }:
-let
-  gpu_drivers = [ "amdgpu" "radeon" ];
-in
+{ pkgs, lib, user, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -28,17 +25,8 @@ in
     "autovt@tty1".enable = false;
   };
 
-  # Extra GPU settings
-  boot.initrd.kernelModules = gpu_drivers;
-  services.xserver.videoDrivers = gpu_drivers;
-
   # Audio settings specific to this machine
   services.pipewire.jack.enable = true;
-  musnix = {
-    enable = true;
-    rtcqs.enable = true;
-    soundcardPciId = "03:00.1";
-  };
 
   # Enabling due to issues with Wayland & screen sharing
   xdg.portal.enable = true;
