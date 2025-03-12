@@ -6,6 +6,8 @@
     ../../nixos/laptop-configuration.nix
   ];
 
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
   boot.initrd.luks.devices."luks-db29127c-e05e-4a4e-8558-2df438c6c766".device = "/dev/disk/by-uuid/db29127c-e05e-4a4e-8558-2df438c6c766";
 
   # Enable the X11 windowing system.
