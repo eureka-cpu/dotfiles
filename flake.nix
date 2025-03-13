@@ -79,17 +79,17 @@
     # so there's no need to include `system`, except for when developing the parent
     # flake.nix itself, or working on one system configuration from another.
     flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in
-      {
-        devShells.default = pkgs.mkShell {
-          buildInputs = with pkgs; [
-            nil
-            nixpkgs-fmt
-          ];
-        };
+    let
+      pkgs = nixpkgs.legacyPackages.${system};
+    in
+    {
+      devShells.default = pkgs.mkShell {
+        buildInputs = with pkgs; [
+          nil
+          nixpkgs-fmt
+        ];
+      };
 
-        formatter = pkgs.nixpkgs-fmt;
-      });
+      formatter = pkgs.nixpkgs-fmt;
+    });
 }

@@ -21,7 +21,7 @@
   ];
 
   programs.kitty = {
-    theme = "Gruvbox Material Dark Medium";
+    themeFile = "GruvboxMaterialDarkMedium";
     font.name = "JetBrainsMono Nerd Font";
   };
   programs.helix.settings.theme = "gruvbox_material_dark_medium";

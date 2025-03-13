@@ -16,16 +16,7 @@
     displayManager.gdm.enable = true;
     desktopManager.gnome.enable = true;
   };
-  services.displayManager = {
-    # Enable automatic login for the user.
-    autoLogin.enable = lib.mkForce true;
-    autoLogin.user = user.name;
-  };
-  # Workaround for GNOME autologin
-  systemd.services = {
-    "getty@tty1".enable = false;
-    "autovt@tty1".enable = false;
-  };
+  services.gnome.gnome-keyring.enable = true;
 
   # Audio settings specific to this machine
   services.pipewire.jack.enable = true;

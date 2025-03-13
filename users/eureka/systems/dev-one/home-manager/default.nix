@@ -20,7 +20,7 @@
   ];
 
   programs.kitty = {
-    theme = "kanagawabones";
+    themeFile = "kanagawabones";
     font.name = "JetBrainsMono Nerd Font";
   };
 
