@@ -12,6 +12,8 @@
     zoom-us
     # studio
     inkscape
+    kdePackages.kdenlive
+    krita
     reaper
     discord
     blender
