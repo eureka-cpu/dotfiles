@@ -1,6 +1,6 @@
 { pkgs, nix-colors, ... }:
 let
-  inherit (nix-colors.lib-contrib { inherit pkgs; }) gtkThemeFromScheme;# colorSchemeFromPicture;
+  inherit (nix-colors.lib-contrib { inherit pkgs; }) gtkThemeFromScheme; # colorSchemeFromPicture;
   cursorName = "Adwaita";
   cursorPkg = pkgs.adwaita-icon-theme;
   cursorSize = 20;

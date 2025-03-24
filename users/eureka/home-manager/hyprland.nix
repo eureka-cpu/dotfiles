@@ -9,7 +9,7 @@
         mako = "${pkgs.mako}/bin/mako";
 
         homeDirectory = user.homeDirectory;
-        wallpaper = "${homeDirectory}/Wallpapers/gruvbox-mountain-village-6k.jpg";
+        wallpaper = "${homeDirectory}/Wallpapers/stairs.jpg";
         mynixui = "${homeDirectory}/Code/mynixui/eww";
         onStart = pkgs.writeShellScriptBin "start.sh" ''
           # start wallpaper daemon and set wallpaper
