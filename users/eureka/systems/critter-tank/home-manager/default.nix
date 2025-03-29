@@ -22,7 +22,10 @@
 
   programs.kitty = {
     themeFile = "GruvboxMaterialDarkMedium";
-    font.name = "JetBrainsMono Nerd Font";
+    font = {
+      name = "JetBrainsMono Nerd Font";
+      size = 15;
+    };
   };
   programs.helix.settings.theme = "gruvbox_material_dark_medium";
   programs.zsh.oh-my-zsh.theme = "dst";
