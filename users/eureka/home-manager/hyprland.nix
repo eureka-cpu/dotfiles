@@ -49,7 +49,7 @@
         # monitor = ",preferred,auto,auto";
         monitor = [
           "desc:HP Inc. HP Z32 CN42411R5T, preferred, auto, 1"
-          "desc:ESP eD15T(2022) 0x00011916, preferred, 0x0, 1.5, transform, 1"
+          "desc:ESP eD15T(2022) 0x00011916, preferred, 0x0, 1, transform, 1"
           "Unknown-1, disabled" # fix for upstream wl-roots bug
         ];
         workspace = "1, monitor:ESP eD15T(2022) 0x00011916, default:true, persistent:true";
