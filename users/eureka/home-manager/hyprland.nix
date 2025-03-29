@@ -1,19 +1,20 @@
-{ pkgs, user, ... }:
+{ pkgs, upstream-pkgs, user, ... }:
 {
   wayland.windowManager.hyprland = {
     enable = true;
     settings =
       let
+        swww-daemon = "${pkgs.swww}/bin/swww-daemon";
         swww = "${pkgs.swww}/bin/swww";
         eww = "${pkgs.eww}/bin/eww";
         mako = "${pkgs.mako}/bin/mako";
 
         homeDirectory = user.homeDirectory;
-        wallpaper = "${homeDirectory}/Wallpapers/stairs.jpg";
+        wallpaper = "${homeDirectory}/Wallpapers/wallhaven.jpg";
         mynixui = "${homeDirectory}/Code/mynixui/eww";
         onStart = pkgs.writeShellScriptBin "start.sh" ''
           # start wallpaper daemon and set wallpaper
-          sleep 2; ${swww} init & ${swww} img ${wallpaper} &
+          sleep 2; ${swww-daemon} & ${swww} img --resize crop ${wallpaper} &
 
           # start widget daemon and open widgets
           ${eww} daemon -c ${mynixui} & ${eww} open window -c ${mynixui} &
