@@ -1,4 +1,4 @@
-{ pkgs, user, host, ... }:
+{ config, pkgs, user, host, ... }:
 {
   # Bootloader.
   boot.loader = {
@@ -12,7 +12,7 @@
   };
 
   boot.kernelModules = [ "v4l2loopback" ];
-  boot.extraModulePackages = [ pkgs.linuxPackages.v4l2loopback ];
+  boot.extraModulePackages = [ config.boot.kernelPackages.v4l2loopback ];
 
   # Set your time zone.
   time.timeZone = "America/Los_Angeles";
@@ -54,22 +54,20 @@
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.${user.name} = {
     isNormalUser = true;
     description = user.description;
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "audio" ];
     shell = pkgs.zsh;
   };
   programs.zsh.enable = true;
@@ -87,30 +85,37 @@
   # Experimental nix features
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  nix.settings = {
+    extra-substituters = [ "https://bonsol.cachix.org" ];
+    extra-trusted-public-keys = [
+      "bonsol.cachix.org-1:yz7vi1rCPW1BpqoszdJvf08HZxQ/5gPTPxft4NnT74A="
+    ];
+  };
+
   environment.sessionVariables = {
+    QT_QPA_PLATFORM = "wayland"; # tell qt apps to use wayland
     WLR_NO_HARDWARE_CURSORS = "1"; # fixes disappearing cursor
     NIXOS_OZONE_WL = "1"; # tells electron apps to use wayland
   };
 
-  fonts.packages = with pkgs; [
-    (nerdfonts.override {
-      fonts = [
-        "JetBrainsMono"
-        "FiraCode"
-        "GeistMono"
-        "Hasklig"
-        "Iosevka"
-        "Lilex"
-        "Monoid"
-        "VictorMono"
-        "ZedMono"
-      ];
-    })
+  fonts.packages = with pkgs.nerd-fonts; [
+    fira-code
+    jetbrains-mono
+    # "GeistMono"
+    # "Hasklig"
+    # "Iosevka"
+    # "Lilex"
+    # "Monoid"
+    # "VictorMono"
+    # "ZedMono"
   ];
 
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 7d";
+  nix = {
+    package = pkgs.nixVersions.latest;
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
   };
 }

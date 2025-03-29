@@ -9,7 +9,11 @@
   home.packages = with pkgs; [
     # comms
     telegram-desktop
+    zoom-us
     # studio
+    inkscape
+    kdePackages.kdenlive
+    krita
     reaper
     discord
     blender
@@ -18,7 +22,7 @@
   ];
 
   programs.kitty = {
-    theme = "kanagawabones";
+    themeFile = "kanagawabones";
     font.name = "JetBrainsMono Nerd Font";
   };
 

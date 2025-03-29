@@ -1,13 +1,12 @@
 { pkgs, lib, user, ... }:
-let
-  gpu_drivers = [ "amdgpu" "radeon" ];
-in
 {
   imports = [
     ./hardware-configuration.nix
     ../../nixos/configuration.nix
     ../../nixos/laptop-configuration.nix
   ];
+
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   boot.initrd.luks.devices."luks-db29127c-e05e-4a4e-8558-2df438c6c766".device = "/dev/disk/by-uuid/db29127c-e05e-4a4e-8558-2df438c6c766";
 
@@ -17,20 +16,10 @@ in
     displayManager.gdm.enable = true;
     desktopManager.gnome.enable = true;
   };
-  services.displayManager = {
-    # Enable automatic login for the user.
-    autoLogin.enable = lib.mkForce true;
-    autoLogin.user = user.name;
-  };
-  # Workaround for GNOME autologin
-  systemd.services = {
-    "getty@tty1".enable = false;
-    "autovt@tty1".enable = false;
-  };
+  services.gnome.gnome-keyring.enable = true;
 
-  # Extra GPU settings
-  boot.initrd.kernelModules = gpu_drivers;
-  services.xserver.videoDrivers = gpu_drivers;
+  # Audio settings specific to this machine
+  services.pipewire.jack.enable = true;
 
   # Enabling due to issues with Wayland & screen sharing
   xdg.portal.enable = true;
@@ -40,12 +29,12 @@ in
   environment = {
     gnome.excludePackages = with pkgs; [
       cheese
-      gnome.gnome-music
+      gnome-music
       gnome-tour
       epiphany
       geary
       gnome-text-editor
-      gnome.gnome-contacts
+      gnome-contacts
       yelp
     ];
   };
