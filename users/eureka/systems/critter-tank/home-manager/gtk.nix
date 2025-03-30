@@ -1,4 +1,4 @@
-{ pkgs, pkgs-upstream, nix-colors, ... }:
+{ pkgs, nix-colors, ... }:
 let
   inherit (nix-colors.lib-contrib { inherit pkgs; }) gtkThemeFromScheme; # colorSchemeFromPicture;
   cursorName = "Adwaita";
@@ -20,7 +20,7 @@ in
 
     iconTheme = {
       name = "Gruvbox-Plus-Dark";
-      package = pkgs-upstream.gruvbox-plus-icons;
+      package = pkgs.gruvbox-plus-icons;
     };
     cursorTheme = {
       name = cursorName;

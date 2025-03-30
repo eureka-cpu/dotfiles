@@ -1,4 +1,4 @@
-{ pkgs, upstream-pkgs, user, ... }:
+{ pkgs, user, ... }:
 {
   wayland.windowManager.hyprland = {
     enable = true;

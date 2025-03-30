@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-upstream.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -15,7 +14,6 @@
 
   outputs =
     { nixpkgs
-    , nixpkgs-upstream
     , flake-utils
     , home-manager
     , helix-themes
@@ -53,7 +51,6 @@
                       inherit
                         helix-themes
                         nix-colors;
-                      pkgs-upstream = nixpkgs-upstream.legacyPackages.${system};
                       user = users.${user};
                     };
                     users.${user} = users.${user}.systems.hosts.${host}.home-manager.modulePath;
