@@ -10,7 +10,10 @@
   services.xserver.displayManager.gdm.enable = true;
 
   # Hyprland
-  programs.hyprland.enable = true;
+  programs.hyprland = {
+    enable = true;
+    package = with pkgs; builtins.trace "Built against Hyprland v${hyprland.version}" hyprland;
+  };
 
   # Nvidia settings
   services.xserver.videoDrivers = [ "nvidia" ];
