@@ -8,6 +8,11 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    swww = { # slow to release but there is a flake!
+      url = "github:LGFae/swww";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.utils.follows = "flake-utils";
+    };
     helix-themes.url = "github:eureka-cpu/helix-themes.nix";
     nix-colors.url = "github:misterio77/nix-colors";
   };
@@ -16,6 +21,7 @@
     { nixpkgs
     , flake-utils
     , home-manager
+    , swww
     , helix-themes
     , nix-colors
     , ...
@@ -51,6 +57,7 @@
                       inherit
                         helix-themes
                         nix-colors;
+                      swww-upstream = swww.packages.${system}.default;
                       user = users.${user};
                     };
                     users.${user} = users.${user}.systems.hosts.${host}.home-manager.modulePath;

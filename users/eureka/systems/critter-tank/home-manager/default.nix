@@ -1,4 +1,4 @@
-{ pkgs, nix-colors, ... }:
+{ pkgs, nix-colors, swww-upstream, ... }:
 {
   imports = [
     ./gtk.nix
@@ -13,7 +13,7 @@
     eww
     rofi-wayland
     mako
-    swww
+    swww-upstream
     xfce.thunar
     zathura
     image-roll

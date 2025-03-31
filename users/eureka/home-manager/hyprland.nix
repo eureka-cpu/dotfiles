@@ -1,11 +1,11 @@
-{ pkgs, user, ... }:
+{ pkgs, user, swww-upstream, ... }:
 {
   wayland.windowManager.hyprland = {
     enable = true;
     settings =
       let
-        swww-daemon = "${pkgs.swww}/bin/swww-daemon";
-        swww = "${pkgs.swww}/bin/swww";
+        swww-daemon = "${swww-upstream}/bin/swww-daemon";
+        swww = "${swww-upstream}/bin/swww";
         eww = "${pkgs.eww}/bin/eww";
         mako = "${pkgs.mako}/bin/mako";
 
