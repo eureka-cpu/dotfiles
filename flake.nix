@@ -8,7 +8,8 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    swww = { # slow to release but there is a flake!
+    swww = {
+      # slow to release but there is a flake!
       url = "github:LGFae/swww";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.utils.follows = "flake-utils";
