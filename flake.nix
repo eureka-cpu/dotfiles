@@ -91,6 +91,9 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in
     {
+      packages = {
+        hexcore-link = pkgs.callPackage ./users/eureka/home-manager/hexcore-link.nix { };
+      };
       devShells.default = pkgs.mkShell {
         buildInputs = with pkgs; [
           nil

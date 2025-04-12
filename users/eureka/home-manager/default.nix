@@ -7,6 +7,7 @@
   home.packages = with pkgs; [
     home-manager
     wl-clipboard
+    (pkgs.callPackage ./hexcore-link.nix { })
     # TODO: override to always use the latest version
     brave
     kitty
