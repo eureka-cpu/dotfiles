@@ -18,6 +18,7 @@
     zathura
     image-roll
     celluloid
+    pavucontrol
   ];
 
   programs.kitty = {
