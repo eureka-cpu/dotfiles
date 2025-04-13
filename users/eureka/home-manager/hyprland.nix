@@ -53,7 +53,10 @@
           "desc:ESP eD15T(2022) 0x00011916, preferred, 0x0, 1, transform, 1"
           "Unknown-1, disabled" # fix for upstream wl-roots bug
         ];
-        workspace = "1, monitor:ESP eD15T(2022) 0x00011916, default:true, persistent:true";
+        workspace = [
+          "1, monitor:desc:HP Inc. HP Z32 CN42411R5T, default:true, persistent:true"
+          "2, monitor:desc:ESP eD15T(2022) 0x00011916, default:true, persistent:true"
+        ];
 
         ###################
         ### MY PROGRAMS ###
@@ -77,11 +80,11 @@
         # exec-once = waybar & hyprpaper & firefox
         exec-once = [
           "${onStart}/bin/start.sh"
-          (openOnWorkspace 2 "$terminal")
-          (openOnWorkspace 2 "$browser")
           (openOnWorkspace 1 "$terminal")
-          "hyprctl dispatch workspace 2"
+          (openOnWorkspace 1 "$browser")
+          (openOnWorkspace 2 "$terminal")
           "hyprctl dispatch workspace 1"
+          "hyprctl dispatch workspace 2"
         ];
 
         #############################
