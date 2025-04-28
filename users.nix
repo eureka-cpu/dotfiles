@@ -61,5 +61,16 @@
         # "yabai"
       ];
     }
+    {
+      name = "dumbitch";
+      github = {
+        username = "Abbigator";
+        profile = "github.com/Abbigator";
+      };
+      description = "Abbigale Caldero";
+      hostl = [
+        "rog-strix"
+      ];
+    }
   ];
 }
