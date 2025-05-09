@@ -206,9 +206,9 @@ in
   nix = {
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
-      extra-substituters = [ "https://fuellabs.cachix.org" ];
+      extra-substituters = [ "https://cloud-scythe-labs.cachix.org" ];
       extra-trusted-public-keys = [
-        "fuellabs.cachix.org-1:3gOmll82VDbT7EggylzOVJ6dr0jgPVU/KMN6+Kf8qx8="
+        "cloud-scythe-labs.cachix.org-1:I+IM+x2gGlmNjUMZOsyHJpxIzmAi7XhZNmTVijGjsLw="
       ];
     };
   };
