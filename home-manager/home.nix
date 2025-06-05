@@ -78,7 +78,7 @@
     theme = "Aquarium Dark";
     font = {
       name = "JetBrainsMono Nerd Font";
-      size = 15;
+      size = 13;
     };
     settings = {
       # The window padding (in pts) (blank area between the text and the window border).
