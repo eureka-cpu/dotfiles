@@ -69,9 +69,7 @@
   };
   programs.hyprland.enable = true;
 
-  hardware.graphics = {
-    enable = true; # Must be enabled
-  };
+  hardware.graphics.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -82,6 +80,7 @@
   services.actkbd = {
     enable = true;
     bindings = [
+      # Monitor brightness
       { keys = [225]; events = ["key"]; command = "/run/current-system/sw/bin/light -A 5"; }
       { keys = [224]; events = ["key"]; command = "/run/current-system/sw/bin/light -U 5"; }
     ];

@@ -60,6 +60,7 @@
     kitty-themes
     auto-cpufreq
     libreoffice
+    playerctl
   ];
   
   xdg.configFile = {
