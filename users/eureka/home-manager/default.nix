@@ -42,6 +42,7 @@
     obs-studio
     ffmpeg # video formatter
     gphoto2
+    spotify
   ];
 
   programs.kitty = {
