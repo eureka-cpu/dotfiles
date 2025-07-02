@@ -14,4 +14,4 @@ I also have some non-nixos configurations for nix-darwin and other linux partiti
 
 What the outcome might look like depending on which wallpaper/colors/topbar is used:
 
-<img src="rice/critter-tank.png" alt="critter-tank-gruvbox" width="200"/>
+<img src="rice/critter-tank.png" alt="critter-tank-gruvbox" width="600"/>
