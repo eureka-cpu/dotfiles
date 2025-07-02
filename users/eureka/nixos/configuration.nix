@@ -90,11 +90,9 @@
 
   nix.settings = {
     extra-substituters = [
-      "https://bonsol.cachix.org"
       "https://cloud-scythe-labs.cachix.org"
     ];
     extra-trusted-public-keys = [
-      "bonsol.cachix.org-1:yz7vi1rCPW1BpqoszdJvf08HZxQ/5gPTPxft4NnT74A="
       "cloud-scythe-labs.cachix.org-1:I+IM+x2gGlmNjUMZOsyHJpxIzmAi7XhZNmTVijGjsLw="
     ];
   };

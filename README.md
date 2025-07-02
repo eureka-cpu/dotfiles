@@ -1,52 +1,17 @@
-# NixOS x Hyprland x eww
+# eureka's dotfiles
 
-The end goal of this project is to eventually have a
-desktop environment that can be imported from a nix flake.
-I'd like to be able to import the flake and have the
-desktop environment produced with just one line. At
-the moment, my setup is more just an amalgamation of
-my personal preferences and packages I use daily. Once
-this project reaches the point of a fully fleshed out
-environment with widgets, etc, I'll move it into its
-own repository and have my dotfiles just be the remaining
-nixpkgs that I use for my systems.
+Welcome, these are the dotfiles for my varies nix/nixos systems. The idea is that modules and configuration
+options can be shared between systems as needed and between declared users. The outcome may look different
+depending on which desktop environment is chosen.
 
-## Motivation
+Currently the following desktop environments are configured for my systems:
 
-There are a ton of great options to look at for creating
-your personalized dotfiles, which is a double-edged sword.
-It can be extremely hard to find everything you're looking
-for. In a way, I'd like this to be a very simple and modular
-nix-box so to speak. You can drop in the flake and it will
-load up the widgets and desktop environment, as if you were
-using any other; Gnome, etc. This is not only an experiment
-for my own education of the nix ecosystem, but also for posterity,
-for anyone who wants to do the same, to have an example of
-what it might look like.
+- Gnome ([dev-one] HP Dev One Notebook)
+- Hyprland ([tensorbook] Razer Blade 15 X Lambda Tensorbook 2022 with NVIDIA GeForce RTX 3070Ti, [critter-tank] MS-7D73 -- AMD Ryzen 9 7950X3D with NVIDIA GeForce RTX 4080 discrete and AMD Raphael integrated graphics, [yabai] MacBook Pro M1)
+- Sway ([xie] Lenovo Yoga Slim 7x -- Snapdragon X Elite X1E-78-100) -- this one is a bit experimental still
 
-## Progress
+I also have some non-nixos configurations for nix-darwin and other linux partitions that are not part of this repository as of writing this.
 
-I'm creating this for my own use cases, and I don't have need
-of many widgets, but I would like to eventually expand upon
-this list.
+What the outcome might look like depending on which wallpaper/colors/topbar is used:
 
-- [x] setup
-  - [x] main flake
-- [x] nix-colors
-- [x] widgets (eww)
-  - [x] top-bar
-  - [x] launcher
-  - [x] powermenu
-
-- [ ] dots
-  - [x] home-manager
-  - [ ] snowfall
-  - [x] hyprland.conf
-  - [x] start.sh
-
-- [ ] hyprland
-  - [ ] plugins
-    - [ ] hyprlock
-    - [ ] hyprcursor
-  - [x] home-manager module
-  - [x] nix hyprland.conf
+<img src="rice/critter-tank.png" alt="critter-tank-gruvbox" width="200"/>
