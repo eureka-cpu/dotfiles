@@ -88,6 +88,17 @@
         };
       };
     };
+    languages = {
+      language-server.buf = {
+        command = "${pkgs.buf}/bin/buf";
+        args = [ "beta" "lsp" ];
+      };
+      language = [{
+        name = "protobuf";
+        auto-format = true;
+        language-servers = [ "buf" ];
+      }];
+    };
     themes = helix-themes.outputs.themes;
   };
 
