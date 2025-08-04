@@ -75,6 +75,11 @@
   };
   programs.zsh.enable = true;
   virtualisation.docker.enable = true;
+  services.tailscale = {
+    enable = true;
+    useRoutingFeatures = "client";
+    openFirewall = true;
+  };
 
   # Enable automatic login for the user.
   services.displayManager.autoLogin = {
