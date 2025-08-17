@@ -17,6 +17,18 @@
     options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
   '';
   security.polkit.enable = true;
+  services.gnome.gnome-keyring.enable = true;
+  programs.seahorse.enable = true;
+  security.pam.services = {
+    gdm.enableGnomeKeyring = true;
+    gdm-password.enableGnomeKeyring = true;
+    login.enableGnomeKeyring = true;
+  };
+  services.dbus.packages = [ pkgs.gnome-keyring pkgs.gcr ];
+  services.xserver.displayManager.sessionCommands = ''
+    eval $(gnome-keyring-daemon --start --daemonize --components=secrets)
+  '';
+
 
   # Set your time zone.
   time.timeZone = "America/Los_Angeles";

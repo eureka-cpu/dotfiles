@@ -16,7 +16,6 @@
     displayManager.gdm.enable = true;
     desktopManager.gnome.enable = true;
   };
-  services.gnome.gnome-keyring.enable = true;
 
   # Audio settings specific to this machine
   services.pipewire.jack.enable = true;

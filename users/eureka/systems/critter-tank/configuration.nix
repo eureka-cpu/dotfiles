@@ -14,17 +14,6 @@
     enable = true;
     package = with pkgs; builtins.trace "Built against Hyprland v${hyprland.version}" hyprland;
   };
-  services.gnome.gnome-keyring.enable = true;
-  programs.seahorse.enable = true;
-  security.pam.services = {
-    gdm.enableGnomeKeyring = true;
-    gdm-password.enableGnomeKeyring = true;
-    login.enableGnomeKeyring = true;
-  };
-  services.dbus.packages = [ pkgs.gnome-keyring pkgs.gcr ];
-  services.xserver.displayManager.sessionCommands = ''
-    eval $(gnome-keyring-daemon --start --daemonize --components=secrets)
-  '';
 
   # Nvidia settings
   services.xserver.videoDrivers = [ "nvidia" ];
