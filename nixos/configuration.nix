@@ -53,18 +53,18 @@ in
     desktopManager = {
       xterm.enable = false;
     };
-    displayManager.gdm.enable = true;
+    # displayManager.gdm.enable = true;
   };
-  programs.hyprland.enable = true;
+  # programs.hyprland.enable = true;
 
   # For some reason this still tries to build from source and my user session crashes.
   # 
-  # xdg.portal.extraPortals = lib.mkForce (with pkgs; [
-  #   xdg-desktop-portal-cosmic
-  # ]);
-  # services.displayManager.cosmic-greeter.enable = true;
-  # services.desktopManager.cosmic.enable = true;
-  # services.power-profiles-daemon.enable = false; # using autocpu-freq
+  xdg.portal.extraPortals = lib.mkForce (with pkgs; [
+    xdg-desktop-portal-cosmic
+  ]);
+  services.displayManager.cosmic-greeter.enable = true;
+  services.desktopManager.cosmic.enable = true;
+  services.power-profiles-daemon.enable = false; # using autocpu-freq
 
   # Nvidia/Intel GPU Settings
   boot = {
