@@ -15,6 +15,7 @@
     home-manager
     nvtopPackages.full
     # Hyprland
+    better-control
     grim
     eww
     rofi-wayland
@@ -38,9 +39,9 @@
     helix
     (vscode-with-extensions.override {
       vscodeExtensions = with vscode-extensions; [
-        bbenoist.nix # nix syntax highlighting
+        bbenoist.nix
         rust-lang.rust-analyzer
-        vadimcn.vscode-lldb # lldb for rust
+        vadimcn.vscode-lldb
         pkief.material-product-icons
         tamasfe.even-better-toml
         esbenp.prettier-vscode
@@ -50,7 +51,7 @@
         dracula-theme.theme-dracula
         zhuangtongfa.material-theme
         file-icons.file-icons
-        eamodio.gitlens # git lens
+        eamodio.gitlens
       ];
     })
     nil
@@ -58,7 +59,7 @@
     # studio
     obs-studio
     reaper
-    ffmpeg # video formatter
+    ffmpeg
     v4l-utils
     gphoto2
     davinci-resolve

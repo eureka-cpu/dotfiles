@@ -7,11 +7,15 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-cosmic = {
+      url = "github:lilyinstarlight/nixos-cosmic?ref=pull/863/head";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     helix-themes.url = "github:eureka-cpu/helix-themes.nix";
     nix-colors.url = "github:misterio77/nix-colors";
   };
 
-  outputs = { nixpkgs, home-manager, ... } @inputs:
+  outputs = { nixpkgs, home-manager, nixos-cosmic, ... }@inputs:
   let
     system = "x86_64-linux";
   in
@@ -21,6 +25,7 @@
         inherit system;
         modules = [
           ./nixos/configuration.nix
+          nixos-cosmic.nixosModules.default
           home-manager.nixosModules.home-manager
           {
             home-manager = {

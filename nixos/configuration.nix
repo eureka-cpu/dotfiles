@@ -57,6 +57,15 @@ in
   };
   programs.hyprland.enable = true;
 
+  # For some reason this still tries to build from source and my user session crashes.
+  # 
+  # xdg.portal.extraPortals = lib.mkForce (with pkgs; [
+  #   xdg-desktop-portal-cosmic
+  # ]);
+  # services.displayManager.cosmic-greeter.enable = true;
+  # services.desktopManager.cosmic.enable = true;
+  # services.power-profiles-daemon.enable = false; # using autocpu-freq
+
   # Nvidia/Intel GPU Settings
   boot = {
     # kernelParams = [ "acpi_rev_override" "mem_sleep_default=deep" "intel_iommu=igfx_off" "nvidia-drm.modeset=1" ];
@@ -110,35 +119,6 @@ in
     };
   };
   specialisation = {
-    prime-offload.configuration = {
-      system.nixos.tags = [ "prime-offload" ];
-      hardware.nvidia = {
-        prime = {
-          offload = {
-            enable = lib.mkForce true;
-            enableOffloadCmd = lib.mkForce true;
-          };
-          sync.enable = lib.mkForce false;
-          intelBusId = intel_bus;
-          nvidiaBusId = nvidia_bus;
-        };
-      };
-    };
-    prime-reverse-sync.configuration = {
-      system.nixos.tags = [ "prime-reverse-sync" ];
-      hardware.nvidia = {
-        prime = {
-          reverseSync.enable = lib.mkForce true;
-          sync.enable = lib.mkForce false;
-          intelBusId = intel_bus;
-          nvidiaBusId = nvidia_bus;
-        };
-      };
-    };
-    blacklist-intel.configuration = {
-      system.nixos.tags = [ "blacklist-intel" ];
-      boot.kernelParams = [ "module_blacklist=i915" ];
-    };
     blacklist-nvidia.configuration = {
       system.nixos.tags = [ "blacklist-nvidia" ];
       boot = {
@@ -206,9 +186,13 @@ in
   nix = {
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
-      extra-substituters = [ "https://cloud-scythe-labs.cachix.org" ];
+      extra-substituters = [
+        "https://cloud-scythe-labs.cachix.org"
+        "https://cosmic.cachix.org/" 
+      ];
       extra-trusted-public-keys = [
         "cloud-scythe-labs.cachix.org-1:I+IM+x2gGlmNjUMZOsyHJpxIzmAi7XhZNmTVijGjsLw="
+        "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE="
       ];
     };
   };
