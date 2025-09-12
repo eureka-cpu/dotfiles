@@ -14,15 +14,6 @@
   home.packages = with pkgs; [
     home-manager
     nvtopPackages.full
-    # Hyprland
-    better-control
-    grim
-    eww
-    rofi-wayland
-    mako
-    swww
-    xfce.thunar
-    networkmanagerapplet
     wl-clipboard
     (brave.override {
       commandLineArgs = "--disable-gpu --enable-chrome-browser-cloud-management";
@@ -72,20 +63,9 @@
     libreoffice
   ];
   
-  xdg.configFile = {
-    "hypr" = {
-      source = ./hypr;
-      recursive = true;
-    };
-    "rofi" = {
-      source = ./rofi;
-      recursive = true;
-    };
-  };
-
   programs.kitty = {
     enable = true;
-    theme = "Aquarium Dark";
+    theme = "nord";
     font = {
       name = "JetBrainsMono Nerd Font";
       size = 15;
@@ -102,7 +82,7 @@
     enable = true;
     defaultEditor = true;
     settings = {
-      theme = "poimandres";
+      theme = "nord";
       editor = {
         cursor-shape = {
           insert = "underline";
