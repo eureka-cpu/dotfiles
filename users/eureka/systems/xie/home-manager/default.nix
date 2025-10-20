@@ -15,14 +15,14 @@
   ];
 
   programs.kitty = {
-    theme = "Catppuccin-Mocha";
+    themeFile = "rose-pine";
     font = {
       name = "JetBrainsMono Nerd Font";
       size = 14;
     };
   };
 
-  programs.helix.settings.theme = "catppuccin_mocha";
+  programs.helix.settings.theme = "rose_pine";
 
   # zsh & oh-my-zsh configurations
   programs.zsh.oh-my-zsh.theme = "dst";
