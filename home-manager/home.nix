@@ -16,7 +16,7 @@
     # Hyprland
     grim
     eww
-    rofi-wayland
+    rofi
     mako
     swww
     xfce.thunar

@@ -12,12 +12,9 @@
     options hid_apple iso_layout=0
   '';
   hardware.asahi = {
-    withRust = true;
     extractPeripheralFirmware = true;
     peripheralFirmwareDirectory = ./firmware;
     setupAsahiSound = true;
-    useExperimentalGPUDriver = true;
-    experimentalGPUInstallMode = "replace";
   };
   
   boot.binfmt.emulatedSystems = [
@@ -65,7 +62,6 @@
     desktopManager = {
       xterm.enable = false;
     };
-    displayManager.gdm.enable = true;
   };
   programs.hyprland.enable = true;
 
