@@ -61,5 +61,17 @@
         # "yabai"
       ];
     }
+    {
+      name = "andrewvious";
+      github = {
+        username = "andrewvious";
+        profile = "github.com/andrewvious";
+      };
+      description = "Andrew O'Brien";
+      hostl = [
+        "asus-rog"
+        "dev-one"
+      ];
+    }
   ];
 }
