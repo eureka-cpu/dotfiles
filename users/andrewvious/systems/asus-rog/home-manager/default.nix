@@ -3,12 +3,12 @@
   imports = [
     ./gtk.nix
     ../../../home-manager/default.nix
+    ../../../home-manager/xfce.nix
   ];
 
   home.packages = with pkgs; [
     nvtopPackages.full
     melonDS
-    xfce.thunar
   ];
 
   programs.kitty = {

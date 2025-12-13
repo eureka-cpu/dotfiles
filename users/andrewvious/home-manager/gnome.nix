@@ -7,7 +7,7 @@
     gnomeExtensions.user-themes
     xdg-desktop-portal
     xdg-desktop-portal-gnome
-  ]
+  ];
 
   dconf.settings = {
     # shell extensions

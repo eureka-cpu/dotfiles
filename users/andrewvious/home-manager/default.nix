@@ -1,5 +1,4 @@
 { pkgs, lib, helix-themes, user, ... }:
-
 {
   home.username = user.name;
   home.homeDirectory = user.homeDirectory;
@@ -36,7 +35,6 @@
         ms-python.python
       ];
     })
-    nil # nix lsp for Helix
     # studio
     obs-studio
     ffmpeg # video formatter
@@ -84,45 +82,26 @@
           display-inlay-hints = true;
         };
       };
-    languages = {
-      language-server.buf = {
-        command = "${pkgs.buf}/bin/buf";
-        args = [ "beta" "lsp" ];
-      };
-      language = [{
-        name = "protobuf";
-        auto-format = true;
-        language-servers = [ "buf" ];
-      }];
-    };
+     };
     themes = helix-themes.outputs.themes;
   };
 
   # zsh & oh-my-zsh configurations
-  programs = {
-    zsh = {
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    autosuggestion.enable = true;
+    oh-my-zsh = {
       enable = true;
-      enableCompletion = true;
-      autosuggestion = {
-        enable = true;
-      };
-      shellAliases = {
-        swaydev = "nix develop github:fuellabs/fuel.nix#sway-dev -c zsh";
-      };
-      oh-my-zsh = {
-        enable = true;
-        plugins = [ "git" ];
-        theme = "dst";
-      };
+      plugins = [ "git" ];
     };
-
-    git = {
-      enable = true;
-      userName = "andrewvious";
-      userEmail = "ohbandrew@gmail.com";
-    };
-
-    # Let Home Manager install and manage itself.
-    home-manager.enable = true;
   };
+  programs.git = {
+    enable = true;
+    userName = "andrewvious";
+    userEmail = "ohbandrew@gmail.com";
+  };
+
+  # Let Home Manager install and manage itself.
+  programs.home-manager.enable = true;
 }
