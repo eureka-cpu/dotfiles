@@ -1,5 +1,10 @@
-{ pkgs, ... }:
 {
+ pkgs,
+ ...
+}: let
+  xfcePath = ../xfce;
+  xfceXml = "{$xfcePath}";
+in {
   imports = [
     ./gtk.nix
     ../../../home-manager/default.nix
@@ -19,6 +24,14 @@
   programs.helix.settings.theme = "kanabox_default";
 
   programs.zsh.oh-my-zsh.theme = "dst";
+
+  xdg.configFile = {
+    "xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml".source = "{xfceXml}/xfce4-keyboard-shortcuts.xml";
+  };
+
+  home.activation.applyXfceTweaks = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    ${pkgs.xfce.xfdesktop}/bin/xfdesktop --reload
+  '';
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release

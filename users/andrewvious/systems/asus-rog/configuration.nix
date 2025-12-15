@@ -6,8 +6,19 @@
   ];
 
   # Enable the X11 windowing system.
-  services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.desktopManager.xfce.enable = true;
+  services.xserver = {
+    enable = true;
+    desktopManager.xfce.enable = true;
+  };
+
+  services.xserver.displayManager.lightdm.enable = false;
+
+  services.displayManager.sddm = {
+    enable = true;
+    package = pkgs.qt6Packages.sddm;
+  };
+
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 
   # Nvidia settings
   services.xserver.videoDrivers = [ "nvidia" ];
