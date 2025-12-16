@@ -125,13 +125,6 @@
     fira-code
     jetbrains-mono
     _0xproto
-    # "GeistMono"
-    # "Hasklig"
-    # "Iosevka"
-    # "Lilex"
-    # "Monoid"
-    # "VictorMono"
-    # "ZedMono"
   ];
 
   nix = {

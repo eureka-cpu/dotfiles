@@ -6,19 +6,13 @@
   ];
 
   # Enable the X11 windowing system.
-  services.xserver = {
+  services.xserver.displayManager.gdm.enable = true;
+
+  # Hyprland
+  programs.hyprland = {
     enable = true;
-    desktopManager.xfce.enable = true;
+    package = with pkgs; builtins.trace "Built against Hyprland v${hyprland.version}" hyprland;
   };
-
-  services.xserver.displayManager.lightdm.enable = false;
-
-  services.displayManager.sddm = {
-    enable = true;
-    package = pkgs.qt6Packages.sddm;
-  };
-
-  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 
   # Nvidia settings
   services.xserver.videoDrivers = [ "nvidia" ];

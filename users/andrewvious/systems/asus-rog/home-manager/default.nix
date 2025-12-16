@@ -1,19 +1,23 @@
+{ pkgs, lib, swww-upstream, ... }:
 {
- pkgs,
- ...
-}: let
-  xfcePath = ../xfce;
-  xfceXml = "{$xfcePath}";
-in {
   imports = [
     ./gtk.nix
     ../../../home-manager/default.nix
-    ../../../home-manager/xfce.nix
+    ../../../home-manager/hyprland.nix
   ];
 
   home.packages = with pkgs; [
     nvtopPackages.full
     melonDS
+    grim
+    rofi-wayland
+    mako
+    swww-upstream
+    xfce.thunar
+    zathura
+    image-roll
+    celluloid
+    pavucontrol
   ];
 
   programs.kitty = {
@@ -25,13 +29,14 @@ in {
 
   programs.zsh.oh-my-zsh.theme = "dst";
 
-  xdg.configFile = {
-    "xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml".source = "{xfceXml}/xfce4-keyboard-shortcuts.xml";
+  xdg.mimeApps.defaultApplications = {
+    "text/plain" = [ "helix.desktop" ];
+    "application/pdf" = [ "zathura.desktop" ];
+    "image/*" = [ "image-roll.desktop" ];
+    "video/png" = [ "celluloid.desktop" ];
+    "video/jpg" = [ "celluloid.desktop" ];
+    "video/*" = [ "celluloid.desktop" ];
   };
-
-  home.activation.applyXfceTweaks = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    ${pkgs.xfce.xfdesktop}/bin/xfdesktop --reload
-  '';
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release

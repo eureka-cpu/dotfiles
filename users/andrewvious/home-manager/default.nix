@@ -50,8 +50,17 @@
     enable = true;
     theme = "kanagawabones";
     font.name = "JetBrainsMono Nerd Font";
+    shellIntegration = {
+      mode = "no-cursor";
+      enableZshIntegration = true;
+    };
     settings = {
+      # The window padding (in pts) (blank area between the text and the window border).
+      # A single value sets all four sides. Two values set the vertical and horizontal sides.
+      # Three values set top, horizontal and bottom. Four values set top, right, bottom and left.
+      window_padding_width = "8 0 8 8"; # extra padding for oh-my-zsh dst theme
       hide_window_decorations = true;
+      cursor_shape = "block";
     };
   };
 
