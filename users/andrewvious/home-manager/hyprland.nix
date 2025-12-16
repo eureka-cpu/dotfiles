@@ -45,7 +45,7 @@
         # monitor = ",preferred,auto,auto";
         monitor = [
           "desc:LG Electronics LG ULTRAWIDE 0x000311FF, 2560x1080@99.94Hz, 0x0, 1"
-          "desc:Microstep Optix G27C2 0000000000001, 1920x1080@120.00Hz, auto, 1"
+          "desc:Microstep Optix G27C2 0000000000001, 1920x1080@120.00Hz, 2560x380, 1"
           "Unknown-1, disabled" # fix for upstream wl-roots bug
         ];
         workspace = [
