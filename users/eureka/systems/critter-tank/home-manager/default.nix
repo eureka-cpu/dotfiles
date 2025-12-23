@@ -11,7 +11,7 @@
     nvtopPackages.full
     grim
     eww
-    rofi-wayland
+    rofi
     mako
     swww-upstream
     xfce.thunar

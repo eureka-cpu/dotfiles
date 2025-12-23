@@ -1,16 +1,17 @@
-{ pkgs, lib, swww-upstream, ... }:
+{ pkgs, swww-upstream, ... }:
 {
   imports = [
     ./gtk.nix
     ../../../home-manager/default.nix
     ../../../home-manager/hyprland.nix
+    ../../../home-manager/waybar.nix
   ];
 
   home.packages = with pkgs; [
     nvtopPackages.full
     melonDS
     grim
-    rofi-wayland
+    rofi
     mako
     swww-upstream
     xfce.thunar
@@ -21,11 +22,11 @@
   ];
 
   programs.kitty = {
-    themeFile = "kanagawabones";
+    themeFile = "zenburned";
     font.name = "JetBrainsMono Nerd Font";
   };
 
-  programs.helix.settings.theme = "kanabox_default";
+  programs.helix.settings.theme = "zenburn";
 
   programs.zsh.oh-my-zsh.theme = "dst";
 
