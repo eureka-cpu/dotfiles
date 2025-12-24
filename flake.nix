@@ -10,9 +10,7 @@
     };
     swww = {
       # slow to release but there is a flake!
-      url = "github:LGFae/swww";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.utils.follows = "flake-utils";
+      url = "git+https://codeberg.org/LGFae/awww";
     };
     helix-themes.url = "github:eureka-cpu/helix-themes.nix";
     nix-colors.url = "github:misterio77/nix-colors";

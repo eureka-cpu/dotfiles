@@ -4,8 +4,8 @@
     enable = true;
     settings =
       let
-        swww-daemon = "${swww-upstream}/bin/swww-daemon";
-        swww = "${swww-upstream}/bin/swww";
+        swww-daemon = "${swww-upstream}/bin/awww-daemon";
+        swww = "${swww-upstream}/bin/awww";
         mako = "${pkgs.mako}/bin/mako";
 
         homeDirectory = user.homeDirectory;
@@ -75,11 +75,10 @@
         # exec-once = waybar & hyprpaper & firefox
         exec-once = [
           "${onStart}/bin/start.sh"
-          # (openOnWorkspace 1 "$terminal")
-          # (openOnWorkspace 1 "$browser")
-          # (openOnWorkspace 2 "$terminal")
-          # "hyprctl dispatch workspace 1"
-          # "hyprctl dispatch workspace 2"
+          (openOnWorkspace 1 "$terminal")
+          (openOnWorkspace 2 "$browser")
+          "hyprctl dispatch workspace 2"
+          "hyprctl dispatch workspace 1"
         ];
 
         #############################
@@ -162,7 +161,7 @@
 
         # https://wiki.hyprland.org/Configuring/Variables/#misc
         misc = {
-          force_default_wallpaper = 1; # Set to 0 or 1 to disable the anime mascot wallpapers
+          force_default_wallpaper = 0; # Set to 0 or 1 to disable the anime mascot wallpapers
           disable_hyprland_logo = false; # If true disables the random hyprland logo / anime girl background. :(
         };
 
@@ -183,11 +182,6 @@
           touchpad = {
             natural_scroll = true;
           };
-        };
-
-        # https://wiki.hyprland.org/Configuring/Variables/#gestures
-        gestures = {
-          workspace_swipe = false;
         };
 
         # Example per-device config
