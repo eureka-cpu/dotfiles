@@ -1,4 +1,4 @@
-{ pkgs, lib, helix-themes, user, ... }:
+{ pkgs, helix-themes, user, ... }:
 {
   home.username = user.name;
   home.homeDirectory = user.homeDirectory;

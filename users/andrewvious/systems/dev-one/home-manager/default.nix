@@ -4,6 +4,7 @@
     ./gtk.nix
     ../../../home-manager/gnome.nix
     ../../../home-manager/default.nix
+    ../../../home-manager/brave-torrent.nix
   ];
 
   home.packages = with pkgs; [
@@ -21,6 +22,8 @@
     steam
     libreoffice
   ];
+
+  braveTorrent.enable = true;
 
   programs.kitty = {
     themeFile = "kanagawabones";
