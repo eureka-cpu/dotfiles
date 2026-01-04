@@ -86,8 +86,10 @@
   };
   programs.git = {
     enable = true;
-    userName = "andrewvious";
-    userEmail = "ohbandrew@gmail.com";
+    settings.user = {
+      name = "andrewvious";
+      email = "ohbandrew@gmail.com";
+    };
   };
 
   # Let Home Manager install and manage itself.

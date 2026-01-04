@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -6,13 +6,21 @@
   ];
 
   # Enable the X11 windowing system.
-  services.xserver.displayManager.gdm.enable = true;
+  services.displayManager.gdm.enable = true;
 
   # Hyprland
   programs.hyprland = {
     enable = true;
     package = with pkgs; builtins.trace "Built against Hyprland v${hyprland.version}" hyprland;
   };
+
+  # Enable automatic login for the user.
+  services.displayManager.autoLogin.enable = true;
+  services.displayManager.autoLogin.user = "andrewvious";
+
+  # Workaround for GNOME autologin
+  systemd.services."getty@tty1".enable = false;
+  systemd.services."autovt@tty1".enable = false;
 
   # Nvidia settings
   services.xserver.videoDrivers = [ "nvidia" ];

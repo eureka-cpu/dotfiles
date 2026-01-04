@@ -22,11 +22,11 @@
   ];
 
   programs.kitty = {
-    themeFile = "zenburned";
+    themeFile = "spaceduck";
     font.name = "JetBrainsMono Nerd Font";
   };
 
-  programs.helix.settings.theme = "zenburn";
+  programs.helix.settings.theme = "base16_default";
 
   programs.zsh.oh-my-zsh.theme = "dst";
 
