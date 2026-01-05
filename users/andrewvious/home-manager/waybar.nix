@@ -11,7 +11,7 @@ in
       mainBar = {
         layer = "top";
         position = "top";
-        height = 30;
+        height = 26;
         spacing = 12;
 
         modules-left = [
@@ -24,11 +24,10 @@ in
         ];
 
         modules-right = [
-          "pulseaudio"
           "network"
+          "pulseaudio"
           "cpu"
           "memory"
-          "battery"
           "tray"
         ];
 
@@ -74,47 +73,98 @@ in
         		"on-scroll-down"= "shift_down";
         	};
         };
-
+        
+        network = {
+          format-ethernet = "󰈀";
+          format-wifi = "󰖩";
+          format-disconnected = "󰖪";
+          tooltip = "{ip}";
+        };
+        
         pulseaudio = {
-          format = "{volume}% {icon}";
+          format = "{icon}";
           format-muted = "󰝟";
           format-icons = {
             default = [ "󰕿" "󰖀" "󰕾" ];
           };
+          tooltip = "{volume}%";
         };
-
-        network = {
-          format-ethernet = "󰈀";
-          format-disconnected = "󰖪";
+        
+        cpu = {
+          format = "󰻠";
+          max-value = 100;
+          interval = 1;
+          graph = true;
+          tooltip = "{usage}%";
         };
+        
+        memory = {
+          format = "󰍛";
+          max-value = 100;
+          interval = 2;
+          graph = true;
+          tooltip = "{used} / {total} GB";
+        };
+        
+        tray = {};
       };
     };
 
     style = ''
       * {
         font-family: JetBrainsMono Nerd Font;
-        font-size: 12px;
       }
 
       window#waybar {
-        background: ${colors.gray1};
-        color: ${colors.gray4};
+        background: ${colors.bg};
+        color: ${colors.fg};
+        border-bottom: 2px solid ${colors.border};
       }
 
-      #workspaces button {
-        color: ${colors.gray3};
+      #waybar .modules-left widget,
+      #waybar .modules-center widget {
+        background: ${colors.moduleBg};
+        color: ${colors.fg};
+        padding: 6px 6px;
+        margin: 4px 4px;
+        border-radius: 8px;
+        font-size: 12px;
+      }
+      
+      #waybar .modules-right > widget {
+        background: ${colors.moduleBg};
+        color: ${colors.fg};
+        border-radius: 6px;
+        padding: 4px 10px;
+        margin: 0px 6px;
+        transition: background 0.2s;
+        font-size: 20px;
       }
 
-      #workspace button.active {
-        color: ${colors.gray4};
+      #waybar .modules-right {
+        padding-right: 12px;
       }
 
-      #workspace button.urgent {
-        color: ${colors.gray2};
+      #waybar .modules-right > widget > label {
+        color: ${colors.fg};
+        padding: 4px 10px;
       }
-
-      #clock {
-        padding: 0 10px;
+      
+      #waybar .modules-right > widget:hover {
+        background: ${colors.accentSecondary};
+      }
+      
+      #cpu > bar,
+      #memory > bar {
+        background-color: ${colors.accentPrimary};
+        border-radius: 3px;
+        margin-top: 3px;
+        margin-bottom: 3px;
+      }
+      
+      #tray {
+        background: transparent;
+        margin-left: 10px;
       }
     '';
   };

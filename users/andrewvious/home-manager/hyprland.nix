@@ -1,4 +1,7 @@
-{ pkgs, user, swww-upstream, ... }:
+{ pkgs, config, user, swww-upstream, ... }:
+let
+  colors = import ./colors.nix;
+in
 {
   wayland.windowManager.hyprland = {
     enable = true;
@@ -7,9 +10,9 @@
         swww-daemon = "${swww-upstream}/bin/awww-daemon";
         swww = "${swww-upstream}/bin/awww";
         mako = "${pkgs.mako}/bin/mako";
-
         homeDirectory = user.homeDirectory;
-        wallpaper = "${homeDirectory}/Wallpapers/wallhaven.jpg";
+        wallpaper = "${homeDirectory}/Wallpapers/wallhaven-blue-abstract.jpg";
+        
         onStart = pkgs.writeShellScriptBin "start.sh" ''
           # start wallpaper daemon and set wallpaper
           ${swww-daemon} & ${swww} img --resize crop ${wallpaper} &
@@ -17,6 +20,22 @@
           # start notification daemon
           ${mako}
         '';
+
+        powerMenu = pkgs.writeShellScriptBin "powermenu.sh" ''
+          chosen=$(printf " Power Off\n Reboot\n󰍃 Log Out\n󰌾 Suspend\n󰗼 Lock" | \
+            rofi -dmenu \
+                 -p "Power" \
+                 -show-icons)
+          
+          case "$chosen" in
+            " Power Off") systemctl poweroff ;;
+            " Reboot")   systemctl reboot ;;
+            "󰍃 Log Out")  hyprctl dispatch exit ;;
+            "󰌾 Suspend") systemctl suspend ;;
+            "󰗼 Lock")    hyprlock ;;
+          esac
+        '';
+
         # Stolen from @iynaix :^)
         openOnWorkspace = workspace: program: "[workspace ${builtins.toString workspace} silent] ${program}";
       in
@@ -75,9 +94,7 @@
         # exec-once = waybar & hyprpaper & firefox
         exec-once = [
           "${onStart}/bin/start.sh"
-          (openOnWorkspace 1 "$terminal")
-          (openOnWorkspace 2 "$browser")
-          "hyprctl dispatch workspace 2"
+          (openOnWorkspace 2 "$terminal")
           "hyprctl dispatch workspace 1"
         ];
 
@@ -122,7 +139,7 @@
 
           # Change transparency of focused and unfocused windows
           active_opacity = "1.0";
-          inactive_opacity = "0.6";
+          inactive_opacity = "0.75";
 
           # https://wiki.hyprland.org/Configuring/Variables/#blur
           blur = {
@@ -208,6 +225,7 @@
           "$mainMod, E, exec, thunar"
           "$mainMod, V, togglefloating,"
           "$mainMod, P, pseudo," # dwindle
+          "$mainMod, BACKSPACE, exec, ${powerMenu}/bin/powermenu.sh"
 
           # Move focus with mainMod + arrow keys
           "$mainMod, L, movefocus, r"
