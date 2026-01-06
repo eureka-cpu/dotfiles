@@ -65,10 +65,14 @@
   
   programs.kitty = {
     enable = true;
-    themeFile = "Nordfox";
+    theme = "Kanagawa";
     font = {
       name = "JetBrainsMono Nerd Font";
       size = 15;
+    };
+    shellIntegration = {
+      mode = "no-cursor";
+      enableZshIntegration = true;
     };
     settings = {
       # The window padding (in pts) (blank area between the text and the window border).
@@ -76,13 +80,14 @@
       # Three values set top, horizontal and bottom. Four values set top, right, bottom and left.
       window_padding_width = "8 0 8 8";
       hide_window_decorations = true;
+      cursor_shape = "block";
     };
   };
   programs.helix = {
     enable = true;
     defaultEditor = true;
     settings = {
-      theme = "nord";
+      theme = "kanagawa";
       editor = {
         cursor-shape = {
           insert = "underline";
@@ -98,7 +103,7 @@
         };
         indent-guides = {
           render = true;
-          characeter = "|";
+          characeter = "╎";
           skip-levels = 1;
         };
         lsp = {
