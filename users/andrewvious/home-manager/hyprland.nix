@@ -1,7 +1,4 @@
-{ pkgs, config, user, swww-upstream, ... }:
-let
-  colors = import ./colors.nix;
-in
+{ pkgs, user, swww-upstream, ... }:
 {
   wayland.windowManager.hyprland = {
     enable = true;
@@ -11,7 +8,7 @@ in
         swww = "${swww-upstream}/bin/awww";
         mako = "${pkgs.mako}/bin/mako";
         homeDirectory = user.homeDirectory;
-        wallpaper = "${homeDirectory}/Wallpapers/wallhaven-blue-abstract.jpg";
+        wallpaper = "${homeDirectory}/Wallpapers/wallhaven-asus-rog.jpg";
         
         onStart = pkgs.writeShellScriptBin "start.sh" ''
           # start wallpaper daemon and set wallpaper
@@ -226,6 +223,8 @@ in
           "$mainMod, V, togglefloating,"
           "$mainMod, P, pseudo," # dwindle
           "$mainMod, BACKSPACE, exec, ${powerMenu}/bin/powermenu.sh"
+          "$mainMod, T, movetoworkspacesilent, special:minimized" # send to tray
+          "$mainMod SHIFT, T, togglespecialworkspace, minimized" # show tray
 
           # Move focus with mainMod + arrow keys
           "$mainMod, L, movefocus, r"

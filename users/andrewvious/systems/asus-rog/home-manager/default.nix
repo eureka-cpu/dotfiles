@@ -5,6 +5,7 @@
     ../../../home-manager/default.nix
     ../../../home-manager/hyprland.nix
     ../../../home-manager/waybar.nix
+    ../../../home-manager/brave-torrent.nix
   ];
 
   home.packages = with pkgs; [
@@ -20,6 +21,8 @@
     celluloid
     pavucontrol
   ];
+
+  braveTorrent.enable = true;
 
   programs.kitty = {
     themeFile = "spaceduck";
