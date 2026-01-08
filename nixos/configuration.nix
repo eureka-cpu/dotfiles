@@ -53,9 +53,7 @@ in
     desktopManager = {
       xterm.enable = false;
     };
-    # displayManager.gdm.enable = true;
   };
-  # programs.hyprland.enable = true;
 
   # For some reason this still tries to build from source and my user session crashes.
   # 
@@ -167,7 +165,7 @@ in
   users.users.eureka = {
     isNormalUser = true;
     description = "Chris O'Brien";
-    extraGroups = [ "networkmanager" "wheel" "openrazer" ];
+    extraGroups = [ "networkmanager" "wheel" "openrazer" "docker" ];
     shell = pkgs.zsh;
   };
   programs.zsh.enable = true;
@@ -196,6 +194,8 @@ in
       ];
     };
   };
+
+  virtualisation.docker.enable = true;
 
   hardware.openrazer.enable = true;
   environment = {
