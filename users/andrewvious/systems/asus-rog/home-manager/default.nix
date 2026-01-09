@@ -10,15 +10,16 @@
 
   home.packages = with pkgs; [
     nvtopPackages.full
+    kdePackages.dolphin
+    kdePackages.kio-extras
+    cliphist
     melonDS
     grim
     rofi
     mako
     swww-upstream
-    xfce.thunar
     zathura
     image-roll
-    celluloid
     pavucontrol
   ];
 
