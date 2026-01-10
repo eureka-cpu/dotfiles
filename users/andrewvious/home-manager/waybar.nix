@@ -11,7 +11,7 @@ in
       mainBar = {
         layer = "top";
         position = "top";
-        height = 26;
+        height = 30;
         spacing = 12;
 
         modules-left = [
@@ -48,64 +48,62 @@ in
         };
 
         clock = {
-        	format = "{:%H:%M}  ";
-        	format-alt = "{:%A, %B %d, %Y (%R)}  ";
-        	tooltip-format = "<tt><small>{calendar}</small></tt>";
+          format = "{:%H:%M}  ";
+          format-alt = "{:%A, %B %d, %Y (%R)}  ";
+          tooltip-format = "<tt><small>{calendar}</small></tt>";
 
-        	calendar = {
-        		"mode"          = "year";
-        		"mode-mon-col"  = 3;
-        		"weeks-pos"     = "right";
-        		"on-scroll"     = 1;
-        		"on-click-right"= "mode";
-        		format = {
-        			"months"=     "<span color='#ffead3'><b>{}</b></span>";
-        			"days"=       "<span color='#ecc6d9'><b>{}</b></span>";
-        			"weeks"=      "<span color='#99ffdd'><b>W{}</b></span>";
-        			"weekdays"=   "<span color='#ffcc66'><b>{}</b></span>";
-        			"today"=      "<span color='#ff6699'><b><u>{}</u></b></span>";
-        		};
-        	};
+          calendar = {
+            mode = "year";
+            "mode-mon-col" = 3;
+            "weeks-pos" = "right";
+            "on-scroll" = 1;
+            "on-click-right" = "mode";
+            format = {
+              months = "<span color='#ffead3'><b>{}</b></span>";
+              days = "<span color='#ecc6d9'><b>{}</b></span>";
+              weeks = "<span color='#99ffdd'><b>W{}</b></span>";
+              weekdays = "<span color='#ffcc66'><b>{}</b></span>";
+              today = "<span color='#ff6699'><b><u>{}</u></b></span>";
+            };
+          };
 
-        	actions = {
-        		"on-click-right"= "mode";
-        		"on-scroll-up"= "shift_up";
-        		"on-scroll-down"= "shift_down";
-        	};
+          actions = {
+            "on-click-right" = "mode";
+            "on-scroll-up" = "shift_up";
+            "on-scroll-down" = "shift_down";
+          };
         };
-        
+
         network = {
-          format-ethernet = "󰈀";
-          format-wifi = "󰖩";
-          format-disconnected = "󰖪";
-          tooltip = "{ip}";
+          format-ethernet = "󰈀 ";
+          format-wifi = "󰖩 ";
+          format-disconnected = "󰖪 ";
+          tooltip-format = "{ifname}";
+          tooltip-format-ethernet = "{ifname}  ";
         };
-        
+
         pulseaudio = {
           format = "{icon}";
-          format-muted = "󰝟";
+          format-muted = "󰝟 ";
           format-icons = {
-            default = [ "󰕿" "󰖀" "󰕾" ];
+            default = [ "󰕿 " "󰖀 " "󰕾 " ];
           };
-          tooltip = "{volume}%";
+          scroll-step = 1;
+          on-click = "pavucontrol";
         };
-        
+
         cpu = {
-          format = "󰻠";
-          max-value = 100;
+          format = "󰻠 ";
           interval = 1;
           graph = true;
-          tooltip = "{usage}%";
         };
-        
+
         memory = {
-          format = "󰍛";
-          max-value = 100;
+          format = "󰍛 ";
           interval = 2;
           graph = true;
-          tooltip = "{used} / {total} GB";
         };
-        
+
         tray = {};
       };
     };
@@ -121,50 +119,45 @@ in
         border-bottom: 2px solid ${colors.border};
       }
 
-      #waybar .modules-left widget,
-      #waybar .modules-center widget {
-        background: ${colors.moduleBg};
-        color: ${colors.fg};
-        padding: 6px 6px;
-        margin: 4px 4px;
-        border-radius: 8px;
-        font-size: 12px;
+      #waybar > widget {
+        background: transparent;
+        border-radius: 0;
+        padding: 0;
+        margin: 0;
       }
-      
-      #waybar .modules-right > widget {
-        background: ${colors.moduleBg};
-        color: ${colors.fg};
-        border-radius: 6px;
-        padding: 4px 10px;
-        margin: 0px 6px;
-        transition: background 0.2s;
-        font-size: 20px;
+
+      #waybar .modules-left > widget,
+      #waybar .modules-center > widget {
+        font-size: 12px;
+        margin: 0 6px;
       }
 
       #waybar .modules-right {
-        padding-right: 12px;
+        margin-right: 8px;
       }
 
-      #waybar .modules-right > widget > label {
-        color: ${colors.fg};
-        padding: 4px 10px;
+      #waybar .modules-right > widget {
+        font-size: 20px;
+        transition: color 0.2s;
       }
-      
+
       #waybar .modules-right > widget:hover {
-        background: ${colors.accentSecondary};
+        color: ${colors.accentSecondary};
       }
-      
+
       #cpu > bar,
       #memory > bar {
         background-color: ${colors.accentPrimary};
         border-radius: 3px;
-        margin-top: 3px;
-        margin-bottom: 3px;
       }
-      
-      #tray {
-        background: transparent;
-        margin-left: 10px;
+
+      #tray > widget {
+        margin: 0 6px;
+      }
+
+      #tray image {
+        min-width: 20px;
+        min-height: 20px;
       }
     '';
   };
