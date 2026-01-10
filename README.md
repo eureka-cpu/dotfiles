@@ -1,17 +1,32 @@
-# eureka's dotfiles
+# dotfiles
 
-Welcome, these are the dotfiles for my varies nix/nixos systems. The idea is that modules and configuration
-options can be shared between systems as needed and between declared users. The outcome may look different
-depending on which desktop environment is chosen.
+A Nix-based dotfiles setup focused on clear abstraction boundaries between users, systems, and shared modules.
 
-Currently the following desktop environments are configured for my systems:
+These dotfiles are primarily built for personal use, but structured so they’re understandable, reproducible, and extensible by others familiar with Nix.
 
-- Gnome ([dev-one] HP Dev One Notebook)
-- Hyprland ([tensorbook] Razer Blade 15 X Lambda Tensorbook 2022 with NVIDIA GeForce RTX 3070Ti, [critter-tank] MS-7D73 -- AMD Ryzen 9 7950X3D with NVIDIA GeForce RTX 4080 discrete and AMD Raphael integrated graphics, [yabai] MacBook Pro M1)
-- Sway ([xie] Lenovo Yoga Slim 7x -- Snapdragon X Elite X1E-78-100) -- this one is a bit experimental still
+**User Profiles**
+ - [eureka-cpu]()
+ - [andrewvious]()
 
-I also have some non-nixos configurations for nix-darwin and other linux partitions that are not part of this repository as of writing this.
+```mermaid
+graph TD
+A[users] --> B[User Profile]
 
-What the outcome might look like depending on which wallpaper/colors/topbar is used:
+B --> C[home-manager *modules*]
+B --> D[nixos *modules*]
 
-<img src="rice/critter-tank.png" alt="critter-tank-gruvbox" width="600"/>
+B --> E[systems]
+E --> F[Host A]
+E --> G[Host B]
+
+C --> H{flake output}
+D --> H
+F --> H
+G --> H
+```
+
+**Conceptual flow:**
+- **users**        → per-user configuration (home-manager)
+- **systems**      → host-specific system definitions
+- **nixos**        → shared system-level modules
+- **flake output** → single entry point tying everything together

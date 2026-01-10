@@ -38,9 +38,9 @@
     "text/plain" = [ "helix.desktop" ];
     "application/pdf" = [ "zathura.desktop" ];
     "image/*" = [ "image-roll.desktop" ];
-    "video/png" = [ "celluloid.desktop" ];
-    "video/jpg" = [ "celluloid.desktop" ];
-    "video/*" = [ "celluloid.desktop" ];
+    "video/png" = [ "vlc.desktop" ];
+    "video/jpg" = [ "vlc.desktop" ];
+    "video/*" = [ "vlc.desktop" ];
   };
 
   # This value determines the Home Manager release that your configuration is
