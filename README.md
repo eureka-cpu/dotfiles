@@ -5,8 +5,8 @@ A Nix-based dotfiles setup focused on clear abstraction boundaries between users
 These dotfiles are primarily built for personal use, but structured so they’re understandable, reproducible, and extensible by others familiar with Nix.
 
 **User Profiles**
- - [eureka-cpu]()
- - [andrewvious]()
+ - [eureka-cpu](./users/eureka/README.md)
+ - [andrewvious](./users/andrewvious/README.md)
 
 ```mermaid
 graph TD
