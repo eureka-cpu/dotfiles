@@ -1,4 +1,4 @@
-{ pkgs, lib, helix-themes, user, ... }:
+{ pkgs, helix-themes, user, ... }:
 {
   home.username = user.name;
   home.homeDirectory = user.homeDirectory;
@@ -86,8 +86,10 @@
   };
   programs.git = {
     enable = true;
-    userName = "andrewvious";
-    userEmail = "ohbandrew@gmail.com";
+    settings.user = {
+      name = "andrewvious";
+      email = "ohbandrew@gmail.com";
+    };
   };
 
   # Let Home Manager install and manage itself.

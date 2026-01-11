@@ -7,16 +7,41 @@
         swww-daemon = "${swww-upstream}/bin/awww-daemon";
         swww = "${swww-upstream}/bin/awww";
         mako = "${pkgs.mako}/bin/mako";
-
         homeDirectory = user.homeDirectory;
-        wallpaper = "${homeDirectory}/Wallpapers/wallhaven.jpg";
+        wallpaper = "${homeDirectory}/Wallpapers/wallhaven-asus-rog.jpg";
+        
         onStart = pkgs.writeShellScriptBin "start.sh" ''
+          # clear clipboard manager
+          rm -rf "$HOME/.cache/cliphist"
+
           # start wallpaper daemon and set wallpaper
           ${swww-daemon} & ${swww} img --resize crop ${wallpaper} &
 
           # start notification daemon
           ${mako}
         '';
+
+        powerMenu = pkgs.writeShellScriptBin "powermenu.sh" ''
+          chosen=$(printf " Power Off\n Reboot\n󰍃 Log Out\n󰌾 Suspend\n󰗼 Lock" | \
+            rofi -dmenu -i \
+                 -p ">" \
+                 -show-icons)
+          
+          case "$chosen" in
+            " Power Off") systemctl poweroff ;;
+            " Reboot")   systemctl reboot ;;
+            "󰍃 Log Out")  hyprctl dispatch exit ;;
+            "󰗼 Lock")    hyprlock ;;
+          esac
+        '';
+
+        clipboardMenu = pkgs.writeShellScriptBin "clipboardmenu.sh" ''
+          cliphist list \
+            | rofi -dmenu -i -matching fuzzy -p Clipboard \
+            | cliphist decode \
+            | wl-copy
+        '';
+
         # Stolen from @iynaix :^)
         openOnWorkspace = workspace: program: "[workspace ${builtins.toString workspace} silent] ${program}";
       in
@@ -75,10 +100,12 @@
         # exec-once = waybar & hyprpaper & firefox
         exec-once = [
           "${onStart}/bin/start.sh"
-          (openOnWorkspace 1 "$terminal")
-          (openOnWorkspace 2 "$browser")
-          "hyprctl dispatch workspace 2"
+          (openOnWorkspace 2 "$terminal")
           "hyprctl dispatch workspace 1"
+
+          # start clipboard daemon
+          "wl-paste --type text --watch cliphist store"
+          "wl-paste --type image --watch cliphist store"
         ];
 
         #############################
@@ -122,7 +149,7 @@
 
           # Change transparency of focused and unfocused windows
           active_opacity = "1.0";
-          inactive_opacity = "0.6";
+          inactive_opacity = "0.75";
 
           # https://wiki.hyprland.org/Configuring/Variables/#blur
           blur = {
@@ -187,8 +214,8 @@
         # Example per-device config
         # See https://wiki.hyprland.org/Configuring/Keywords/#per-device-input-configs for more
         device = {
-          # name = "epic-mouse-v1";
-          # sensitivity = "-0.5";
+          name = "logitech-g502-hero-gaming-mouse";
+          sensitivity = "-0.75";
         };
 
         ####################
@@ -199,15 +226,21 @@
         "$mainMod" = "SUPER";
 
         # Opens rofi on first press, closes it on second
-        bindr = "SUPER, SUPER_L, exec, pkill rofi || rofi -show drun -show-icons";
+        bindr = [
+          "SUPER, SUPER_L, exec, pkill rofi || rofi -show drun -show-icons" # app finder
+          "SUPER, BACKSPACE, exec, pkill rofi || ${powerMenu}/bin/powermenu.sh"
+          "SUPER, C, exec, pkill rofi || ${clipboardMenu}/bin/clipboardmenu.sh"
+        ];
 
         # Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
         bind = [
           "$mainMod, Q, killactive,"
-          "$mainMod, M, exit,"
-          "$mainMod, E, exec, thunar"
+          "$mainMod, E, exec, dolphin"
           "$mainMod, V, togglefloating,"
           "$mainMod, P, pseudo," # dwindle
+          "$mainMod, T, movetoworkspacesilent, special:minimized" # send to tray
+          "$mainMod SHIFT, T, togglespecialworkspace, minimized" # show tray
+          "$mainMod SHIFT, C, exec, cliphist wipe" # clear clipboard manager
 
           # Move focus with mainMod + arrow keys
           "$mainMod, L, movefocus, r"

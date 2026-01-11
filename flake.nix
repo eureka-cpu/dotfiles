@@ -12,6 +12,10 @@
       # slow to release but there is a flake!
       url = "git+https://codeberg.org/LGFae/awww";
     };
+    brave-torrent = {
+      # Legacy Brave (1.77.101) for users who want web torrent!
+      url = "github:NixOS/nixpkgs/bfbd5014640d";
+    };
     helix-themes.url = "github:eureka-cpu/helix-themes.nix";
     nix-colors.url = "github:misterio77/nix-colors";
   };
@@ -21,6 +25,7 @@
     , flake-utils
     , home-manager
     , swww
+    , brave-torrent
     , helix-themes
     , nix-colors
     , ...
@@ -54,6 +59,7 @@
                     useGlobalPkgs = true;
                     extraSpecialArgs = {
                       inherit
+                        brave-torrent
                         helix-themes
                         nix-colors;
                       swww-upstream = swww.packages.${system}.default;

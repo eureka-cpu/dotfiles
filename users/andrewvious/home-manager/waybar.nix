@@ -24,11 +24,10 @@ in
         ];
 
         modules-right = [
-          "pulseaudio"
           "network"
+          "pulseaudio"
           "cpu"
           "memory"
-          "battery"
           "tray"
         ];
 
@@ -49,72 +48,116 @@ in
         };
 
         clock = {
-        	format = "{:%H:%M}  ";
-        	format-alt = "{:%A, %B %d, %Y (%R)}  ";
-        	tooltip-format = "<tt><small>{calendar}</small></tt>";
+          format = "{:%H:%M}  ";
+          format-alt = "{:%A, %B %d, %Y (%R)}  ";
+          tooltip-format = "<tt><small>{calendar}</small></tt>";
 
-        	calendar = {
-        		"mode"          = "year";
-        		"mode-mon-col"  = 3;
-        		"weeks-pos"     = "right";
-        		"on-scroll"     = 1;
-        		"on-click-right"= "mode";
-        		format = {
-        			"months"=     "<span color='#ffead3'><b>{}</b></span>";
-        			"days"=       "<span color='#ecc6d9'><b>{}</b></span>";
-        			"weeks"=      "<span color='#99ffdd'><b>W{}</b></span>";
-        			"weekdays"=   "<span color='#ffcc66'><b>{}</b></span>";
-        			"today"=      "<span color='#ff6699'><b><u>{}</u></b></span>";
-        		};
-        	};
+          calendar = {
+            mode = "year";
+            "mode-mon-col" = 3;
+            "weeks-pos" = "right";
+            "on-scroll" = 1;
+            "on-click-right" = "mode";
+            format = {
+              months = "<span color='#ffead3'><b>{}</b></span>";
+              days = "<span color='#ecc6d9'><b>{}</b></span>";
+              weeks = "<span color='#99ffdd'><b>W{}</b></span>";
+              weekdays = "<span color='#ffcc66'><b>{}</b></span>";
+              today = "<span color='#ff6699'><b><u>{}</u></b></span>";
+            };
+          };
 
-        	actions = {
-        		"on-click-right"= "mode";
-        		"on-scroll-up"= "shift_up";
-        		"on-scroll-down"= "shift_down";
-        	};
-        };
-
-        pulseaudio = {
-          format = "{volume}% {icon}";
-          format-muted = "󰝟";
-          format-icons = {
-            default = [ "󰕿" "󰖀" "󰕾" ];
+          actions = {
+            "on-click-right" = "mode";
+            "on-scroll-up" = "shift_up";
+            "on-scroll-down" = "shift_down";
           };
         };
 
         network = {
-          format-ethernet = "󰈀";
-          format-disconnected = "󰖪";
+          format-ethernet = "󰈀 ";
+          format-wifi = "󰖩 ";
+          format-disconnected = "󰖪 ";
+          tooltip-format = "{ifname}";
+          tooltip-format-ethernet = "{ifname}  ";
         };
+
+        pulseaudio = {
+          format = "{icon}";
+          format-muted = "󰝟 ";
+          format-icons = {
+            default = [ "󰕿 " "󰖀 " "󰕾 " ];
+          };
+          scroll-step = 1;
+          on-click = "pavucontrol";
+        };
+
+        cpu = {
+          format = "󰻠 ";
+          interval = 1;
+          graph = true;
+        };
+
+        memory = {
+          format = "󰍛 ";
+          interval = 2;
+          graph = true;
+        };
+
+        tray = {};
       };
     };
 
     style = ''
       * {
         font-family: JetBrainsMono Nerd Font;
-        font-size: 12px;
       }
 
       window#waybar {
-        background: ${colors.gray1};
-        color: ${colors.gray4};
+        background: ${colors.bg};
+        color: ${colors.fg};
+        border-bottom: 2px solid ${colors.border};
       }
 
-      #workspaces button {
-        color: ${colors.gray3};
+      #waybar > widget {
+        background: transparent;
+        border-radius: 0;
+        padding: 0;
+        margin: 0;
       }
 
-      #workspace button.active {
-        color: ${colors.gray4};
+      #waybar .modules-left > widget,
+      #waybar .modules-center > widget {
+        font-size: 12px;
+        margin: 0 6px;
       }
 
-      #workspace button.urgent {
-        color: ${colors.gray2};
+      #waybar .modules-right {
+        margin-right: 8px;
       }
 
-      #clock {
-        padding: 0 10px;
+      #waybar .modules-right > widget {
+        font-size: 20px;
+        transition: color 0.2s;
+      }
+
+      #waybar .modules-right > widget:hover {
+        color: ${colors.accentSecondary};
+      }
+
+      #cpu > bar,
+      #memory > bar {
+        background-color: ${colors.accentPrimary};
+        border-radius: 3px;
+      }
+
+      #tray > widget {
+        margin: 0 6px;
+      }
+
+      #tray image {
+        min-width: 20px;
+        min-height: 20px;
       }
     '';
   };
