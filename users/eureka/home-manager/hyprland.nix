@@ -4,8 +4,8 @@
     enable = true;
     settings =
       let
-        swww-daemon = "${swww-upstream}/bin/swww-daemon";
-        swww = "${swww-upstream}/bin/swww";
+        swww-daemon = "${swww-upstream}/bin/awww-daemon";
+        swww = "${swww-upstream}/bin/awww";
         eww = "${pkgs.eww}/bin/eww";
         mako = "${pkgs.mako}/bin/mako";
 
@@ -191,9 +191,7 @@
         };
 
         # https://wiki.hyprland.org/Configuring/Variables/#gestures
-        gestures = {
-          workspace_swipe = false;
-        };
+        gestures = { };
 
         # Example per-device config
         # See https://wiki.hyprland.org/Configuring/Keywords/#per-device-input-configs for more
