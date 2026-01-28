@@ -1,6 +1,16 @@
 { config, pkgs, ... }:
 let
   colors = import ./colors.nix;
+
+  customMic = pkgs.writeShellScriptBin "mic.sh" ''
+    #!/usr/bin/env bash
+    
+    if wpctl get-volume @DEFAULT_SOURCE@ | grep -q MUTED; then
+      echo '{"text":"󰍬 ","class":"muted"}'
+    else
+      echo  '{"text":"󰍬 "}'
+    fi
+  '';
 in
 {
   programs.waybar = {
@@ -24,10 +34,11 @@ in
         ];
 
         modules-right = [
-          "network"
+          "custom/mic"
           "pulseaudio"
           "cpu"
           "memory"
+          "network"
           "tray"
         ];
 
@@ -74,12 +85,11 @@ in
           };
         };
 
-        network = {
-          format-ethernet = "󰈀 ";
-          format-wifi = "󰖩 ";
-          format-disconnected = "󰖪 ";
-          tooltip-format = "{ifname}";
-          tooltip-format-ethernet = "{ifname}  ";
+        "custom/mic" = {
+          exec = "${customMic}/bin/mic.sh";
+          interval = 1;
+          return-type = "json";
+          on-click = "wpctl set-mute @DEFAULT_SOURCE@ toggle";
         };
 
         pulseaudio = {
@@ -102,6 +112,14 @@ in
           format = "󰍛 ";
           interval = 2;
           graph = true;
+        };
+
+        network = {
+          format-ethernet = "󰈀 ";
+          format-wifi = "󰖩 ";
+          format-disconnected = "󰖪 ";
+          tooltip-format = "{ifname}";
+          tooltip-format-ethernet = "{ifname}  ";
         };
 
         tray = {};
@@ -132,23 +150,12 @@ in
         margin: 0 6px;
       }
 
-      #waybar .modules-right {
-        margin-right: 8px;
-      }
-
       #waybar .modules-right > widget {
         font-size: 20px;
-        transition: color 0.2s;
       }
 
-      #waybar .modules-right > widget:hover {
-        color: ${colors.accentSecondary};
-      }
-
-      #cpu > bar,
-      #memory > bar {
-        background-color: ${colors.accentPrimary};
-        border-radius: 3px;
+      #custom-mic.muted {
+        color: #ff5555;
       }
 
       #tray > widget {

@@ -22,9 +22,9 @@
         '';
 
         powerMenu = pkgs.writeShellScriptBin "powermenu.sh" ''
-          chosen=$(printf " Power Off\n Reboot\n󰍃 Log Out\n󰌾 Suspend\n󰗼 Lock" | \
+          chosen=$(printf " Power Off\n Reboot\n󰍃 Log Out\n󰗼 Lock" | \
             rofi -dmenu -i \
-                 -p ">" \
+                 -p pwr \
                  -show-icons)
           
           case "$chosen" in
@@ -37,7 +37,7 @@
 
         clipboardMenu = pkgs.writeShellScriptBin "clipboardmenu.sh" ''
           cliphist list \
-            | rofi -dmenu -i -matching fuzzy -p Clipboard \
+            | rofi -dmenu -i -matching fuzzy -p clipr \
             | cliphist decode \
             | wl-copy
         '';
@@ -230,6 +230,7 @@
           "SUPER, SUPER_L, exec, pkill rofi || rofi -show drun -show-icons" # app finder
           "SUPER, BACKSPACE, exec, pkill rofi || ${powerMenu}/bin/powermenu.sh"
           "SUPER, C, exec, pkill rofi || ${clipboardMenu}/bin/clipboardmenu.sh"
+          "SUPER, U, exec, wpctl set-mute @DEFAULT_SOURCE@ 1" # release-to-mute for default input device
         ];
 
         # Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
@@ -241,6 +242,10 @@
           "$mainMod, T, movetoworkspacesilent, special:minimized" # send to tray
           "$mainMod SHIFT, T, togglespecialworkspace, minimized" # show tray
           "$mainMod SHIFT, C, exec, cliphist wipe" # clear clipboard manager
+
+          # Push-to-Talk + Mute Toggle for default input device
+          "$mainMod, U, exec, wpctl set-mute @DEFAULT_SOURCE@ 0"
+          "$mainMod, SPACE, exec, wpctl set-mute @DEFAULT_SOURCE@ toggle"
 
           # Move focus with mainMod + arrow keys
           "$mainMod, L, movefocus, r"
