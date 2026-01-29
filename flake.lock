@@ -110,11 +110,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1766387499,
-        "narHash": "sha256-AjK3/UKDzeXFeYNLVBaJ3+HLE9he1g5UrlNd4/BM3eA=",
+        "lastModified": 1769622371,
+        "narHash": "sha256-Cs1/+P3ntxl9mOIL7/QtItBAzQJ2xjvTMHv7qw0nFV0=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "527ad07e6625302b648ed3b28c34b62a79bd103e",
+        "rev": "02d763228d8aff317e6e5a319474b6d4d9d826a5",
         "type": "github"
       },
       "original": {
@@ -175,11 +175,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1766309749,
-        "narHash": "sha256-3xY8CZ4rSnQ0NqGhMKAy5vgC+2IVK0NoVEzDoOh4DA4=",
+        "lastModified": 1769461804,
+        "narHash": "sha256-msG8SU5WsBUfVVa/9RPLaymvi5bI8edTavbIq3vRlhI=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "a6531044f6d0bef691ea18d4d4ce44d0daa6e816",
+        "rev": "bfc1b8a4574108ceef22f02bafcf6611380c100d",
         "type": "github"
       },
       "original": {
@@ -244,11 +244,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1766150267,
-        "narHash": "sha256-LG+Q5yRZQ0WFO/XLWGtNGaR4XLiOgUZArEB4ZHl9sy0=",
+        "lastModified": 1766518114,
+        "narHash": "sha256-3zIOjIidbrHXTxEzjPVrwSd19Mwdfw58VvSnTWtlunc=",
         "ref": "refs/heads/main",
-        "rev": "e52afbb27472935cc47ab2574ff7e9c22ddf7011",
-        "revCount": 1325,
+        "rev": "138c4ebdbe0c3eead5656373ea8837a5bd49c40b",
+        "revCount": 1329,
         "type": "git",
         "url": "https://codeberg.org/LGFae/awww"
       },

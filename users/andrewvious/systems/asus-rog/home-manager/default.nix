@@ -44,6 +44,16 @@
     "video/*" = [ "vlc.desktop" ];
   };
 
+  # Fix for broken desktop entry. https://github.com/brave/brave-browser/issues/52193
+  xdg.dataFile."applications/com.brave.Browser.desktop".text = ''
+    [Desktop Entry]
+    Type=Application
+    Name=Brave Browser (hidden)
+    NoDisplay=true
+    Hidden=true
+    '';
+  
+
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
   # introduces backwards incompatible changes.
