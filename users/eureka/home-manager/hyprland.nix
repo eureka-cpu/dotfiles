@@ -272,8 +272,6 @@
 
         # Example windowrule
         # windowrule = float, ^(kitty)$
-
-        windowrule = "match:class .*, suppress_event maximize"; # You'll probably like this.
       };
   };
 }

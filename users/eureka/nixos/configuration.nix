@@ -1,5 +1,9 @@
 { config, pkgs, user, host, ... }:
 {
+  imports = [
+    ./modules/gh-mdbook-server.nix
+  ];
+
   # Bootloader.
   boot.loader = {
     systemd-boot.enable = true;
@@ -91,6 +95,14 @@
     enable = true;
     useRoutingFeatures = "client";
     openFirewall = true;
+  };
+  services.gh-mdbook-server = {
+    enable = true;
+    user = user.name;
+    remote = "git@github.com/eureka-cpu/todo.git";
+    local = "/home/eureka/Code/eureka-cpu/todo";
+    port = 3001;
+    update = true;
   };
 
   # Enable automatic login for the user.
