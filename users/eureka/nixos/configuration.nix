@@ -1,7 +1,7 @@
 { config, pkgs, user, host, ... }:
 {
   imports = [
-    ./modules/gh-mdbook-server.nix
+    ./modules/systemd/gh-mdbook-server
   ];
 
   # Bootloader.

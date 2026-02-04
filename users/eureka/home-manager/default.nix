@@ -26,6 +26,7 @@
     ffmpeg # video formatter
     gphoto2
     spotify
+    zoom-us
   ];
 
   programs.kitty = {
