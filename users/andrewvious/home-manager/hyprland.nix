@@ -69,13 +69,13 @@
         # Default:
         # monitor = ",preferred,auto,auto";
         monitor = [
-          "desc:LG Electronics LG ULTRAWIDE 0x000311FF, 2560x1080@100.00Hz, 0x0, 1"
-          "desc:Microstep Optix G27C2 0000000000001, 1920x1080@120.00Hz, 2560x380, 1"
+          "desc:Microstep Optix G27C2 0000000000001, 1920x1080@120.00Hz, 0x0, 1"
+          "desc:LG Electronics LG ULTRAWIDE 0x000311FF, 2560x1080@100.00Hz, 1920x-20, 1"
           "Unknown-1, disabled" # fix for upstream wl-roots bug
         ];
         workspace = [
-          "1, monitor:desc:LG Electronics LG ULTRAWIDE 0x000311FF, default:true, persistent:true"
-          "2, monitor:desc:Microstep Optix G27C2 0000000000001, default:true, persistent:true"
+          "1, monitor:desc:Microstep Optix G27C2 0000000000001, default:true, persistent:true"
+          "2, monitor:desc:LG Electronics LG ULTRAWIDE 0x000311FF, default:true, persistent:true"
         ];
 
         ###################
@@ -100,7 +100,7 @@
         # exec-once = waybar & hyprpaper & firefox
         exec-once = [
           "${onStart}/bin/start.sh"
-          (openOnWorkspace 2 "$terminal")
+          (openOnWorkspace 1 "$terminal")
           "hyprctl dispatch workspace 1"
 
           # start clipboard daemon

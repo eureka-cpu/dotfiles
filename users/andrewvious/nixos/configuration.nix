@@ -82,7 +82,7 @@
   users.users.${user.name} = {
     isNormalUser = true;
     description = user.description;
-    extraGroups = [ "networkmanager" "wheel" "docker" "audio" ];
+    extraGroups = [ "networkmanager" "wheel" "dialout" "docker" "audio" ]; #dialout is for Arduino IDE
     shell = pkgs.zsh;
   };
   programs.zsh.enable = true;

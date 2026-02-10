@@ -22,6 +22,9 @@
     zathura
     pavucontrol
     qimgv
+    # Arduino Uno R3
+    arduino-ide
+    arduino-cli
   ];
 
   braveTorrent.enable = true;
