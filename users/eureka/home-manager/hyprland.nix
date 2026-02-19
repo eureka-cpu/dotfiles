@@ -138,7 +138,9 @@
 
           shadow = {
             enabled = true;
-
+            range = 32;
+            render_power = 2;
+            scale = 0.9;
           };
 
           # https://wiki.hyprland.org/Configuring/Variables/#blur
