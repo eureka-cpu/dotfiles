@@ -108,13 +108,16 @@
         general = {
           gaps_in = 5;
           gaps_out = 10;
-          border_size = 2;
+          border_size = 0;
 
           # https://wiki.hyprland.org/Configuring/Variables/#variable-types for info about colors
-          "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
-          "col.inactive_border" = "rgba(595959aa)";
+          # "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
+          # "col.inactive_border" = "rgba(595959aa)";
 
           # Set to true enable resizing windows by clicking and dragging on borders and gaps
+          #
+          # This setting can sometimes cause focus to be lost on window menus.
+          # Use mod+right-click instead.
           resize_on_border = false;
 
           # Please see https://wiki.hyprland.org/Configuring/Tearing/ before you turn this on
@@ -124,7 +127,7 @@
 
         # https://wiki.hyprland.org/Configuring/Variables/#decoration
         decoration = {
-          rounding = 5;
+          rounding = 0;
 
           # Change transparency of focused and unfocused windows
           active_opacity = "1.0";
@@ -141,7 +144,7 @@
 
         # https://wiki.hyprland.org/Configuring/Variables/#animations
         animations = {
-          enabled = true;
+          enabled = false;
           bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
           # Default animations, see https://wiki.hyprland.org/Configuring/Animations/ for more
           animation = [
@@ -182,7 +185,7 @@
           kb_model = "";
           kb_options = "";
           kb_rules = "";
-          follow_mouse = 1;
+          follow_mouse = 2;
           natural_scroll = true;
           sensitivity = 0; # -1.0 - 1.0, 0 means no modification.
           touchpad = {
