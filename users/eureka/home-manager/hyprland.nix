@@ -132,6 +132,14 @@
           # Change transparency of focused and unfocused windows
           active_opacity = "1.0";
           inactive_opacity = "1.0";
+          dim_inactive = true;
+          dim_strength = 0.02;
+          dim_around = 0.02;
+
+          shadow = {
+            enabled = true;
+
+          };
 
           # https://wiki.hyprland.org/Configuring/Variables/#blur
           blur = {
