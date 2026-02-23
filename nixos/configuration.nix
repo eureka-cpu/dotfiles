@@ -186,11 +186,9 @@ in
       experimental-features = [ "nix-command" "flakes" ];
       extra-substituters = [
         "https://cloud-scythe-labs.cachix.org"
-        "https://cosmic.cachix.org/" 
       ];
       extra-trusted-public-keys = [
         "cloud-scythe-labs.cachix.org-1:I+IM+x2gGlmNjUMZOsyHJpxIzmAi7XhZNmTVijGjsLw="
-        "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE="
       ];
     };
   };

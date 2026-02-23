@@ -25,6 +25,7 @@
     fastfetch
     # comms
     telegram-desktop
+    signal-desktop
     # code
     git
     helix
@@ -45,11 +46,10 @@
         eamodio.gitlens
       ];
     })
-    nil
-    rust-analyzer
     # studio
     obs-studio
     reaper
+    tuxguitar
     ffmpeg
     v4l-utils
     gphoto2
