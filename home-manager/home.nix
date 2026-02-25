@@ -61,6 +61,7 @@
     auto-cpufreq
     blender
     libreoffice
+    zoom-us
   ];
   
   programs.kitty = {
