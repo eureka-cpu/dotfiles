@@ -6,6 +6,8 @@
     ../../nixos/desktop-configuration.nix
   ];
 
+  networking.hostName = "critter-tank";
+
   # Enable the X11 windowing system.
   services.xserver.displayManager.gdm.enable = true;
 
