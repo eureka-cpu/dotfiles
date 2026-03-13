@@ -1,107 +1,88 @@
 {
-  description = "one flake to rule them all";
+  description = ''
+    Dotfiles follow a very common pattern. There are users, users own systems,
+    systems have modules. Sometimes systems have more than one user, sometimes
+    users have more than one system. This is basically a matrix of users and
+    systems, and their modules.
+  '';
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    swww = {
-      # slow to release but there is a flake!
+    awww = {
       url = "git+https://codeberg.org/LGFae/awww";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
-    brave-torrent = {
-      # Legacy Brave (1.77.101) for users who want web torrent!
-      url = "github:NixOS/nixpkgs/bfbd5014640d";
-    };
-    helix-themes.url = "github:eureka-cpu/helix-themes.nix";
+    helix-themes.url = "github:eureka-cpu/helix-themes?ref=eureka-cpu/0";
     nix-colors.url = "github:misterio77/nix-colors";
   };
 
+  # There must be some way of defining a flake which shares modules between
+  # users such that users can refer to other users for permissions, and
+  # allows users to rebuild-switch and also see the flake outputs per-user.
+  #
+  # The goal is to make it so that one can do the following:
+  #
+  # outputs.<user>.homeModules (refer to home modules)
+  # outputs.<user>.nixosModules (module introspection)
+  # outputs.<user>.nixosConfigurations.<system>.<hostname> (nixos-rebuild switch --flake .#<user>.nixosConfigurations.<system>.<hostname>)
+  # outputs.<user>.darwinModules (module introspection)
+  # outputs.<user>.darwinConfigurations.<system>.<hostname> (darwin-rebuild switch --flake .#<user>.darwinConfigurations.<system>.<hostname>)
+  #
+  # For nixosConfigurations and darwinConfigurations, it would be great to
+  # have a mapping such that it produces a configuration for the system attribute.
+  # This means that `nixosConfigurations.aarch64-linux.<hostname>` would produce
+  # a `nixosSystem` where `system = "aarch64-linux"`.
+  #
+  # In addition, each system should be able to reference other user modules
+  # and user information in order to set `users.users.<user>` and groups.
   outputs =
-    { nixpkgs
-    , flake-utils
+    { self
+    , nixpkgs
     , home-manager
-    , swww
-    , brave-torrent
+    , awww
     , helix-themes
     , nix-colors
-    , ...
     }:
-    let
-      # TODO: Related to the comment below, the system will be whatever system
-      # is passed to the function that creates the configuration.
-      # It doesn't belong here and should be removed.
-      system = flake-utils.lib.system.x86_64-linux;
-
-      userLib = import ./users.nix;
-      userl = userLib.userl;
-      users = userLib.foldUserl userl;
-      # Create an attrset of nixos system configurations for a user's host systems.
-      foldUserSysteml = user: hostl:
-        builtins.foldl'
-          (nixosSystems': host: nixosSystems' // {
-            # TODO: Get this block reduced to `users.${user}.systems.hosts.${host}.nixosSystem`
-            # We want to improve readability but also not force top-level inputs on any one system.
-            # If each system has its own flake then it gives more independence to that system
-            # while also having the benefit of being aware of the other configurations of systems
-            # belonging to that user. This way you only need to declare most things once.
-            ${host} = nixpkgs.lib.nixosSystem {
-              inherit system;
-              modules = [
-                users.${user}.systems.hosts.${host}.modulePath
-                home-manager.nixosModules.home-manager
-                {
-                  home-manager = {
-                    useUserPackages = true;
-                    useGlobalPkgs = true;
-                    extraSpecialArgs = {
-                      inherit
-                        brave-torrent
-                        helix-themes
-                        nix-colors;
-                      swww-upstream = swww.packages.${system}.default;
-                      user = users.${user};
-                    };
-                    users.${user} = users.${user}.systems.hosts.${host}.home-manager.modulePath;
-                  };
-                }
-              ];
-              specialArgs = {
-                user = users.${user};
-                host = users.${user}.systems.hosts.${host};
-              };
-            };
-          })
-          { }
-          hostl;
-      # Combine all users system configurations into an attrset.
-      foldSysteml = userl:
-        builtins.foldl'
-          (nixosSystems': user:
-            nixosSystems' // foldUserSysteml user.name user.hostl
-          )
-          { }
-          userl;
-    in
-    { nixosConfigurations = foldSysteml userl; } //
-    # Configurations rely on the system that is set in hardware-configuration.nix
-    # so there's no need to include `system`, except for when developing the parent
-    # flake.nix itself, or working on one system configuration from another.
-    flake-utils.lib.eachDefaultSystem (system:
-    let
-      pkgs = nixpkgs.legacyPackages.${system};
-    in
     {
-      devShells.default = pkgs.mkShell {
-        buildInputs = with pkgs; [
-          nil
-          nixpkgs-fmt
-        ];
+      # All user defined home-manager modules go here
+      homeManagerModules = {};
+
+      # All user defined nixos modules go here
+      nixosModules = {};
+      # All nixos systems per-user go here
+      nixosConfigurations = {
+        critter-tank = nixpkgs.lib.nixosSystem {
+          modules = [
+            ./users/eureka/systems/critter-tank/configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              nixpkgs.overlays = [
+                awww.overlays.default
+              ];
+              home-manager = {
+                useUserPackages = true;
+                useGlobalPkgs = true;
+                sharedModules = [
+                  helix-themes.homeManagerModule
+                ];
+                extraSpecialArgs = {
+                  # TODO: Repalce with stylix
+                  inherit nix-colors;
+                };
+                users.eureka = ./users/eureka/systems/critter-tank/home-manager;
+              };
+            }
+          ];
+        };
       };
 
-      formatter = pkgs.nixpkgs-fmt;
-    });
+      # All user defined darwin modules go here
+      darwinModules = {};
+      # All darwin systems per-user go here
+      darwinConfigurations = {};
+    };
 }

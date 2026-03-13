@@ -1,8 +1,8 @@
-{ pkgs, lib, helix-themes, user, ... }:
+{ pkgs, lib, ... }:
 {
   # Home Manager needs a bit of information about you and the paths it should manage.
-  home.username = user.name;
-  home.homeDirectory = user.homeDirectory;
+  home.username = "eureka";
+  home.homeDirectory = lib.mkDefault "/home/eureka";
 
   home.packages = with pkgs; [
     home-manager
@@ -83,7 +83,6 @@
         language-servers = [ "buf" ];
       }];
     };
-    themes = helix-themes.outputs.themes;
   };
 
   # zsh & oh-my-zsh configurations

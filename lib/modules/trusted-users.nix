@@ -4,7 +4,7 @@
     # Map to the name of the user this is for
     type = lib.types.attrsOf (lib.types.submodule {
       options = {
-        hosts =
+        trustedUsers =
           let
             host = lib.types.submodule {
               options = {

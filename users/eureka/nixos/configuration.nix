@@ -1,4 +1,7 @@
-{ config, pkgs, user, host, ... }:
+{ config, pkgs, ... }:
+let
+  user = config.users.users.eureka.name;
+in
 {
   imports = [
     ./modules/systemd/gh-mdbook-server
@@ -10,16 +13,16 @@
     efi.canTouchEfiVariables = true;
   };
 
-  networking = {
-    hostName = host.networking.hostName;
-    networkmanager.enable = true;
-  };
+  networking.networkmanager.enable = true;
 
   boot.kernelModules = [ "v4l2loopback" ];
   boot.extraModulePackages = [ config.boot.kernelPackages.v4l2loopback ];
   boot.extraModprobeConfig = ''
     options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
   '';
+
+  # TODO: Probably this needs attention as it gets applied to all systems
+  # and not every system will use this...
   security.polkit.enable = true;
   services.gnome.gnome-keyring.enable = true;
   programs.seahorse.enable = true;
@@ -32,7 +35,6 @@
   services.xserver.displayManager.sessionCommands = ''
     eval $(gnome-keyring-daemon --start --daemonize --components=secrets)
   '';
-
 
   # Set your time zone.
   time.timeZone = "America/Los_Angeles";
@@ -83,9 +85,9 @@
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.${user.name} = {
+  users.users.eureka = {
     isNormalUser = true;
-    description = user.description;
+    description = "Chris O'Brien";
     extraGroups = [ "networkmanager" "wheel" "docker" "audio" ];
     shell = pkgs.zsh;
   };
@@ -97,8 +99,8 @@
     openFirewall = true;
   };
   services.gh-mdbook-server = {
+    inherit user;
     enable = true;
-    user = user.name;
     remote = "git@github.com/eureka-cpu/todo.git";
     local = "/home/eureka/Code/eureka-cpu/todo";
     port = 3001;
@@ -107,8 +109,8 @@
 
   # Enable automatic login for the user.
   services.displayManager.autoLogin = {
+    inherit user;
     enable = false;
-    user = user.name;
   };
 
   # Allow unfree packages
@@ -133,15 +135,7 @@
   };
 
   fonts.packages = with pkgs.nerd-fonts; [
-    fira-code
     jetbrains-mono
-    # "GeistMono"
-    # "Hasklig"
-    # "Iosevka"
-    # "Lilex"
-    # "Monoid"
-    # "VictorMono"
-    # "ZedMono"
   ];
 
   nix = {
