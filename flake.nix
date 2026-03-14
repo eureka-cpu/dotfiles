@@ -8,6 +8,10 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nix-darwin = {
+      url = "github:nix-darwin/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -42,6 +46,7 @@
   outputs =
     { self
     , nixpkgs
+    , nix-darwin
     , home-manager
     , awww
     , helix-themes
@@ -68,13 +73,13 @@
               home-manager = {
                 useUserPackages = true;
                 useGlobalPkgs = true;
+                users.eureka = ./users/eureka/systems/critter-tank/home-manager;
                 sharedModules = [
                   helix-themes.homeManagerModule
                 ];
                 extraSpecialArgs = {
                   inherit nix-colors;
                 };
-                users.eureka = ./users/eureka/systems/critter-tank/home-manager;
               };
             }
           ];
@@ -84,6 +89,20 @@
       # All user defined darwin modules go here
       darwinModules = {};
       # All darwin systems per-user go here
-      darwinConfigurations = {};
+      darwinConfigurations = {
+        yabai = nix-darwin.lib.darwinSystem {
+          modules = [
+            ./users/eureka/systems/yabai/configuration.nix
+            home-manager.darwinModules.home-manager
+            {
+              home-manager = {
+                useUserPackages = true;
+                useGlobalPkgs = true;
+                users.eureka = ./users/eureka/systems/yabai/home-manager;
+              };
+            }
+          ];
+        };
+      };
     };
 }
