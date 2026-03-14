@@ -2,8 +2,8 @@
 {
   imports = [
     ./gtk.nix
-    ../../../home-manager/hyprland.nix
-    ../../../home-manager/default.nix
+    ../../../../home-manager/hyprland.nix
+    ../../../../home-manager/default.nix
     nix-colors.homeManagerModules.default
   ];
 
@@ -14,7 +14,7 @@
     rofi
     mako
     awww
-    xfce.thunar
+    thunar
     zathura
     image-roll
     celluloid

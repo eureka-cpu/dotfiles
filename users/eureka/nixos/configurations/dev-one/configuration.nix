@@ -2,17 +2,18 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../nixos/configuration.nix
-    ../../nixos/laptop-configuration.nix
+    ../../../nixos/configuration.nix
+    ../../../nixos/laptop-configuration.nix
   ];
+
+  networking.hostName = "dev-one";
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   boot.initrd.luks.devices."luks-db29127c-e05e-4a4e-8558-2df438c6c766".device = "/dev/disk/by-uuid/db29127c-e05e-4a4e-8558-2df438c6c766";
 
-  # Enable the X11 windowing system.
-  services.xserver = {
-    # Enable the GNOME Desktop Environment.
+  # Enable the GNOME Desktop Environment.
+  services = {
     displayManager.gdm.enable = true;
     desktopManager.gnome.enable = true;
   };
@@ -44,11 +45,5 @@
     dedicatedServer.openFirewall = true;
   };
 
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "23.11"; # Did you read the comment?
+  system.stateVersion = "23.11";
 }
