@@ -31,6 +31,7 @@
 
     let
       inherit (nixpkgs) lib;
+
       users = builtins.attrNames (builtins.readDir ./users);
       systemsFor = { user, platform }:
         let
@@ -39,16 +40,18 @@
         if builtins.pathExists path then
           builtins.attrNames (builtins.readDir path)
         else
-          [];
-      mkSystem = { user, hostname, platform }:
+          [ ];
+
+      genSystem = { user, hostname, platform }:
         let
-          mkSystem = if platform == "darwin" then
-            nix-darwin.lib.darwinSystem
-          else
-            nixpkgs.lib.nixosSystem;
+          nixSystem =
+            if platform == "darwin" then
+              nix-darwin.lib.darwinSystem
+            else
+              nixpkgs.lib.nixosSystem;
           host = "${self}/users/${user}/${platform}/configurations/${hostname}";
         in
-        mkSystem {
+        nixSystem {
           modules = [
             (host + "/configuration.nix")
             home-manager."${platform}Modules".home-manager
@@ -67,26 +70,31 @@
               home-manager.extraSpecialArgs = { inherit nix-colors; };
             };
         };
-      genSystems = platform: lib.mergeAttrsList (map (user:
-        lib.listToAttrs (map (hostname:
-          lib.nameValuePair "${user}-${hostname}" (mkSystem {
-            inherit user hostname platform;
-          })
-        ) (systemsFor { inherit user platform; }))
-      ) users);
+
+      genSystems = platform: lib.mergeAttrsList (map
+        (user:
+          lib.listToAttrs (map
+            (hostname:
+              lib.nameValuePair "${user}-${hostname}" (genSystem {
+                inherit user hostname platform;
+              })
+            )
+            (systemsFor { inherit user platform; }))
+        )
+        users);
     in
     {
       # All user defined home-manager modules go here
-      homeManagerModules = {};
+      homeManagerModules = { };
 
       # All user defined nixos modules go here
-      nixosModules = {};
+      nixosModules = { };
       # All nixos systems per-user go here
-      nixosConfigurations = (genSystems "nixos");
+      nixosConfigurations = genSystems "nixos";
 
       # All user defined darwin modules go here
-      darwinModules = {};
+      darwinModules = { };
       # All darwin systems per-user go here
-      darwinConfigurations = (genSystems "darwin");
+      darwinConfigurations = genSystems "darwin";
     };
 }
