@@ -7,6 +7,14 @@
       url = "github:nix-darwin/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-apple-silicon = {
+      url = "github:nix-community/nixos-apple-silicon";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    x1e-nixos-config = {
+      url = "github:kuruczgy/x1e-nixos-config";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -25,76 +33,99 @@
     , nix-darwin
     , home-manager
     , awww
-    , helix-themes
     , nix-colors
-    }:
+    , ...
+    }@inputs:
 
     let
       inherit (nixpkgs) lib;
 
       users = builtins.attrNames (builtins.readDir ./users);
-      systemsFor = { user, platform }:
+      systemsFor = { user, type }:
         let
-          path = ./users/${user}/${platform}/configurations;
+          path = ./users/${user}/${type}/configurations;
         in
         if builtins.pathExists path then
           builtins.attrNames (builtins.readDir path)
         else
           [ ];
 
-      genSystem = { user, hostname, platform }:
+      genSystem = builder: { user, hostname, type }:
         let
-          nixSystem =
-            if platform == "darwin" then
-              nix-darwin.lib.darwinSystem
-            else
-              nixpkgs.lib.nixosSystem;
-          host = "${self}/users/${user}/${platform}/configurations/${hostname}";
+          host = "${self}/users/${user}/${type}/configurations/${hostname}";
         in
-        nixSystem {
+        builder {
           modules = [
             (host + "/configuration.nix")
-            home-manager."${platform}Modules".home-manager
+            home-manager."${type}Modules".home-manager
             {
               home-manager = {
                 useUserPackages = true;
                 useGlobalPkgs = true;
                 users.${user} = host + "/home-manager";
-                sharedModules = [ helix-themes.homeManagerModule ];
+                sharedModules = [ inputs.helix-themes.homeManagerModule ];
               };
             }
-          ] ++ lib.optional (platform == "nixos")
+          ] ++ lib.optional (type == "nixos")
             {
               # TODO: Use hyprpaper and stylix so we can just remove this
               nixpkgs.overlays = [ awww.overlays.default ];
               home-manager.extraSpecialArgs = { inherit nix-colors; };
-            };
+            };          
         };
 
-      genSystems = platform: lib.mergeAttrsList (map
+      genSystems = { builder, type }: lib.mergeAttrsList (map
         (user:
           lib.listToAttrs (map
             (hostname:
-              lib.nameValuePair "${user}-${hostname}" (genSystem {
-                inherit user hostname platform;
+              lib.nameValuePair "${user}-${hostname}" (genSystem builder {
+                inherit user hostname type;
               })
             )
-            (systemsFor { inherit user platform; }))
+            (systemsFor { inherit user type; }))
         )
         users);
     in
     {
       # All user defined home-manager modules go here
-      homeManagerModules = { };
+      homeManagerModules = {
+        helix-themes = inputs.helix-themes.homeManagerModule;
+      };
 
       # All user defined nixos modules go here
-      nixosModules = { };
+      nixosModules = {
+        eureka.hardware-profiles = {
+          apple-silicon = { config, lib, ... }: {
+            options.hardware.asahi = {
+              enable = lib.mkEnableOption "Asahi Linux Apple Silicon hardware support";
+            };
+            config = lib.mkIf config.hardware.asahi.enable {
+              imports = [ inputs.nixos-apple-silicon.nixosModules.default ];
+              nixpkgs.overlays = [ inputs.nixos-apple-silicon.overlays.default ];
+            };
+          };
+          qcom-x1e80100 = { config, lib, ... }: {
+            options.hardware.qualcomm.x1e80100 = {
+              enable = lib.mkEnableOption "Qualcomm X-Elite hardware support";
+            };
+            config = lib.mkIf config.hardware.qualcomm.x1e80100.enable {
+              imports = [ inputs.x1e-nixos-config.nixosModules.x1e ];
+            };
+          };
+        };
+      };
       # All nixos systems per-user go here
-      nixosConfigurations = genSystems "nixos";
+      nixosConfigurations = genSystems {
+        type = "nixos";
+        builder = nixpkgs.lib.nixosSystem;
+      };
 
       # All user defined darwin modules go here
       darwinModules = { };
       # All darwin systems per-user go here
-      darwinConfigurations = genSystems "darwin";
+      darwinConfigurations = genSystems {
+        type = "darwin";
+        builder = nix-darwin.lib.darwinSystem;
+      };
     };
 }
