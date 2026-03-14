@@ -55,6 +55,8 @@
       nixosModules = {};
       # All nixos systems per-user go here
       nixosConfigurations = {
+        # TODO: create the generator code which uses the file structure to automatically
+        # find the nixos configurations and home-manager configurations for the system.
         critter-tank = nixpkgs.lib.nixosSystem {
           modules = [
             ./users/eureka/systems/critter-tank/configuration.nix
@@ -70,7 +72,6 @@
                   helix-themes.homeManagerModule
                 ];
                 extraSpecialArgs = {
-                  # TODO: Repalce with stylix
                   inherit nix-colors;
                 };
                 users.eureka = ./users/eureka/systems/critter-tank/home-manager;
