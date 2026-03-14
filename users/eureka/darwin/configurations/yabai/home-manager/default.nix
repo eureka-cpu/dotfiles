@@ -1,5 +1,9 @@
 { pkgs, lib, ... }:
 {
+  imports = [
+    ../../../../home-manager/default.nix
+  ];
+
   programs.kitty = {
     themeFile = "zenwritten_dark";
     font = {
