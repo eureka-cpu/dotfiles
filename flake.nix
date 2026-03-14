@@ -15,7 +15,7 @@
       url = "git+https://codeberg.org/LGFae/awww";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    helix-themes.url = "github:eureka-cpu/helix-themes?ref=eureka-cpu/0";
+    helix-themes.url = "github:CptPotato/helix-themes";
     nix-colors.url = "github:misterio77/nix-colors";
   };
 

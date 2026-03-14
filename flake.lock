@@ -56,16 +56,15 @@
     },
     "helix-themes": {
       "locked": {
-        "lastModified": 1773438937,
-        "narHash": "sha256-R8VgcBic2OiTYx9nWPsPFlKT39iKu/yznu+yWbvGLbA=",
-        "owner": "eureka-cpu",
+        "lastModified": 1773504104,
+        "narHash": "sha256-tColQF59K4xQvnYgUsw7H2bqwojMRB9aT9aB1dnAGJs=",
+        "owner": "CptPotato",
         "repo": "helix-themes",
-        "rev": "97f1e370eaf08d80bb3a388bfbd36552505d8708",
+        "rev": "3ac754a3f34984c7596f888ad2796e57eb8b6367",
         "type": "github"
       },
       "original": {
-        "owner": "eureka-cpu",
-        "ref": "eureka-cpu/0",
+        "owner": "CptPotato",
         "repo": "helix-themes",
         "type": "github"
       }
