@@ -235,15 +235,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1772751386,
-        "narHash": "sha256-0knvUfiYap8IzXAFbXvr/kBqGWS7p2egsqJB8mVAJsQ=",
-        "owner": "kuruczgy",
+        "lastModified": 1773608062,
+        "narHash": "sha256-cAGbImAWXRvQW3Mv+9Vs/t1b/o4l1HNmZsgV3zfOrXg=",
+        "owner": "eureka-cpu",
         "repo": "x1e-nixos-config",
-        "rev": "227267dd1702c22d49866731cb7fef92a435ae35",
+        "rev": "3cdbb12411784e66f24ba18b66c0285333bc00c1",
         "type": "github"
       },
       "original": {
-        "owner": "kuruczgy",
+        "owner": "eureka-cpu",
+        "ref": "eureka-cpu/211",
         "repo": "x1e-nixos-config",
         "type": "github"
       }

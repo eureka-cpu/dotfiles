@@ -12,7 +12,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     x1e-nixos-config = {
-      url = "github:kuruczgy/x1e-nixos-config";
+      url = "github:eureka-cpu/x1e-nixos-config?ref=eureka-cpu/211";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
@@ -55,7 +55,7 @@
           host = "${self}/users/${user}/${type}/configurations/${hostname}";
         in
         builder {
-          modules = [
+          modules = lib.collect lib.isFunction (self.nixosModules) ++ [
             (host + "/configuration.nix")
             home-manager."${type}Modules".home-manager
             {
@@ -96,21 +96,14 @@
       nixosModules = {
         eureka.hardware-profiles = {
           apple-silicon = { config, lib, ... }: {
-            options.hardware.asahi = {
-              enable = lib.mkEnableOption "Asahi Linux Apple Silicon hardware support";
-            };
-            config = lib.mkIf config.hardware.asahi.enable {
-              imports = [ inputs.nixos-apple-silicon.nixosModules.default ];
-              nixpkgs.overlays = [ inputs.nixos-apple-silicon.overlays.default ];
-            };
+            imports = [ inputs.nixos-apple-silicon.nixosModules.default ];
+            config.hardware.asahi.enable = lib.mkDefault false;
+            config.nixpkgs.overlays = lib.optional
+              config.hardware.asahi.enable
+              inputs.nixos-apple-silicon.overlays.default;
           };
           qcom-x1e80100 = { config, lib, ... }: {
-            options.hardware.qualcomm.x1e80100 = {
-              enable = lib.mkEnableOption "Qualcomm X-Elite hardware support";
-            };
-            config = lib.mkIf config.hardware.qualcomm.x1e80100.enable {
-              imports = [ inputs.x1e-nixos-config.nixosModules.x1e ];
-            };
+            imports = [ inputs.x1e-nixos-config.nixosModules.x1e ];
           };
         };
       };
