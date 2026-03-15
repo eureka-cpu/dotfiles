@@ -71,7 +71,7 @@
               # TODO: Use hyprpaper and stylix so we can just remove this
               nixpkgs.overlays = [ awww.overlays.default ];
               home-manager.extraSpecialArgs = { inherit nix-colors; };
-            };          
+            };
         };
 
       genSystems = { builder, type }: lib.mergeAttrsList (map
