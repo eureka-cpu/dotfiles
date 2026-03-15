@@ -287,4 +287,34 @@
         # windowrule = float, ^(kitty)$
       };
   };
+
+  home.packages = with pkgs; [
+    grim
+    eww
+    rofi
+    mako
+    awww
+    thunar
+    zathura
+    image-roll
+    celluloid
+    pavucontrol
+  ];
+
+  xdg = {
+    configFile = {
+      rofi = {
+        source = ./rofi;
+        recursive = true;
+      };
+    };
+    mimeApps.defaultApplications = {
+      "text/plain" = [ "helix.desktop" ];
+      "application/pdf" = [ "zathura.desktop" ];
+      "image/*" = [ "image-roll.desktop" ];
+      "video/png" = [ "celluloid.desktop" ];
+      "video/jpg" = [ "celluloid.desktop" ];
+      "video/*" = [ "celluloid.desktop" ];
+    };
+  };
 }
