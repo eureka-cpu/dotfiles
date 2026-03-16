@@ -55,7 +55,7 @@
           host = "${self}/users/${user}/${type}/configurations/${hostname}";
         in
         builder {
-          modules = lib.collect lib.isFunction (self.nixosModules) ++ [
+          modules = lib.collect lib.isFunction (self."${type}Modules") ++ [
             (host + "/configuration.nix")
             home-manager."${type}Modules".home-manager
             {
