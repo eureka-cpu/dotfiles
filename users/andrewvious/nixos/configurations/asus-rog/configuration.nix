@@ -2,8 +2,10 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../nixos/configuration.nix
+    ../../../nixos/configuration.nix
   ];
+
+  networking.hostName = "asus-rog";
 
   # Enable the X11 windowing system.
   services.displayManager.gdm.enable = true;
@@ -13,10 +15,6 @@
     enable = true;
     package = with pkgs; builtins.trace "Built against Hyprland v${hyprland.version}" hyprland;
   };
-
-  # Enable automatic login for the user.
-  services.displayManager.autoLogin.enable = true;
-  services.displayManager.autoLogin.user = "andrewvious";
 
   # Workaround for GNOME autologin
   systemd.services."getty@tty1".enable = false;

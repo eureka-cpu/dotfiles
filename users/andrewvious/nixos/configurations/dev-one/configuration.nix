@@ -7,6 +7,8 @@
       ../../nixos/laptop-configuration.nix
     ];
 
+  networking.hostName = "dev-one";
+
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   boot.initrd.luks.devices."luks-04f2d713-cd4e-4d6e-bb67-024a40dd176a".device = "/dev/disk/by-uuid/04f2d713-cd4e-4d6e-bb67-024a40dd176a";
@@ -25,10 +27,6 @@
   # Enabling due to issues with Wayland & screen sharing
   xdg.portal.enable = true;
   
-  # Enable automatic login for the user.
-  services.displayManager.autoLogin.enable = true;
-  services.displayManager.autoLogin.user = "andrewvious";
-
   # Workaround for GNOME autologin
   systemd.services."getty@tty1".enable = false;
   systemd.services."autovt@tty1".enable = false;
