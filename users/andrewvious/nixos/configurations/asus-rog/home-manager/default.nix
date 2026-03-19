@@ -1,4 +1,4 @@
-{ pkgs, swww-upstream, ... }:
+{ pkgs, ... }:
 {
   imports = [
     ./gtk.nix
@@ -14,14 +14,6 @@
     kdePackages.dolphin
     kdePackages.kio
     kdePackages.kio-extras
-    cliphist
-    grim
-    rofi
-    mako
-    swww-upstream
-    zathura
-    pavucontrol
-    qimgv
     # Arduino Uno R3
     arduino-ide
     arduino-cli
