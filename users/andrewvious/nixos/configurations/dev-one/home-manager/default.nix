@@ -2,9 +2,9 @@
 {
   imports = [
     ./gtk.nix
-    ../../../home-manager/gnome.nix
-    ../../../home-manager/default.nix
-    ../../../home-manager/brave-torrent.nix
+    ../../../../home-manager/gnome.nix
+    ../../../../home-manager/default.nix
+    ../../../../home-manager/brave-torrent.nix
   ];
 
   home.packages = with pkgs; [

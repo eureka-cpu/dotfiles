@@ -3,8 +3,8 @@
   imports =
     [
       ./hardware-configuration.nix
-      ../../nixos/configuration.nix
-      ../../nixos/laptop-configuration.nix
+      ../../../nixos/configuration.nix
+      ../../../nixos/laptop-configuration.nix
     ];
 
   networking.hostName = "dev-one";

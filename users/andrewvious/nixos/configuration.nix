@@ -82,7 +82,7 @@ in
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.andrewvious = {
     isNormalUser = true;
-    description = user.description;
+    description = "Andrew O'Brien";
     extraGroups = [ "networkmanager" "wheel" "dialout" "docker" "audio" ]; #dialout is for Arduino IDE
     shell = pkgs.zsh;
   };
