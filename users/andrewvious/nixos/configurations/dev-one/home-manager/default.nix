@@ -13,7 +13,7 @@
     zoom-us
     # studio
     inkscape
-    kdePackages.kdenlive
+    # kdePackages.kdenlive
     krita
     reaper
     discord

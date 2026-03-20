@@ -38,6 +38,22 @@
         "type": "github"
       }
     },
+    "brave-torrent": {
+      "locked": {
+        "lastModified": 1745494783,
+        "narHash": "sha256-L3TZwuvddj2a9SFApRUrwLGStUnhXBBJRs6o2JqN+tQ=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "bfbd5014640db4509f601878a2f2a9216a0459d0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "bfbd5014640db4509f601878a2f2a9216a0459d0",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -198,6 +214,7 @@
     "root": {
       "inputs": {
         "awww": "awww",
+        "brave-torrent": "brave-torrent",
         "helix-themes": "helix-themes",
         "home-manager": "home-manager",
         "nix-colors": "nix-colors",

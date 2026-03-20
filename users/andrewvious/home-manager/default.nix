@@ -8,7 +8,6 @@
     obsidian
     wl-clipboard
     brave
-    brave-torrent
     kitty
     # shell
     zsh

@@ -25,7 +25,7 @@
     };
     helix-themes.url = "github:CptPotato/helix-themes";
     nix-colors.url = "github:misterio77/nix-colors";
-    brave-torrent.url = "github:nixos/nixpks/bfbd5014640db4509f601878a2f2a9216a0459d0";
+    brave-torrent.url = "github:NixOS/nixpkgs?rev=bfbd5014640db4509f601878a2f2a9216a0459d0";
   };
 
   outputs =
