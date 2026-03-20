@@ -5,7 +5,6 @@
     ../../../../home-manager/default.nix
     ../../../../home-manager/hyprland.nix
     ../../../../home-manager/waybar.nix
-    ../../../../home-manager/brave-torrent.nix
     ../../../../home-manager/hypridle.nix
   ];
 
@@ -18,8 +17,6 @@
     arduino-ide
     arduino-cli
   ];
-
-  braveTorrent.enable = true;
 
   programs.kitty = {
     themeFile = "spaceduck";

@@ -71,7 +71,8 @@
               # TODO: Use hyprpaper and stylix so we can just remove this
               nixpkgs.overlays = [
                 awww.overlays.default
-                brave-torrent.overlays.default
+                # Note: Only for x86_64-linux builds
+                (import ./users/andrewvious/home-manager/brave-torrent.nix)
               ];
               home-manager.extraSpecialArgs = { inherit nix-colors; };
             };
