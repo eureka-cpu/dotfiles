@@ -25,6 +25,7 @@
     };
     helix-themes.url = "github:CptPotato/helix-themes";
     nix-colors.url = "github:misterio77/nix-colors";
+    brave-torrent.url = "github:nixos/nixpks/bfbd5014640db4509f601878a2f2a9216a0459d0";
   };
 
   outputs =
@@ -34,6 +35,7 @@
     , home-manager
     , awww
     , nix-colors
+    , brave-torrent
     , ...
     }@inputs:
 
@@ -69,12 +71,8 @@
           ] ++ lib.optional (type == "nixos")
             {
               # TODO: Use hyprpaper and stylix so we can just remove this
-              nixpkgs.overlays = [
-                awww.overlays.default
-                # Note: Only for x86_64-linux builds
-                (import ./users/andrewvious/overlays/brave-overlay.nix)
-              ];
-              home-manager.extraSpecialArgs = { inherit nix-colors; };
+              nixpkgs.overlays = [ awww.overlays.default ];
+              home-manager.extraSpecialArgs = { inherit nix-colors brave-torrent; };
             };
         };
 
