@@ -72,7 +72,7 @@
               nixpkgs.overlays = [
                 awww.overlays.default
                 # Note: Only for x86_64-linux builds
-                (import ./users/andrewvious/home-manager/brave-torrent.nix)
+                (import ./users/andrewvious/overlays/brave-overlay.nix)
               ];
               home-manager.extraSpecialArgs = { inherit nix-colors; };
             };
