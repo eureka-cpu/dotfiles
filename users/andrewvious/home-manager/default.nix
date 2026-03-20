@@ -71,7 +71,6 @@
         };
       };
      };
-    themes = helix-themes.outputs.themes;
   };
 
   # zsh & oh-my-zsh configurations

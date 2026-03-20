@@ -69,7 +69,10 @@
           ] ++ lib.optional (type == "nixos")
             {
               # TODO: Use hyprpaper and stylix so we can just remove this
-              nixpkgs.overlays = [ awww.overlays.default ];
+              nixpkgs.overlays = [
+                awww.overlays.default
+                brave-torrent.overlays.default
+              ];
               home-manager.extraSpecialArgs = { inherit nix-colors; };
             };
         };
