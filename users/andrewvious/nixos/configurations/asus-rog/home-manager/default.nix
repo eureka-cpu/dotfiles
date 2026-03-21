@@ -20,7 +20,7 @@
   ];
 
   braveTorrent.enable = true;
-
+   
   programs.kitty = {
     themeFile = "spaceduck";
     font.name = "JetBrainsMono Nerd Font";

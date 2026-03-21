@@ -83,7 +83,7 @@ in
   users.users.andrewvious = {
     isNormalUser = true;
     description = "Andrew O'Brien";
-    extraGroups = [ "networkmanager" "wheel" "dialout" "docker" "audio" ]; #dialout is for Arduino IDE
+    extraGroups = [ "networkmanager" "wheel" "dialout" "nordvpn" "docker" "audio" ]; #dialout is for Arduino IDE
     shell = pkgs.zsh;
   };
   programs.zsh.enable = true;

@@ -1,8 +1,9 @@
-{ config, lib, pkgs, ... }:
+{ config, pkgs, ... }:
 {
   imports = [
     ./hardware-configuration.nix
     ../../../nixos/configuration.nix
+    ../../../nixos/nordvpn.nix
   ];
 
   networking.hostName = "asus-rog";
@@ -33,6 +34,12 @@
     # Optionally, you may need to select the appropriate driver version for your specific GPU
     package = config.boot.kernelPackages.nvidiaPackages.production;
   };
+
+  # nordvpn settings:
+  services.nordvpn.enable = true;
+  networking.firewall.allowedTCPPorts = [ 443 ];
+  networking.firewall.allowedUDPPorts = [ 1194 ];
+  networking.firewall.checkReversePath = "loose";
 
   hardware.bluetooth = {
     enable = true;
