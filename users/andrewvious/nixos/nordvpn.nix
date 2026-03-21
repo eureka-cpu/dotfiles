@@ -72,6 +72,7 @@
         libxml2
         libidn2
         zlib
+        sqlite
         wireguard-tools
       ];
     };
