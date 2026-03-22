@@ -5,6 +5,7 @@
       ./hardware-configuration.nix
       ../../../nixos/configuration.nix
       ../../../nixos/laptop-configuration.nix
+      ../../../nixos/nordvpn.nix
     ];
 
   networking.hostName = "dev-one";
@@ -30,6 +31,12 @@
   # Workaround for GNOME autologin
   systemd.services."getty@tty1".enable = false;
   systemd.services."autovt@tty1".enable = false;
+
+  # nordvpn settings:
+  services.nordvpn.enable = true;
+  networking.firewall.allowedTCPPorts = [ 443 ];
+  networking.firewall.allowedUDPPorts = [ 1194 ];
+  networking.firewall.checkReversePath = "loose";
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
