@@ -17,6 +17,9 @@
     package = with pkgs; builtins.trace "Built against Hyprland v${hyprland.version}" hyprland;
   };
 
+  # Enabling to build images for Raspberry Pi
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
   # Workaround for GNOME autologin
   systemd.services."getty@tty1".enable = false;
   systemd.services."autovt@tty1".enable = false;
