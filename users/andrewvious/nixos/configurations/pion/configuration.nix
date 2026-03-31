@@ -81,11 +81,13 @@
   nixpkgs.config.allowUnfree = true;
 
   nix = {
-    package = pkgs.nixVersions.latest;
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
       trusted-users = [ "root" "andrewvious" ];
     };
+    package = pkgs.nixVersions.latest;
+    # Use the path to `nixpkgs` in `inputs` as $NIX_PATH
+    nixPath = lib.mkForce [ "nixpkgs=${pkgs.path}" ];
     gc = {
       automatic = true;
       dates = "weekly";
