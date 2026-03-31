@@ -7,6 +7,7 @@
     ../../../../home-manager/hyprland.nix
     ../../../../home-manager/waybar.nix
     ../../../../home-manager/hypridle.nix
+    ../../../../home-manager/fastfetch.nix
   ];
 
   home.packages = with pkgs; [
