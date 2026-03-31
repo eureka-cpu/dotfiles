@@ -1,10 +1,12 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
+    fastfetch
     helix
     jellyfin
     yazi
     zellij
   ];
+
   # zsh configurations
   programs.zsh = {
     enable = true;

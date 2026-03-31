@@ -68,7 +68,10 @@
   };
 
   programs.zsh.enable = true;
-  environment.systemPackages = [ pkgs.kitty.terminfo ];
+  environment.systemPackages = [
+    pkgs.kitty.terminfo
+    pkgs.lm_sensors
+  ];
 
   # Mount external drive, otherwise required on reboot,
   # `nofail` accounts for if drive is unplugged.

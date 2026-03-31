@@ -12,7 +12,7 @@
     # shell
     zsh
     oh-my-zsh
-    neofetch
+    fastfetch
     # code
     docker
     git
