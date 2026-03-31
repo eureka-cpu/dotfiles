@@ -1,4 +1,4 @@
-{ pkgs, lib, user, ... }:
+{ pkgs, lib, ... }:
 {
   imports =
     [
@@ -31,6 +31,9 @@
   # Workaround for GNOME autologin
   systemd.services."getty@tty1".enable = false;
   systemd.services."autovt@tty1".enable = false;
+
+  # Enabling to build images for Raspberry Pi
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
   # nordvpn settings:
   services.nordvpn.enable = true;
