@@ -1,4 +1,4 @@
-{ config, pkgs, modulesPath, ... }:
+{ config, pkgs, lib, modulesPath, ... }:
 {
   imports = [
     "${modulesPath}/installer/sd-card/sd-image-aarch64.nix"
@@ -7,7 +7,6 @@
   nixpkgs.hostPlatform = "aarch64-linux";
 
   boot = {
-    kernelPackages = pkgs.linuxKernel.packages.linux_rpi4;
     initrd.availableKernelModules = [ "xhci_pci" "usbhid" "usb_storage" ];
     loader = {
       grub.enable = false;
@@ -40,14 +39,19 @@
 
   users.users.andrewvious = {
     isNormalUser = true;
+    initialPassword = builtins.trace "Please change inital passwd, current: changeme" "changeme";
     extraGroups = [ "wheel" ];
     shell = pkgs.zsh;
     openssh.authorizedKeys.keys = [
+      # asus-rog
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEJDzX6wii1D7UR6Rit0zmc7TJQoMitk9YQ3Rp4wXJTr"
       # dev-one
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG5HJekhFhih2epjAwwgVJxna5GKSRQgya5FqaYpM4ZL" 
     ];
   };
+
   programs.zsh.enable = true;
+  environment.systemPackages = [ pkgs.kitty.terminfo ];
 
   nixpkgs.config.allowUnfree = true;
 
@@ -55,6 +59,7 @@
     package = pkgs.nixVersions.latest;
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
+      trusted-users = [ "root" "andrewvious" ];
     };
     gc = {
       automatic = true;
