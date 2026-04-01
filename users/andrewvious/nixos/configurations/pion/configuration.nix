@@ -52,9 +52,58 @@
       # Don't expose anywhere other than tailscale
       openFirewall = false;
     };
+
+    samba = {
+      enable = true;
+      openFirewall = true;  # opens UDP 137,138 / TCP 139,445
+    
+      settings = {
+        global = {
+          # Restrict to LAN subnet only
+          "hosts allow" = "192.168.1. 127.0.0.1";
+          "hosts deny" = "0.0.0.0/0";
+    
+          # Security hardening
+          "server min protocol" = "SMB3";  # drop SMB1/2
+          "ntlm auth" = "no";              # disable legacy NTLM
+    
+          # Restrict broadcasting
+          "disable netbios" = "yes";
+        };
+    
+        extdrive = {
+          path = "/mnt/external";
+          browseable = "yes";
+          "read only" = "no";
+          "guest ok" = "no";            # require authentication
+          "valid users" = "andrewvious";
+          "create mask" = "0644";
+          "directory mask" = "0755";
+          "force user" = "andrewvious";
+        };
+      };
+    };
+  };
+
+  # Mount external drive, otherwise required on reboot,
+  # `nofail` accounts for if drive is unplugged.
+  systemd = {
+    mounts = [{
+      what = "/dev/disk/by-uuid/00C6-AEAA";
+      where = "/mnt/external";
+      type = "exfat";
+      options = "uid=1000,gid=992,umask=007,nofail";
+      wantedBy = [ "multi-user.target" ];
+    }];
+
+    services.jellyfin = {
+      after = [ "tailscaled.service" ];
+      wants = [ "tailscaled.service" ];
+    };
   };
 
   users.users.andrewvious = {
+    uid = 1000;
     isNormalUser = true;
     initialPassword = builtins.trace "Reset passwd if flashed: `changeme`" "changeme";
     extraGroups = [ "wheel" "jellyfin" ];
@@ -73,14 +122,6 @@
     pkgs.lm_sensors
   ];
 
-  # Mount external drive, otherwise required on reboot,
-  # `nofail` accounts for if drive is unplugged.
-  fileSystems."/mnt/external" = {
-    device = "/dev/disk/by-uuid/00C6-AEAA";
-    fsType = "exfat";
-    options = [ "nofail" "umask=007" "uid=0" "gid=${toString config.users.groups.jellyfin.gid}" ];
-  };
-
   nixpkgs.config.allowUnfree = true;
 
   nix = {
@@ -96,11 +137,6 @@
       dates = "weekly";
       options = "--delete-older-than 7d";
     };
-  };
-
-  systemd.services.jellyfin = {
-    after = [ "tailscaled.service" ];
-    wants = [ "tailscaled.service" ];
   };
 
   system.stateVersion = "25.05";

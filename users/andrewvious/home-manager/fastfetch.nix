@@ -76,8 +76,8 @@
         keyColor = "35";
       }
       {
-        type = "bios";
-        key = "├  Firmware";
+        type = "kernel";
+        key = "├  Kernel";
         keyColor = "35";
       }
       {
