@@ -1,13 +1,14 @@
-{ pkgs, user, swww-upstream, ... }:
+{ pkgs, config, ... }:
 {
   wayland.windowManager.hyprland = {
     enable = true;
     settings =
       let
-        swww-daemon = "${swww-upstream}/bin/awww-daemon";
-        swww = "${swww-upstream}/bin/awww";
+        swww-daemon = "${pkgs.awww}/bin/awww-daemon";
+        swww = "${pkgs.awww}/bin/awww";
         mako = "${pkgs.mako}/bin/mako";
-        homeDirectory = user.homeDirectory;
+
+        inherit (config.home) homeDirectory;
         wallpaper = "${homeDirectory}/Wallpapers/wallhaven-asus-rog.jpg";
         
         onStart = pkgs.writeShellScriptBin "start.sh" ''
@@ -305,4 +306,15 @@
         windowrule = "match:class .*, suppress_event maximize";
       };
   };
+
+  home.packages = with pkgs; [
+    awww
+    cliphist
+    grim
+    mako
+    pavucontrol
+    qimgv
+    rofi
+    zathura
+   ];
 }

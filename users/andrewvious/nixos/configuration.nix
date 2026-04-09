@@ -1,4 +1,7 @@
-{ config, pkgs, user, host, ... }:
+{ config, pkgs, ... }:
+let
+  user = config.users.users.andrewvious.name;
+in
 {
   # Bootloader.
   boot.loader = {
@@ -6,10 +9,8 @@
     efi.canTouchEfiVariables = true;
   };
 
-  networking = {
-    hostName = host.networking.hostName;
-    networkmanager.enable = true;
-  };
+  networking.networkmanager.enable = true;
+  
 
   boot.kernelModules = [ "v4l2loopback" ];
   boot.extraModulePackages = [ config.boot.kernelPackages.v4l2loopback ];
@@ -79,10 +80,10 @@
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.${user.name} = {
+  users.users.andrewvious = {
     isNormalUser = true;
-    description = user.description;
-    extraGroups = [ "networkmanager" "wheel" "dialout" "docker" "audio" ]; #dialout is for Arduino IDE
+    description = "Andrew O'Brien";
+    extraGroups = [ "networkmanager" "wheel" "dialout" "nordvpn" "docker" "audio" ]; #dialout is for Arduino IDE
     shell = pkgs.zsh;
   };
   programs.zsh.enable = true;
@@ -95,8 +96,8 @@
 
   # Enable automatic login for the user.
   services.displayManager.autoLogin = {
+    inherit user;
     enable = true;
-    user = user.name;
   };
 
   # Allow unfree packages

@@ -1,107 +1,126 @@
 {
-  description = "one flake to rule them all";
+  description = "One flake to rule them all.";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
+    nix-darwin = {
+      url = "github:nix-darwin/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixos-apple-silicon = {
+      url = "github:nix-community/nixos-apple-silicon";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    x1e-nixos-config = {
+      url = "github:eureka-cpu/x1e-nixos-config?ref=eureka-cpu/211";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    swww = {
-      # slow to release but there is a flake!
+    awww = {
       url = "git+https://codeberg.org/LGFae/awww";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
-    brave-torrent = {
-      # Legacy Brave (1.77.101) for users who want web torrent!
-      url = "github:NixOS/nixpkgs/bfbd5014640d";
-    };
-    helix-themes.url = "github:eureka-cpu/helix-themes.nix";
+    helix-themes.url = "github:CptPotato/helix-themes";
     nix-colors.url = "github:misterio77/nix-colors";
+    brave-torrent.url = "github:NixOS/nixpkgs?rev=bfbd5014640db4509f601878a2f2a9216a0459d0";
   };
 
   outputs =
-    { nixpkgs
-    , flake-utils
+    { self
+    , nixpkgs
+    , nix-darwin
     , home-manager
-    , swww
-    , brave-torrent
-    , helix-themes
+    , awww
     , nix-colors
+    , brave-torrent
     , ...
-    }:
-    let
-      # TODO: Related to the comment below, the system will be whatever system
-      # is passed to the function that creates the configuration.
-      # It doesn't belong here and should be removed.
-      system = flake-utils.lib.system.x86_64-linux;
+    }@inputs:
 
-      userLib = import ./users.nix;
-      userl = userLib.userl;
-      users = userLib.foldUserl userl;
-      # Create an attrset of nixos system configurations for a user's host systems.
-      foldUserSysteml = user: hostl:
-        builtins.foldl'
-          (nixosSystems': host: nixosSystems' // {
-            # TODO: Get this block reduced to `users.${user}.systems.hosts.${host}.nixosSystem`
-            # We want to improve readability but also not force top-level inputs on any one system.
-            # If each system has its own flake then it gives more independence to that system
-            # while also having the benefit of being aware of the other configurations of systems
-            # belonging to that user. This way you only need to declare most things once.
-            ${host} = nixpkgs.lib.nixosSystem {
-              inherit system;
-              modules = [
-                users.${user}.systems.hosts.${host}.modulePath
-                home-manager.nixosModules.home-manager
-                {
-                  home-manager = {
-                    useUserPackages = true;
-                    useGlobalPkgs = true;
-                    extraSpecialArgs = {
-                      inherit
-                        brave-torrent
-                        helix-themes
-                        nix-colors;
-                      swww-upstream = swww.packages.${system}.default;
-                      user = users.${user};
-                    };
-                    users.${user} = users.${user}.systems.hosts.${host}.home-manager.modulePath;
-                  };
-                }
-              ];
-              specialArgs = {
-                user = users.${user};
-                host = users.${user}.systems.hosts.${host};
-              };
-            };
-          })
-          { }
-          hostl;
-      # Combine all users system configurations into an attrset.
-      foldSysteml = userl:
-        builtins.foldl'
-          (nixosSystems': user:
-            nixosSystems' // foldUserSysteml user.name user.hostl
-          )
-          { }
-          userl;
-    in
-    { nixosConfigurations = foldSysteml userl; } //
-    # Configurations rely on the system that is set in hardware-configuration.nix
-    # so there's no need to include `system`, except for when developing the parent
-    # flake.nix itself, or working on one system configuration from another.
-    flake-utils.lib.eachDefaultSystem (system:
     let
-      pkgs = nixpkgs.legacyPackages.${system};
+      inherit (nixpkgs) lib;
+
+      users = builtins.attrNames (builtins.readDir ./users);
+      systemsFor = { user, type }:
+        let
+          path = ./users/${user}/${type}/configurations;
+        in
+        if builtins.pathExists path then
+          builtins.attrNames (builtins.readDir path)
+        else
+          [ ];
+
+      genSystem = builder: { user, hostname, type }:
+        let
+          host = "${self}/users/${user}/${type}/configurations/${hostname}";
+        in
+        builder {
+          modules = lib.collect lib.isFunction (self."${type}Modules") ++ [
+            (host + "/configuration.nix")
+            home-manager."${type}Modules".home-manager
+            {
+              home-manager = {
+                useUserPackages = true;
+                useGlobalPkgs = true;
+                users.${user} = host + "/home-manager";
+                sharedModules = [ inputs.helix-themes.homeManagerModule ];
+              };
+            }
+          ] ++ lib.optional (type == "nixos")
+            {
+              # TODO: Use hyprpaper and stylix so we can just remove this
+              nixpkgs.overlays = [ awww.overlays.default ];
+              home-manager.extraSpecialArgs = { inherit nix-colors brave-torrent; };
+            };
+        };
+
+      genSystems = { builder, type }: lib.mergeAttrsList (map
+        (user:
+          lib.listToAttrs (map
+            (hostname:
+              lib.nameValuePair "${user}-${hostname}" (genSystem builder {
+                inherit user hostname type;
+              })
+            )
+            (systemsFor { inherit user type; }))
+        )
+        users);
     in
     {
-      devShells.default = pkgs.mkShell {
-        buildInputs = with pkgs; [
-          nil
-          nixpkgs-fmt
-        ];
+      # All user defined home-manager modules go here
+      homeManagerModules = {
+        helix-themes = inputs.helix-themes.homeManagerModule;
       };
 
-      formatter = pkgs.nixpkgs-fmt;
-    });
+      # All user defined nixos modules go here
+      nixosModules = {
+        eureka.hardware-profiles = {
+          apple-silicon = { config, lib, ... }: {
+            imports = [ inputs.nixos-apple-silicon.nixosModules.default ];
+            config.hardware.asahi.enable = lib.mkDefault false;
+            config.nixpkgs.overlays = lib.optional
+              config.hardware.asahi.enable
+              inputs.nixos-apple-silicon.overlays.default;
+          };
+          qcom-x1e80100 = { config, lib, ... }: {
+            imports = [ inputs.x1e-nixos-config.nixosModules.x1e ];
+          };
+        };
+      };
+      # All nixos systems per-user go here
+      nixosConfigurations = genSystems {
+        type = "nixos";
+        builder = nixpkgs.lib.nixosSystem;
+      };
+
+      # All user defined darwin modules go here
+      darwinModules = { };
+      # All darwin systems per-user go here
+      darwinConfigurations = genSystems {
+        type = "darwin";
+        builder = nix-darwin.lib.darwinSystem;
+      };
+    };
 }

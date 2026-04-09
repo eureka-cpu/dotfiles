@@ -1,7 +1,7 @@
-{ pkgs, helix-themes, user, ... }:
+{ pkgs, lib, ... }:
 {
-  home.username = user.name;
-  home.homeDirectory = user.homeDirectory;
+  home.username = "andrewvious";
+  home.homeDirectory = lib.mkDefault "/home/andrewvious";
 
   home.packages = with pkgs; [
     home-manager
@@ -12,7 +12,7 @@
     # shell
     zsh
     oh-my-zsh
-    neofetch
+    fastfetch
     # code
     docker
     git
@@ -71,7 +71,6 @@
         };
       };
      };
-    themes = helix-themes.outputs.themes;
   };
 
   # zsh & oh-my-zsh configurations

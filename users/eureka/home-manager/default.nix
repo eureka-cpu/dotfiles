@@ -1,13 +1,15 @@
-{ pkgs, lib, helix-themes, user, ... }:
+{ pkgs, lib, ... }:
 {
   # Home Manager needs a bit of information about you and the paths it should manage.
-  home.username = user.name;
-  home.homeDirectory = user.homeDirectory;
+  home.username = "eureka";
+  home.homeDirectory = lib.mkDefault
+    (if pkgs.stdenv.isDarwin then
+      "/Users/eureka"
+    else
+      "/home/eureka");
 
   home.packages = with pkgs; [
     home-manager
-    wl-clipboard
-    # TODO: override to always use the latest version
     brave
     kitty
     kitty-themes
@@ -23,11 +25,13 @@
     docker
     # studio
     obs-studio
-    ffmpeg # video formatter
+    ffmpeg
     gphoto2
     spotify
     zoom-us
-  ];
+  ] ++ lib.optionals pkgs.stdenv.isLinux (with pkgs; [
+    wl-clipboard
+  ]);
 
   programs.kitty = {
     enable = true;
@@ -63,7 +67,7 @@
         };
         indent-guides = {
           render = true;
-          character = "|";
+          character = "╎";
           skip-levels = 1;
         };
         lsp = {
@@ -77,13 +81,22 @@
         command = "${pkgs.buf}/bin/buf";
         args = [ "beta" "lsp" ];
       };
-      language = [{
-        name = "protobuf";
-        auto-format = true;
-        language-servers = [ "buf" ];
-      }];
+      formatter.ocaml = {
+        command = "ocamlformat";
+        args = [ "-" "--impl" ];
+      };
+      language = [
+        {
+          name = "protobuf";
+          auto-format = true;
+          language-servers = [ "buf" ];
+        }
+        {
+          name = "ocaml";
+          auto-format = true;
+        }
+      ];
     };
-    themes = helix-themes.outputs.themes;
   };
 
   # zsh & oh-my-zsh configurations
@@ -98,8 +111,10 @@
   };
   programs.git = {
     enable = true;
-    userName = "eureka-cpu";
-    userEmail = "github.eureka@gmail.com";
+    settings.user = {
+      name = "eureka-cpu";
+      email = "github.eureka@gmail.com";
+    };
   };
 
   # Let Home Manager install and manage itself.

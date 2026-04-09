@@ -1,15 +1,15 @@
-{ pkgs, user, swww-upstream, ... }:
+{ pkgs, config, ... }:
 {
   wayland.windowManager.hyprland = {
     enable = true;
     settings =
       let
-        swww-daemon = "${swww-upstream}/bin/awww-daemon";
-        swww = "${swww-upstream}/bin/awww";
+        swww-daemon = "${pkgs.awww}/bin/awww-daemon";
+        swww = "${pkgs.awww}/bin/awww";
         eww = "${pkgs.eww}/bin/eww";
         mako = "${pkgs.mako}/bin/mako";
 
-        homeDirectory = user.homeDirectory;
+        inherit (config.home) homeDirectory;
         wallpaper = "${homeDirectory}/Wallpapers/wallhaven.jpg";
         mynixui = "${homeDirectory}/Code/mynixui/eww";
         onStart = pkgs.writeShellScriptBin "start.sh" ''
@@ -286,5 +286,35 @@
         # Example windowrule
         # windowrule = float, ^(kitty)$
       };
+  };
+
+  home.packages = with pkgs; [
+    grim
+    eww
+    rofi
+    mako
+    awww
+    thunar
+    zathura
+    image-roll
+    celluloid
+    pavucontrol
+  ];
+
+  xdg = {
+    configFile = {
+      rofi = {
+        source = ./rofi;
+        recursive = true;
+      };
+    };
+    mimeApps.defaultApplications = {
+      "text/plain" = [ "helix.desktop" ];
+      "application/pdf" = [ "zathura.desktop" ];
+      "image/*" = [ "image-roll.desktop" ];
+      "video/png" = [ "celluloid.desktop" ];
+      "video/jpg" = [ "celluloid.desktop" ];
+      "video/*" = [ "celluloid.desktop" ];
+    };
   };
 }
