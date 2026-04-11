@@ -3,16 +3,43 @@
     fastfetch
     helix
     jellyfin
-    yazi
-    zellij
   ];
 
-  # zsh configurations
   programs = {
     zsh = {
       enable = true;
       enableCompletion = true;
       autosuggestion.enable = true;
+    };
+
+    helix = {
+      enable = true;
+      defaultEditor = true;
+      settings = {
+        theme =  "ataraxia";
+        editor = {
+          cursor-shape = {
+            insert = "underline";
+            normal = "block";
+            select = "block";
+          };
+          statusline = {
+            mode = {
+              insert = "INSERT";
+              normal = "NORMAL";
+              select = "SELECT";
+            };
+          };
+          indent-guides = {
+            render = true;
+            characeter = "|";
+          };
+          lsp = {
+            display-messages = true;
+            display-inlay-hints = true;
+          };
+        };
+      };
     };
   
     fastfetch = {

@@ -1,4 +1,4 @@
-{ config, pkgs, lib, modulesPath, ... }:
+{ pkgs, lib, modulesPath, ... }:
 {
   imports = [
     "${modulesPath}/installer/sd-card/sd-image-aarch64.nix"
@@ -55,7 +55,7 @@
 
     samba = {
       enable = true;
-      openFirewall = true;  # opens UDP 137,138 / TCP 139,445
+      openFirewall = true;  # opens TCP 445
     
       settings = {
         global = {
