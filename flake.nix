@@ -12,7 +12,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     x1e-nixos-config = {
-      url = "github:eureka-cpu/x1e-nixos-config?ref=eureka-cpu/211";
+      url = "github:kuruczgy/x1e-nixos-config";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {

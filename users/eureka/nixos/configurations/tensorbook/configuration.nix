@@ -28,6 +28,14 @@ in
       polychromatic
     ];
   };
+  nixpkgs.overlays = [
+    (self: super: {
+      # fixes brave just for this machine
+      brave = super.brave.override {
+        commandLineArgs = "--disable-gpu --enable-chrome-browser-cloud-management";
+      };
+    })
+  ];
 
   # For some reason this still tries to build from source and my user session crashes.
   # 
@@ -89,6 +97,7 @@ in
       nvidiaBusId = nvidia_bus;
     };
   };
+  boot.loader.systemd-boot.configurationLimit = 6;
   specialisation = {
     blacklist-nvidia.configuration = {
       system.nixos.tags = [ "blacklist-nvidia" ];

@@ -107,6 +107,8 @@
     oh-my-zsh = {
       enable = true;
       plugins = [ "git" ];
+      theme = "eureka";
+      custom = "${./zsh/custom}";
     };
   };
   programs.git = {

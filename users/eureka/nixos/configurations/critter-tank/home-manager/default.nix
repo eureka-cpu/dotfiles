@@ -19,7 +19,6 @@
     };
   };
   programs.helix.settings.theme = "gruvbox_material_dark_medium";
-  programs.zsh.oh-my-zsh.theme = "dst";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release

@@ -7,9 +7,6 @@
 
   home.packages = with pkgs; [
     nvtopPackages.full
-    (brave.override {
-      commandLineArgs = "--disable-gpu --enable-chrome-browser-cloud-management";
-    })
     # comms
     telegram-desktop
     signal-desktop
@@ -43,7 +40,7 @@
   ];
   
   programs.kitty = {
-    themeFile = "Kanagawa";
+    themeFile = "kanagawa";
     font = {
       name = "JetBrainsMono Nerd Font";
       size = 15;

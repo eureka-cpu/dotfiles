@@ -24,7 +24,6 @@
     font.name = "JetBrainsMono Nerd Font";
   };
   programs.helix.settings.theme = "kanabox_default";
-  programs.zsh.oh-my-zsh.theme = "dst";
 
   home.stateVersion = "23.11";
 }
