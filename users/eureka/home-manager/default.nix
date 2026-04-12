@@ -118,6 +118,31 @@
       email = "github.eureka@gmail.com";
     };
   };
+  systemd.user.services.eureka-calendar-fetch = {
+    Unit = {
+      Description = "Fetch upcoming calendar events";
+    };
+    Service = {
+      Type = "oneshot";
+      ExecStart = ''
+        ${pkgs.bash}/bin/bash -c '${pkgs.gcalcli}/bin/gcalcli agenda now "now + 24 hours" --nocolor --details url --tsv > %h/.cache/eureka-prompt/events.tsv.tmp && mv %h/.cache/eureka-prompt/events.tsv.tmp %h/.cache/eureka-prompt/events.tsv'
+      '';
+      ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p %h/.cache/eureka-prompt";
+    };
+  };
+  systemd.user.timers.eureka-calendar-fetch = {
+    Unit = {
+      Description = "Timer for eureka-calendar-fetch";
+    };
+    Timer = {
+      OnBootSec = "1min";
+      OnUnitActiveSec = "1h";
+      Persistent = true;
+    };
+    Install = {
+      WantedBy = [ "timers.target" ];
+    };
+  };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
