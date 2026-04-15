@@ -21,16 +21,16 @@
     # code
     git
     helix
-    obsidian
     docker
     # studio
-    obs-studio
     ffmpeg
     gphoto2
-    spotify
-    zoom-us
   ] ++ lib.optionals pkgs.stdenv.isLinux (with pkgs; [
     wl-clipboard
+    obsidian
+    obs-studio
+    spotify
+    zoom-us
   ]);
 
   programs.kitty = {

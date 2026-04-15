@@ -2,7 +2,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../darwin/configuration.nix
+    ../../../darwin/configuration.nix
   ];
 
   services.yabai = {
