@@ -1,10 +1,9 @@
-{ pkgs, nix-colors, ... }:
+{ pkgs, lib, ... }:
 {
   imports = [
     ./gtk.nix
     ../../../../home-manager/hyprland.nix
     ../../../../home-manager/default.nix
-    nix-colors.homeManagerModules.default
   ];
 
   home.packages = with pkgs; [
@@ -14,11 +13,11 @@
   programs.kitty = {
     themeFile = "GruvboxMaterialDarkMedium";
     font = {
-      name = "JetBrainsMono Nerd Font";
-      size = 15;
+      name = lib.mkForce "JetBrainsMono Nerd Font";
+      size = lib.mkForce 15;
     };
   };
-  programs.helix.settings.theme = "gruvbox_material_dark_medium";
+  programs.helix.settings.theme = lib.mkForce "gruvbox_material_dark_medium";
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release

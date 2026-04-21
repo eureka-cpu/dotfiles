@@ -1,10 +1,9 @@
-{ pkgs, nix-colors, ... }:
+{ pkgs, ... }:
 {
   imports = [
     ./gtk.nix
     ../../../../home-manager/hyprland.nix
     ../../../../home-manager/default.nix
-    nix-colors.homeManagerModules.default
   ];
 
   home.packages = with pkgs; [

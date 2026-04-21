@@ -1,5 +1,12 @@
 { pkgs, config, ... }:
 {
+  stylix = {
+    enable = true;
+    targets.hyprland = {
+      enable = true;
+      colors.enable = true;
+    };
+  };
   wayland.windowManager.hyprland = {
     enable = true;
     settings =
