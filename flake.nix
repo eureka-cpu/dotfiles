@@ -23,8 +23,11 @@
       url = "git+https://codeberg.org/LGFae/awww";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     helix-themes.url = "github:CptPotato/helix-themes";
-    nix-colors.url = "github:misterio77/nix-colors";
     brave-torrent.url = "github:NixOS/nixpkgs?rev=bfbd5014640db4509f601878a2f2a9216a0459d0";
   };
 
@@ -34,7 +37,7 @@
     , nix-darwin
     , home-manager
     , awww
-    , nix-colors
+    , stylix
     , brave-torrent
     , ...
     }@inputs:
@@ -65,14 +68,14 @@
                 useUserPackages = true;
                 useGlobalPkgs = true;
                 users.${user} = host + "/home-manager";
-                sharedModules = [ inputs.helix-themes.homeManagerModule ];
+                sharedModules = builtins.attrValues self.homeManagerModules;
               };
             }
           ] ++ lib.optional (type == "nixos")
             {
               # TODO: Use hyprpaper and stylix so we can just remove this
               nixpkgs.overlays = [ awww.overlays.default ];
-              home-manager.extraSpecialArgs = { inherit nix-colors brave-torrent; };
+              home-manager.extraSpecialArgs = { inherit brave-torrent; };
             };
         };
 
@@ -91,6 +94,7 @@
     {
       # All user defined home-manager modules go here
       homeManagerModules = {
+        inherit (stylix.homeModules) stylix;
         helix-themes = inputs.helix-themes.homeManagerModule;
       };
 
