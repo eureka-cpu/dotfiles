@@ -33,6 +33,11 @@
     zoom-us
   ]);
 
+  stylix.targets.kitty = {
+    # Prefer to manually set kitty theme
+    enable = false;
+    colors.enable = false;
+  };
   programs.kitty = {
     enable = true;
     shellIntegration = {
