@@ -5,7 +5,14 @@ let
   cursorSize = 22;
 in
 {
-  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-medium.yaml";
+  stylix = {
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-medium.yaml";
+    targets = {
+      gtk.enable = true;
+      gtk.colors.enable = true;
+      qt.enable = true;
+    };
+  };
 
   gtk = {
     enable = true;
