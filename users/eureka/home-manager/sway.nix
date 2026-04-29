@@ -6,6 +6,9 @@ let
   };
 in
 {
+  # Fixes a flicker bug in sway: https://github.com/kuruczgy/x1e-nixos-config/discussions/145
+  home.sessionVariables.WLR_RENDER_NO_EXPLICIT_SYNC = 1;
+
   wayland.windowManager.sway = {
     enable = true;
     xwayland = true;

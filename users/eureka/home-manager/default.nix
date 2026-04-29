@@ -1,4 +1,12 @@
 { pkgs, lib, ... }:
+let
+  filterByPlatform = ps:
+    let
+      inherit (pkgs) hostPlatform;
+      inherit (lib.meta) availableOn;
+    in
+    builtins.filter (p: availableOn hostPlatform p) ps;
+in
 {
   # Home Manager needs a bit of information about you and the paths it should manage.
   home.username = "eureka";
@@ -8,7 +16,7 @@
     else
       "/home/eureka");
 
-  home.packages = with pkgs; [
+  home.packages = filterByPlatform (with pkgs; [
     home-manager
     brave
     kitty
@@ -25,7 +33,6 @@
     # studio
     ffmpeg
     gphoto2
-  ] ++ lib.optionals pkgs.stdenv.isLinux (with pkgs; [
     wl-clipboard
     obsidian
     obs-studio
