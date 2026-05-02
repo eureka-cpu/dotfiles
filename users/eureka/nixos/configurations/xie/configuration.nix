@@ -4,6 +4,7 @@
     ./hardware-configuration.nix
     ../../../nixos/configuration.nix
     ../../../nixos/laptop-configuration.nix
+    ./thermal-throttle
   ];
 
   networking.hostName = "xie";
@@ -25,6 +26,12 @@
 
     # This is not secure, but it makes diagnosing errors easier.
     emergencyAccess = true;
+  };
+
+  boot = {
+    # Improves system performance
+    kernelParams = lib.mkAfter [ "pcie_aspm=off" ];
+    binfmt.emulatedSystems = [ "x86_64-linux" ];
   };
 
   networking.networkmanager.plugins = lib.mkForce [ ];
