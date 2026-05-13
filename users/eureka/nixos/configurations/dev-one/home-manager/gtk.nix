@@ -8,12 +8,8 @@ in
   gtk = {
     enable = true;
     iconTheme = {
-      name = "Colloid";
-      package = pkgs.colloid-icon-theme;
-    };
-    theme = {
-      name = "Nordic-darker";
-      package = pkgs.nordic;
+      name = "Gruvbox-Plus-Dark";
+      package = pkgs.gruvbox-plus-icons;
     };
     gtk3.extraConfig = {
       Settings = ''
@@ -37,11 +33,5 @@ in
     size = cursorSize;
     gtk.enable = true;
     x11.enable = true;
-  };
-  home.sessionVariables.GTK_THEME = "Nordic-darker";
-  dconf.settings = {
-    "org/gnome/shell/extensions/user-theme" = {
-      name = "Nordic-darker";
-    };
   };
 }

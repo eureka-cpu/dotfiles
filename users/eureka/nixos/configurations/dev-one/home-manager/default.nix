@@ -2,7 +2,6 @@
 {
   imports = [
     ./gtk.nix
-    ../../../../home-manager/gnome.nix
     ../../../../home-manager/default.nix
   ];
 
@@ -20,10 +19,10 @@
   ];
 
   programs.kitty = {
-    themeFile = "kanagawabones";
+    themeFile = "GruvboxMaterialDarkMedium";
     font.name = "JetBrainsMono Nerd Font";
   };
-  programs.helix.settings.theme = "kanabox_default";
+  programs.helix.settings.theme = "gruvbox_material_dark_medium";
 
   home.stateVersion = "23.11";
 }
