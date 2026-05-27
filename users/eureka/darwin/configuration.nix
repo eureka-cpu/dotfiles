@@ -20,6 +20,7 @@
     defaults.NSGlobalDomain.NSWindowShouldDragOnGesture = true;
   };
 
+  nixpkgs.config.allowUnfree = true;
   nix = {
     settings = {
       # Necessary for using flakes on this system.

@@ -30,6 +30,7 @@ in
     git
     helix
     docker
+    claude-code
     # studio
     ffmpeg
     gphoto2
