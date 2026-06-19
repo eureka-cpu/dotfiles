@@ -2,14 +2,14 @@
 {
   imports = [
     ../../../../home-manager/default.nix
-    ../../../../home-manager/sway.nix
+    # ../../../../home-manager/sway.nix
   ];
 
   home.packages = with pkgs; [
-    wofi
-    mako
-    swaybg
-    nautilus
+    # wofi
+    # mako
+    # swaybg
+    # nautilus
   ];
 
   programs.kitty = {

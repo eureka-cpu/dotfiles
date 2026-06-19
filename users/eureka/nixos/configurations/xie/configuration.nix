@@ -8,10 +8,15 @@
   ];
 
   networking.hostName = "xie";
-  services.xserver.displayManager.startx.enable = true;
+  # services.xserver.displayManager.startx.enable = true;
+  xdg.portal.extraPortals = lib.mkForce (with pkgs; [
+    xdg-desktop-portal-cosmic
+  ]);
+  services.displayManager.cosmic-greeter.enable = true;
+  services.desktopManager.cosmic.enable = true;
 
   # Must be enabled to use sway with home-manager
-  security.polkit.enable = true;
+  # security.polkit.enable = true;
 
   boot.loader.systemd-boot = {
     enable = true;
