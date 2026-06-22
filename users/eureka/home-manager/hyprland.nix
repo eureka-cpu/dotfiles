@@ -1,12 +1,5 @@
 { pkgs, config, ... }:
 {
-  stylix = {
-    enable = true;
-    targets.hyprland = {
-      enable = true;
-      colors.enable = true;
-    };
-  };
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [
