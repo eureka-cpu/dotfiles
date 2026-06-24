@@ -34,11 +34,12 @@ in
     # studio
     ffmpeg
     gphoto2
-    wl-clipboard
     obsidian
     obs-studio
     spotify
     zoom-us
+  ]) ++ lib.optionals (!pkgs.stdenv.isDarwin) (with pkgs; [
+    wl-clipboard
   ]);
 
   programs.kitty = {

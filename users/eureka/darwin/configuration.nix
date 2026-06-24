@@ -20,6 +20,8 @@
     defaults.NSGlobalDomain.NSWindowShouldDragOnGesture = true;
   };
 
+  services.tailscale.enable = true;
+
   nixpkgs.config.allowUnfree = true;
   nix = {
     settings = {

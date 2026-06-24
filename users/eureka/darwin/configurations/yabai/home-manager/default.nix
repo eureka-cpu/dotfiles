@@ -11,7 +11,7 @@
       size = 17;
     };
   };
-  programs.helix.settings.theme = "meliora";
+  programs.helix.settings.theme = "ferra";
 
   home.stateVersion = "25.05";
 }
