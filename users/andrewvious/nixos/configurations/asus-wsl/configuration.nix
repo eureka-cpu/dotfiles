@@ -1,9 +1,5 @@
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, lib, ... }:
 {
-  imports = [
-    inputs.nixos-wsl.nixosModules.wsl
-  ];
-
   networking.hostName = "asus-wsl";
   nixpkgs.hostPlatform = "x86_64-linux";
 
@@ -14,6 +10,21 @@
 
   programs.zsh.enable = true;
   users.users.andrewvious.shell = pkgs.zsh;
+
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
+
+  # Experimental nix features
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  nix.settings = {
+    extra-substituters = [
+      "https://cloud-scythe-labs.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "cloud-scythe-labs.cachix.org-1:I+IM+x2gGlmNjUMZOsyHJpxIzmAi7XhZNmTVijGjsLw="
+    ];
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

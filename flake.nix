@@ -65,7 +65,6 @@
           host = "${self}/users/${user}/${type}/configurations/${hostname}";
         in
         builder {
-          specialArgs = { inherit inputs; };
           modules = lib.collect lib.isFunction (self."${type}Modules") ++ [
             (host + "/configuration.nix")
             home-manager."${type}Modules".home-manager
@@ -106,6 +105,7 @@
 
       # All user defined nixos modules go here
       nixosModules = {
+        wsl = { ... }: { imports = [ inputs.nixos-wsl.nixosModules.wsl ]; };
         eureka.hardware-profiles = {
           apple-silicon = { config, lib, ... }: {
             imports = [ inputs.nixos-apple-silicon.nixosModules.default ];
