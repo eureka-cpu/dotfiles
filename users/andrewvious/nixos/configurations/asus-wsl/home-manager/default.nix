@@ -1,8 +1,8 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
-    fastfetch
+    git
     helix
-    jellyfin
+    fastfetch
   ];
 
   programs = {
@@ -10,6 +10,14 @@
       enable = true;
       enableCompletion = true;
       autosuggestion.enable = true;
+    };
+
+    git = {
+      enable = true;
+      settings.user = {
+        name = "andrewvious";
+        email = "ohbandrew@gmail.com";
+      };
     };
 
     helix = {

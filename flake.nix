@@ -11,6 +11,10 @@
       url = "github:nix-community/nixos-apple-silicon";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     x1e-nixos-config = {
       url = "github:kuruczgy/x1e-nixos-config";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -35,6 +39,7 @@
     { self
     , nixpkgs
     , nix-darwin
+    , nixos-wsl
     , home-manager
     , awww
     , stylix
@@ -60,6 +65,7 @@
           host = "${self}/users/${user}/${type}/configurations/${hostname}";
         in
         builder {
+          specialArgs = { inherit inputs; };
           modules = lib.collect lib.isFunction (self."${type}Modules") ++ [
             (host + "/configuration.nix")
             home-manager."${type}Modules".home-manager
