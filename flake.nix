@@ -105,7 +105,7 @@
 
       # All user defined nixos modules go here
       nixosModules = {
-        wsl = { ... }: { imports = [ inputs.nixos-wsl.nixosModules.wsl ]; };
+        wsl = { ... }: { imports = [ inputs.nixos-wsl.nixosModules.default ]; };
         eureka.hardware-profiles = {
           apple-silicon = { config, lib, ... }: {
             imports = [ inputs.nixos-apple-silicon.nixosModules.default ];
