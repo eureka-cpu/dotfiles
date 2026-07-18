@@ -33,6 +33,10 @@
     };
     helix-themes.url = "github:CptPotato/helix-themes";
     brave-torrent.url = "github:NixOS/nixpkgs?rev=bfbd5014640db4509f601878a2f2a9216a0459d0";
+    openclaude = {
+      url = "github:eureka-cpu/openclaude-nix?ref=eureka-cpu/add-ollama-support";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -44,6 +48,7 @@
     , awww
     , stylix
     , brave-torrent
+    , openclaude
     , ...
     }@inputs:
 
@@ -79,7 +84,10 @@
           ] ++ lib.optional (type == "nixos")
             {
               # TODO: Use hyprpaper and stylix so we can just remove this
-              nixpkgs.overlays = [ awww.overlays.default ];
+              nixpkgs.overlays = [
+                awww.overlays.default
+                openclaude.overlays.default
+              ];
               home-manager.extraSpecialArgs = { inherit brave-torrent; };
             };
         };
@@ -100,6 +108,7 @@
       # All user defined home-manager modules go here
       homeManagerModules = {
         inherit (stylix.homeModules) stylix;
+        inherit (openclaude.homeManagerModules) openclaude;
         helix-themes = inputs.helix-themes.homeManagerModule;
       };
 

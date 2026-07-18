@@ -98,6 +98,16 @@ in
     useRoutingFeatures = "client";
     openFirewall = true;
   };
+  services.ollama = {
+    enable = true;
+    openFirewall = true;
+    syncModels = true;
+    loadModels = [
+      "gemma4:26b"
+      "qwen2.5-coder:14b"
+      "qwen3:30b"
+    ];
+  };
   services.gh-mdbook-server = {
     inherit user;
     enable = true;

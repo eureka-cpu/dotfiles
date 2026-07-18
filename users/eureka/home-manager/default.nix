@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, osConfig ? { }, ... }:
 let
   filterByPlatform = ps:
     let
@@ -6,6 +6,9 @@ let
       inherit (lib.meta) availableOn;
     in
     builtins.filter (p: availableOn hostPlatform p) ps;
+
+  nixosOllamaModels = (osConfig.services.ollama or { }).loadModels or [ ];
+  ollamaModels = lib.listToAttrs (map (m: lib.nameValuePair m { name = m; }) nixosOllamaModels);
 in
 {
   # Home Manager needs a bit of information about you and the paths it should manage.
@@ -154,6 +157,27 @@ in
     };
     Install = {
       WantedBy = [ "timers.target" ];
+    };
+  };
+
+  programs.openclaude = {
+    enable = true;
+    ollama.enable = true;
+  };
+  programs.opencode = {
+    enable = true;
+    settings = {
+      model = "ollama/qwen3:30b";
+      small_model = "ollama/qwen2.5-coder:14b";
+      provider.ollama = {
+        npm = "@ai-sdk/openai-compatible";
+        name = "Ollama (local)";
+        options = {
+          baseURL = "http://127.0.0.1:11434/v1";
+          apiKey = "ollama";
+        };
+        models = ollamaModels;
+      };
     };
   };
 

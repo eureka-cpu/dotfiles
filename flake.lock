@@ -361,6 +361,27 @@
         "type": "github"
       }
     },
+    "openclaude": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1784348208,
+        "narHash": "sha256-KNphijmmmVPjAAvI1w5yLIIirEESjQqr33T+cQ0mRtY=",
+        "owner": "eureka-cpu",
+        "repo": "openclaude-nix",
+        "rev": "585b9cdd1cc25aa625ecbf382be7c7a40a1ad3b6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "eureka-cpu",
+        "ref": "eureka-cpu/add-ollama-support",
+        "repo": "openclaude-nix",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "awww": "awww",
@@ -371,6 +392,7 @@
         "nixos-apple-silicon": "nixos-apple-silicon",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs",
+        "openclaude": "openclaude",
         "stylix": "stylix",
         "x1e-nixos-config": "x1e-nixos-config"
       }

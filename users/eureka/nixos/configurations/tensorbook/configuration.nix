@@ -15,7 +15,7 @@ in
 
   # Pinned Kernel Version
   boot.kernelPackages = pkgs.linuxPackages_zen;
-  
+
   # Topology config for routing audio/microphone on Razer laptops
   boot.extraModprobeConfig = ''
     options snd-sof-pci tplg_filename=sof-hda-generic-2ch-pdm1.tplg
@@ -120,6 +120,8 @@ in
       '';
     };
   };
+
+  services.ollama.package = pkgs.ollama-cuda;
 
   system.stateVersion = "23.05";
 }
