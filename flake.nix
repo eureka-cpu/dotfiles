@@ -1,6 +1,11 @@
 {
   description = "One flake to rule them all.";
 
+  nixConfig = {
+    extra-substituters = [ "https://cache.numtide.com" ];
+    extra-trusted-public-keys = [ "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=" ];
+  };
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nix-darwin = {
@@ -37,6 +42,7 @@
       url = "github:eureka-cpu/openclaude-nix?ref=eureka-cpu/add-ollama-support";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    llm-agents.url = "github:numtide/llm-agents.nix";
   };
 
   outputs =
@@ -87,6 +93,9 @@
               nixpkgs.overlays = [
                 awww.overlays.default
                 openclaude.overlays.default
+                (final: _prev: {
+                  llm-agents = inputs.llm-agents.packages.${final.system};
+                })
               ];
               home-manager.extraSpecialArgs = { inherit brave-torrent; };
             };

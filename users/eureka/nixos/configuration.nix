@@ -128,9 +128,11 @@ in
 
   nix.settings = {
     extra-substituters = [
+      "https://cache.numtide.com"
       "https://cloud-scythe-labs.cachix.org"
     ];
     extra-trusted-public-keys = [
+      "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
       "cloud-scythe-labs.cachix.org-1:I+IM+x2gGlmNjUMZOsyHJpxIzmAi7XhZNmTVijGjsLw="
     ];
 

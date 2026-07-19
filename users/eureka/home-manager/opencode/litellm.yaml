@@ -1,0 +1,22 @@
+model_list:
+  - model_name: claude-sonnet-proxy
+    litellm_params:
+      model: anthropic/claude-sonnet-4-6
+      api_key: os.environ/ANTHROPIC_API_KEY
+
+  - model_name: claude-opus-proxy
+    litellm_params:
+      model: anthropic/claude-opus-4-6
+      api_key: os.environ/ANTHROPIC_API_KEY
+
+  - model_name: local-fallback
+    litellm_params:
+      model: ollama/qwen2.5-coder:14b
+      api_base: http://127.0.0.1:11434
+
+router_settings:
+  fallbacks:
+    - {"claude-sonnet-proxy": ["local-fallback"]}
+    - {"claude-opus-proxy": ["local-fallback"]}
+  num_retries: 2
+  timeout: 30
