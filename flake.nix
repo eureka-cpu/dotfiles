@@ -38,6 +38,7 @@
     };
     helix-themes.url = "github:CptPotato/helix-themes";
     brave-torrent.url = "github:NixOS/nixpkgs?rev=bfbd5014640db4509f601878a2f2a9216a0459d0";
+    # TODO: Bump this and add helix flake for latest changes
     openclaude = {
       url = "github:eureka-cpu/openclaude-nix?ref=eureka-cpu/add-ollama-support";
       inputs.nixpkgs.follows = "nixpkgs";
