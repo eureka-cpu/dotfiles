@@ -126,9 +126,6 @@ in
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # Experimental nix features
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
   nix.settings = {
     extra-substituters = [
       "https://cloud-scythe-labs.cachix.org"
@@ -136,6 +133,17 @@ in
     extra-trusted-public-keys = [
       "cloud-scythe-labs.cachix.org-1:I+IM+x2gGlmNjUMZOsyHJpxIzmAi7XhZNmTVijGjsLw="
     ];
+
+    experimental-features = [
+      "nix-command"
+      "flakes"
+      "auto-allocate-uids" # necessary for containers and builds that need uid-range
+      "cgroups" # also necessary for uid-range
+      "pipe-operators" # adds |>/<| operator support to the language
+    ];
+    auto-allocate-uids = true;
+    use-cgroups = true;
+    extra-system-features = [ "uid-range" ];
   };
 
   environment.sessionVariables = {
