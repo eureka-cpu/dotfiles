@@ -92,6 +92,20 @@
                 (final: _prev: {
                   llm-agents = inputs.llm-agents.packages.${final.system};
                 })
+                # Bump kitty-themes so newer upstreamed themes (e.g. ferra) are
+                # available to programs.kitty.themeFile, which hardcodes
+                # pkgs.kitty-themes in the home-manager module.
+                (_final: prev: {
+                  kitty-themes = prev.kitty-themes.overrideAttrs (old: {
+                    version = "0-unstable-2026-07-10";
+                    src = prev.fetchFromGitHub {
+                      owner = "kovidgoyal";
+                      repo = "kitty-themes";
+                      rev = "e144651f75891cf4795ef1e7c24bb3e27c47aa06";
+                      hash = "sha256-cl79/m3tGZzGXBuwcIIBxsewrcgaFK0R0VRlRiiw5yk=";
+                    };
+                  });
+                })
               ];
             }
           ] ++ lib.optional (type == "nixos")
