@@ -1,5 +1,7 @@
 { pkgs, lib, config, osConfig ? { }, ... }:
 let
+  inherit (pkgs) stdenv;
+
   filterByPlatform = ps:
     let
       inherit (pkgs) hostPlatform;
@@ -48,11 +50,12 @@ in
     # studio
     ffmpeg
     gphoto2
-    wl-clipboard
     obsidian
     obs-studio
     spotify
     zoom-us
+  ]) ++ lib.optionals stdenv.isLinux (with pkgs; [
+    wl-clipboard
   ]);
 
   stylix.targets.kitty = {

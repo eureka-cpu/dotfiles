@@ -87,16 +87,18 @@
                 users.${user} = host + "/home-manager";
                 sharedModules = builtins.attrValues self.homeManagerModules;
               };
+              nixpkgs.overlays = [
+                openclaude.overlays.default
+                (final: _prev: {
+                  llm-agents = inputs.llm-agents.packages.${final.system};
+                })
+              ];
             }
           ] ++ lib.optional (type == "nixos")
             {
               # TODO: Use hyprpaper and stylix so we can just remove this
               nixpkgs.overlays = [
                 awww.overlays.default
-                openclaude.overlays.default
-                (final: _prev: {
-                  llm-agents = inputs.llm-agents.packages.${final.system};
-                })
               ];
               home-manager.extraSpecialArgs = { inherit brave-torrent; };
             };
