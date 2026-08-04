@@ -5,6 +5,14 @@
     ../../../darwin/configuration.nix
   ];
 
+  services.tailscale.enable = true;
+  # The nix-darwin tailscale module only provisions /etc/resolver/ts.net, which
+  # covers the default *.ts.net MagicDNS suffix. Our tailnet uses a custom
+  # MagicDNS domain, so add a scoped resolver pointing at Tailscale's resolver
+  # (100.100.100.100) for it — otherwise *.applicative.internal names (e.g. the
+  # git forge) fail to resolve on macOS with headless tailscaled.
+  environment.etc."resolver/applicative.internal".text = "nameserver 100.100.100.100";
+
   services.yabai = {
     enable = true;
     package = pkgs.yabai;
