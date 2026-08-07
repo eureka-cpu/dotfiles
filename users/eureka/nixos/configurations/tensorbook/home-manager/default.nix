@@ -40,13 +40,13 @@
   ];
   
   programs.kitty = {
-    themeFile = "E-Ink";
+    themeFile = "ferra";
     font = {
       name = "JetBrainsMono Nerd Font";
       size = 15;
     };
   };
-  programs.helix.settings.theme = "base16_default_light";
+  programs.helix.settings.theme = "ferra";
 
   home.stateVersion = "23.05";
 }
