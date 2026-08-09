@@ -39,6 +39,10 @@
     helix-themes.url = "github:CptPotato/helix-themes";
     brave-torrent.url = "github:NixOS/nixpkgs?rev=bfbd5014640db4509f601878a2f2a9216a0459d0";
     llm-agents.url = "github:numtide/llm-agents.nix";
+    zerostack = {
+      url = "github:gi-dellav/zerostack?ref=v1.7.2";
+      flake = false;
+    };
   };
 
   outputs =
@@ -50,6 +54,7 @@
     , awww
     , stylix
     , brave-torrent
+    , zerostack
     , ...
     }@inputs:
 
@@ -82,6 +87,7 @@
                 sharedModules = builtins.attrValues self.homeManagerModules;
               };
               nixpkgs.overlays = [
+                (import "${inputs.zerostack}/nix/overlay")
                 (final: _prev: {
                   llm-agents = inputs.llm-agents.packages.${final.system};
                 })

@@ -465,7 +465,8 @@
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_2",
         "stylix": "stylix",
-        "x1e-nixos-config": "x1e-nixos-config"
+        "x1e-nixos-config": "x1e-nixos-config",
+        "zerostack": "zerostack"
       }
     },
     "rust-overlay": {
@@ -654,6 +655,23 @@
       "original": {
         "owner": "kuruczgy",
         "repo": "x1e-nixos-config",
+        "type": "github"
+      }
+    },
+    "zerostack": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1784922780,
+        "narHash": "sha256-rBFgrZvSnLxLulJxxPeS/+uVk56ifdgDl6JZ0uqtlp8=",
+        "owner": "gi-dellav",
+        "repo": "zerostack",
+        "rev": "3d6c34307cc6dfb6ed6490168d36e08b237bf7bd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gi-dellav",
+        "ref": "v1.7.2",
+        "repo": "zerostack",
         "type": "github"
       }
     }
