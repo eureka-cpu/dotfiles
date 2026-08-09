@@ -192,10 +192,6 @@ in
     };
   };
 
-  programs.openclaude = {
-    enable = true;
-    ollama.enable = true;
-  };
   xdg.configFile = {
     "opencode/agent/architect.md".source = config.lib.file.mkOutOfStoreSymlink "${agentsDir}/architect.md";
     "opencode/agent/reviewer.md".source = config.lib.file.mkOutOfStoreSymlink "${agentsDir}/reviewer.md";
