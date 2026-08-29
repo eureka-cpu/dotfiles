@@ -312,6 +312,22 @@
         "type": "github"
       }
     },
+    "kitty-diff-git": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1786291595,
+        "narHash": "sha256-Bgsr4I+vUuAS9dEE2Y7s68cHys/swoHaG4q2T8qQM8I=",
+        "owner": "eureka-cpu",
+        "repo": "kitty-diff-git",
+        "rev": "56c9c810fbdfc43a42e68c3e17807ad4f06aa925",
+        "type": "github"
+      },
+      "original": {
+        "owner": "eureka-cpu",
+        "repo": "kitty-diff-git",
+        "type": "github"
+      }
+    },
     "llm-agents": {
       "inputs": {
         "bun2nix": "bun2nix",
@@ -459,6 +475,7 @@
         "brave-torrent": "brave-torrent",
         "helix-themes": "helix-themes",
         "home-manager": "home-manager",
+        "kitty-diff-git": "kitty-diff-git",
         "llm-agents": "llm-agents",
         "nix-darwin": "nix-darwin",
         "nixos-apple-silicon": "nixos-apple-silicon",

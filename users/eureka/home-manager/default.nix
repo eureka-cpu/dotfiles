@@ -43,6 +43,7 @@ in
     fastfetch
     # code
     git
+    git-kitten # kitty-diff-git: `git kitten diff`
     helix
     docker
     pkgs.llm-agents.claude-code
@@ -146,6 +147,29 @@ in
     settings.user = {
       name = "eureka-cpu";
       email = "github.eureka@gmail.com";
+    };
+  };
+  programs.gh = {
+    enable = true;
+    settings = {
+      git_protocol = "ssh";
+      prompt = "enabled";
+      aliases = {
+        co = "pr checkout";
+        pv = "pr view";
+        pd = ''!gh pr diff "$1" | delta'';
+      };
+    };
+    gitCredentialHelper.enable = true;
+    extensions = [ pkgs.gh-dash ];
+  };
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
+    options = {
+      features = "side-by-side";
+      navigate = true;
+      line-numbers = true;
     };
   };
   systemd.user.services.litellm-proxy = {

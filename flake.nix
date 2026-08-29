@@ -43,6 +43,10 @@
       url = "github:gi-dellav/zerostack?ref=v1.7.2";
       flake = false;
     };
+    kitty-diff-git = {
+      url = "github:eureka-cpu/kitty-diff-git";
+      flake = false;
+    };
   };
 
   outputs =
@@ -88,6 +92,7 @@
               };
               nixpkgs.overlays = [
                 (import "${inputs.zerostack}/nix/overlay")
+                (import "${inputs.kitty-diff-git}/overlay.nix")
                 (final: _prev: {
                   llm-agents = inputs.llm-agents.packages.${final.system};
                 })
