@@ -1,5 +1,9 @@
 { pkgs, lib, ... }:
 {
+  imports = [
+    ../fonts.nix
+  ];
+
   users.users.eureka = {
     description = "Chris O'Brien";
     home = "/Users/eureka";
@@ -8,7 +12,6 @@
   programs.zsh.enable = true;
 
   fonts.packages = with pkgs; [
-    nerd-fonts.jetbrains-mono
     openlilylib-fonts.bravura
   ];
 

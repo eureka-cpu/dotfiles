@@ -5,6 +5,7 @@ in
 {
   imports = [
     ./modules/systemd/gh-mdbook-server
+    ../fonts.nix
   ];
 
   # Bootloader.
@@ -153,10 +154,6 @@ in
     WLR_NO_HARDWARE_CURSORS = "1"; # fixes disappearing cursor
     NIXOS_OZONE_WL = "1"; # tells electron apps to use wayland
   };
-
-  fonts.packages = with pkgs.nerd-fonts; [
-    jetbrains-mono
-  ];
 
   nix = {
     package = pkgs.nixVersions.latest;
