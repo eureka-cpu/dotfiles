@@ -13,14 +13,6 @@ let
   ollamaModels = lib.listToAttrs (map (m: lib.nameValuePair m { name = m; }) nixosOllamaModels);
 
   dotfiles = "${config.home.homeDirectory}/.config/dotfiles";
-  opencodeDir = "${dotfiles}/users/eureka/home-manager/opencode";
-  agentsDir = "${opencodeDir}/agents";
-
-  litellmModels = {
-    "claude-sonnet-proxy" = { name = "Claude Sonnet (proxy)"; };
-    "claude-opus-proxy" = { name = "Claude Opus (proxy)"; };
-    "local-fallback" = { name = "Local Fallback (qwen2.5-coder:14b)"; };
-  };
 in
 {
   # Home Manager needs a bit of information about you and the paths it should manage.
@@ -46,8 +38,7 @@ in
     git-kitten # kitty-diff-git: `git kitten diff`
     helix
     docker
-    pkgs.llm-agents.claude-code
-    pkgs.llm-agents.oh-my-opencode
+    llm-agents.claude-code
     # studio
     ffmpeg
     gphoto2
@@ -157,37 +148,10 @@ in
       aliases = {
         co = "pr checkout";
         pv = "pr view";
-        pd = ''!gh pr diff "$1" | delta'';
       };
     };
     gitCredentialHelper.enable = true;
     extensions = [ pkgs.gh-dash ];
-  };
-  programs.delta = {
-    enable = true;
-    enableGitIntegration = true;
-    options = {
-      features = "side-by-side";
-      navigate = true;
-      line-numbers = true;
-    };
-  };
-  systemd.user.services.litellm-proxy = {
-    Unit = {
-      Description = "LiteLLM proxy (Anthropic -> local fallback)";
-      After = [ "network.target" ];
-    };
-    Service = {
-      ExecStart = "${lib.getExe pkgs.litellm} --config %h/.config/litellm/config.yaml --port 4000";
-      Restart = "on-failure";
-      RestartSec = 5;
-      # Optional: populate ANTHROPIC_API_KEY=... here to enable Anthropic models.
-      # If absent the proxy still starts and routes to the local fallback.
-      EnvironmentFile = "-${config.home.homeDirectory}/.config/litellm/secrets";
-    };
-    Install = {
-      WantedBy = [ "default.target" ];
-    };
   };
 
   systemd.user.services.eureka-calendar-fetch = {
@@ -213,54 +177,6 @@ in
     };
     Install = {
       WantedBy = [ "timers.target" ];
-    };
-  };
-
-  xdg.configFile = {
-    "opencode/agent/architect.md".source = config.lib.file.mkOutOfStoreSymlink "${agentsDir}/architect.md";
-    "opencode/agent/reviewer.md".source = config.lib.file.mkOutOfStoreSymlink "${agentsDir}/reviewer.md";
-    "opencode/agent/pm.md".source = config.lib.file.mkOutOfStoreSymlink "${agentsDir}/pm.md";
-    "opencode/agent/verifier.md".source = config.lib.file.mkOutOfStoreSymlink "${agentsDir}/verifier.md";
-    "opencode/agent/security.md".source = config.lib.file.mkOutOfStoreSymlink "${agentsDir}/security.md";
-    "opencode/agent/builder.md".source = config.lib.file.mkOutOfStoreSymlink "${agentsDir}/builder.md";
-    "litellm/config.yaml".source = config.lib.file.mkOutOfStoreSymlink "${opencodeDir}/litellm.yaml";
-    "opencode/oh-my-openagent.jsonc".source = config.lib.file.mkOutOfStoreSymlink "${opencodeDir}/oh-my-openagent.jsonc";
-  };
-
-  programs.opencode = {
-    enable = true;
-    package = pkgs.llm-agents.opencode;
-    rules = ''
-      # Agent Workflow
-
-      The **pm** is the sole entry point. Describe your task to it and it will orchestrate the full workflow — architect → builder → reviewer — asking you for input whenever any agent encounters a problem.
-
-      Agents do not share live session context. State passes through file artifacts:
-      - **SPEC.md** (repo root) — produced by the architect, read by builder and reviewer
-      - Inline context — the pm is responsible for passing relevant state in each Task call
-    '';
-    settings = {
-      plugin = [ "oh-my-openagent" ];
-      model = "ollama/qwen3:30b";
-      small_model = "ollama/qwen2.5-coder:14b";
-      provider.litellm = {
-        npm = "@ai-sdk/openai-compatible";
-        name = "LiteLLM (proxy)";
-        options = {
-          baseURL = "http://127.0.0.1:4000/v1";
-          apiKey = "litellm";
-        };
-        models = litellmModels;
-      };
-      provider.ollama = {
-        npm = "@ai-sdk/openai-compatible";
-        name = "Ollama (local)";
-        options = {
-          baseURL = "http://127.0.0.1:11434/v1";
-          apiKey = "ollama";
-        };
-        models = ollamaModels;
-      };
     };
   };
 
