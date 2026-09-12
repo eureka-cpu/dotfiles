@@ -1,21 +1,17 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 let
   cursorName = "Adwaita";
   cursorPkg = pkgs.adwaita-icon-theme;
   cursorSize = 22;
+  colors = config.programs.kasane.colors;
 in
 {
-  stylix = {
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-medium.yaml";
-    targets = {
-      gtk.enable = true;
-      gtk.colors.enable = true;
-      qt.enable = true;
-    };
-  };
-
   gtk = {
     enable = true;
+    theme = {
+      name = "adw-gtk3-dark";
+      package = pkgs.adw-gtk3;
+    };
     iconTheme = {
       name = "Gruvbox-Plus-Dark";
       package = pkgs.gruvbox-plus-icons;
@@ -24,6 +20,25 @@ in
       name = cursorName;
       package = cursorPkg;
       size = cursorSize;
+    };
+    gtk3.extraCss = ''
+      @define-color accent_color ${colors.blue};
+      @define-color accent_bg_color ${colors.blue};
+      @define-color accent_fg_color ${colors.foreground};
+    '';
+    gtk4.extraCss = ''
+      @define-color accent_color ${colors.blue};
+      @define-color accent_bg_color ${colors.blue};
+      @define-color accent_fg_color ${colors.foreground};
+    '';
+  };
+
+  qt = {
+    enable = true;
+    platformTheme.name = "gtk";
+    style = {
+      name = "adwaita-dark";
+      package = pkgs.adwaita-qt;
     };
   };
 

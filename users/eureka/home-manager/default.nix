@@ -45,11 +45,11 @@ in
     wl-clipboard
   ]);
 
-  stylix.targets.kitty = {
-    # Prefer to manually set kitty theme
-    enable = false;
-    colors.enable = false;
+  programs.kasane = {
+    enable = true;
+    palette = "obi-gamma";
   };
+
   programs.kitty = {
     enable = true;
     shellIntegration = {
@@ -64,6 +64,40 @@ in
       hide_window_decorations = true;
       cursor_shape = "block";
     };
+    extraConfig =
+      let
+        c = config.programs.kasane.colors;
+      in
+      ''
+        cursor                  ${c.cursor}
+        foreground              ${c.foreground}
+        background              ${c.background}
+        selection_foreground    ${c.selection_foreground}
+        selection_background    ${c.selection_background}
+        color0                  ${c.black}
+        color8                  ${c."black-bright"}
+        color1                  ${c.red}
+        color9                  ${c."red-bright"}
+        color2                  ${c.green}
+        color10                 ${c."green-bright"}
+        color3                  ${c.yellow}
+        color11                 ${c."yellow-bright"}
+        color4                  ${c.blue}
+        color12                 ${c."blue-bright"}
+        color5                  ${c.magenta}
+        color13                 ${c."magenta-bright"}
+        color6                  ${c.cyan}
+        color14                 ${c."cyan-bright"}
+        color7                  ${c.white}
+        color15                 ${c."white-bright"}
+        active_tab_foreground   ${c.active_tab_foreground}
+        active_tab_background   ${c.active_tab_background}
+        inactive_tab_foreground ${c.inactive_tab_foreground}
+        inactive_tab_background ${c.inactive_tab_background}
+        active_border_color     ${c."black-bright"}
+        inactive_border_color   ${c.black}
+        bell_border_color       ${c.yellow}
+      '';
   };
   programs.helix = {
     enable = true;

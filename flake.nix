@@ -32,15 +32,15 @@
       url = "git+https://codeberg.org/LGFae/awww";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    stylix = {
-      url = "github:nix-community/stylix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     helix-themes.url = "github:CptPotato/helix-themes";
     brave-torrent.url = "github:NixOS/nixpkgs?rev=bfbd5014640db4509f601878a2f2a9216a0459d0";
     llm-agents.url = "github:numtide/llm-agents.nix";
     kitty-diff-git = {
       url = "github:eureka-cpu/kitty-diff-git";
+      flake = false;
+    };
+    kasane = {
+      url = "github:eureka-cpu/kasane";
       flake = false;
     };
   };
@@ -52,7 +52,6 @@
     , nixos-wsl
     , home-manager
     , awww
-    , stylix
     , brave-torrent
     , ...
     }@inputs:
@@ -86,6 +85,7 @@
                 sharedModules = builtins.attrValues self.homeManagerModules;
               };
               nixpkgs.overlays = [
+                (import "${inputs.kasane}/overlay.nix")
                 (import "${inputs.kitty-diff-git}/overlay.nix")
                 (final: _prev: {
                   llm-agents = inputs.llm-agents.packages.${final.system};
@@ -128,8 +128,8 @@
     {
       # All user defined home-manager modules go here
       homeManagerModules = {
-        inherit (stylix.homeModules) stylix;
         helix-themes = inputs.helix-themes.homeManagerModule;
+        kasane = import "${inputs.kasane}/module.nix";
       };
 
       # All user defined nixos modules go here
