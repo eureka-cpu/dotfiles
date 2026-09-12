@@ -1,12 +1,5 @@
 { pkgs, config, ... }:
 {
-  stylix = {
-    enable = true;
-    targets.hyprland = {
-      enable = true;
-      colors.enable = true;
-    };
-  };
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [
@@ -317,12 +310,153 @@
   ];
 
   xdg = {
-    configFile = {
-      rofi = {
-        source = ./rofi;
-        recursive = true;
+    configFile =
+      let
+        inherit (config.programs.kasane.colors)
+          background active_tab_background selection_background
+          black-bright blue blue-bright foreground white red;
+      in
+      {
+        "rofi/config.rasi".source = ./rofi/config.rasi;
+        "rofi/kasane.rasi".text = ''
+          * {
+              bg:         ${background};
+              surface:    ${active_tab_background};
+              surface2:   ${selection_background};
+              border-col: ${black-bright};
+              accent:     ${blue};
+              accent2:    ${blue-bright};
+              fg:         ${foreground};
+              fg-dim:     ${white};
+              urgent:     ${red};
+
+              background-color: transparent;
+              text-color:       @fg;
+          }
+
+          window {
+              location:         center;
+              anchor:           center;
+              border:           2px;
+              border-radius:    0px;
+              border-color:     @border-col;
+              height:           360px;
+              width:            600px;
+              background-color: transparent;
+              spacing:          0;
+              children:         [mainbox];
+              orientation:      horizontal;
+          }
+
+          mainbox {
+              spacing:  0;
+              children: [inputbar, message, listview];
+          }
+
+          message {
+              padding:          10px;
+              border:           0px 2px 2px 2px;
+              border-color:     @bg;
+              background-color: @fg-dim;
+          }
+
+          inputbar {
+              color:            @fg;
+              padding:          14px;
+              background-color: @bg;
+              border-color:     @bg;
+              border:           1px;
+              border-radius:    0px;
+          }
+
+          entry, prompt, case-indicator {
+              text-font:  inherit;
+              text-color: inherit;
+          }
+
+          prompt {
+              margin: 0px 1em 0em 0em;
+          }
+
+          listview {
+              padding:          8px;
+              border-radius:    0px;
+              border:           2px 2px 2px 2px;
+              border-color:     @bg;
+              background-color: @bg;
+              dynamic:          false;
+          }
+
+          element {
+              padding:          5px;
+              vertical-align:   0.5;
+              border-radius:    0px;
+              text-color:       @fg;
+              background-color: @surface;
+          }
+
+          element.normal.active {
+              background-color: @accent;
+              text-color:       @bg;
+          }
+
+          element.normal.urgent {
+              background-color: @urgent;
+          }
+
+          element.selected.normal {
+              background-color: @accent2;
+              text-color:       @bg;
+          }
+
+          element.selected.active {
+              background-color: @accent;
+              text-color:       @bg;
+          }
+
+          element.selected.urgent {
+              background-color: @urgent;
+          }
+
+          element.alternate.normal {
+              background-color: transparent;
+          }
+
+          element-text, element-icon {
+              size:             3ch;
+              margin:           0 10 0 0;
+              vertical-align:   0.5;
+              background-color: inherit;
+              text-color:       inherit;
+          }
+
+          button {
+              padding:          6px;
+              color:            @fg-dim;
+              horizontal-align: 0.5;
+              border:           2px 0px 2px 2px;
+              border-radius:    0px;
+              border-color:     @fg-dim;
+          }
+
+          button.selected.normal {
+              border:       2px 0px 2px 2px;
+              border-color: @fg-dim;
+          }
+        '';
+        "mako/config".text = ''
+          background-color=${background}ff
+          text-color=${foreground}ff
+          border-color=${blue}ff
+          border-size=1
+          border-radius=0
+          font=JetBrainsMono Nerd Font 12
+          layer=overlay
+          max-history=100
+          icons=1
+          max-icon-size=64
+        '';
       };
-    };
     mimeApps.defaultApplications = {
       "text/plain" = [ "helix.desktop" ];
       "application/pdf" = [ "zathura.desktop" ];
