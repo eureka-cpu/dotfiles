@@ -312,21 +312,23 @@
   xdg = {
     configFile =
       let
-        c = config.programs.kasane.colors;
+        inherit (config.programs.kasane.colors)
+          background active_tab_background selection_background
+          black-bright blue blue-bright foreground white red;
       in
       {
         "rofi/config.rasi".source = ./rofi/config.rasi;
         "rofi/kasane.rasi".text = ''
           * {
-              bg:         ${c.background};
-              surface:    ${c.active_tab_background};
-              surface2:   ${c.selection_background};
-              border-col: ${c."black-bright"};
-              accent:     ${c.blue};
-              accent2:    ${c."blue-bright"};
-              fg:         ${c.foreground};
-              fg-dim:     ${c.white};
-              urgent:     ${c.red};
+              bg:         ${background};
+              surface:    ${active_tab_background};
+              surface2:   ${selection_background};
+              border-col: ${black-bright};
+              accent:     ${blue};
+              accent2:    ${blue-bright};
+              fg:         ${foreground};
+              fg-dim:     ${white};
+              urgent:     ${red};
 
               background-color: transparent;
               text-color:       @fg;
@@ -443,9 +445,9 @@
           }
         '';
         "mako/config".text = ''
-          background-color=${c.background}ff
-          text-color=${c.foreground}ff
-          border-color=${c.blue}ff
+          background-color=${background}ff
+          text-color=${foreground}ff
+          border-color=${blue}ff
           border-size=1
           border-radius=0
           font=JetBrainsMono Nerd Font 12

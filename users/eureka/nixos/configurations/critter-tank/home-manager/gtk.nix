@@ -3,7 +3,7 @@ let
   cursorName = "Adwaita";
   cursorPkg = pkgs.adwaita-icon-theme;
   cursorSize = 20;
-  colors = config.programs.kasane.colors;
+  inherit (config.programs.kasane.colors) blue foreground;
 in
 {
   gtk = {
@@ -28,39 +28,39 @@ in
       size = cursorSize;
     };
     gtk3.extraCss = ''
-      @define-color accent_color ${colors.blue};
-      @define-color accent_bg_color ${colors.blue};
-      @define-color accent_fg_color ${colors.foreground};
-      @define-color window_fg_color ${colors.foreground};
-      @define-color view_fg_color ${colors.foreground};
-      @define-color headerbar_fg_color ${colors.foreground};
-      @define-color card_fg_color ${colors.foreground};
-      @define-color popover_fg_color ${colors.foreground};
-      @define-color sidebar_fg_color ${colors.foreground};
-      @define-color theme_fg_color ${colors.foreground};
-      @define-color theme_text_color ${colors.foreground};
-      * { color: ${colors.foreground}; }
+      @define-color accent_color ${blue};
+      @define-color accent_bg_color ${blue};
+      @define-color accent_fg_color ${foreground};
+      @define-color window_fg_color ${foreground};
+      @define-color view_fg_color ${foreground};
+      @define-color headerbar_fg_color ${foreground};
+      @define-color card_fg_color ${foreground};
+      @define-color popover_fg_color ${foreground};
+      @define-color sidebar_fg_color ${foreground};
+      @define-color theme_fg_color ${foreground};
+      @define-color theme_text_color ${foreground};
+      * { color: ${foreground}; }
     '';
     gtk4.extraCss = ''
-      @define-color accent_color ${colors.blue};
-      @define-color accent_bg_color ${colors.blue};
-      @define-color accent_fg_color ${colors.foreground};
-      @define-color window_fg_color ${colors.foreground};
-      @define-color view_fg_color ${colors.foreground};
-      @define-color headerbar_fg_color ${colors.foreground};
-      @define-color card_fg_color ${colors.foreground};
-      @define-color popover_fg_color ${colors.foreground};
-      @define-color sidebar_fg_color ${colors.foreground};
+      @define-color accent_color ${blue};
+      @define-color accent_bg_color ${blue};
+      @define-color accent_fg_color ${foreground};
+      @define-color window_fg_color ${foreground};
+      @define-color view_fg_color ${foreground};
+      @define-color headerbar_fg_color ${foreground};
+      @define-color card_fg_color ${foreground};
+      @define-color popover_fg_color ${foreground};
+      @define-color sidebar_fg_color ${foreground};
       * {
-        --window-fg-color: ${colors.foreground};
-        --view-fg-color: ${colors.foreground};
-        --headerbar-fg-color: ${colors.foreground};
-        --card-fg-color: ${colors.foreground};
-        --popover-fg-color: ${colors.foreground};
-        --sidebar-fg-color: ${colors.foreground};
-        --secondary-sidebar-fg-color: ${colors.foreground};
-        --dialog-fg-color: ${colors.foreground};
-        --thumbnail-fg-color: ${colors.foreground};
+        --window-fg-color: ${foreground};
+        --view-fg-color: ${foreground};
+        --headerbar-fg-color: ${foreground};
+        --card-fg-color: ${foreground};
+        --popover-fg-color: ${foreground};
+        --sidebar-fg-color: ${foreground};
+        --secondary-sidebar-fg-color: ${foreground};
+        --dialog-fg-color: ${foreground};
+        --thumbnail-fg-color: ${foreground};
       }
     '';
   };

@@ -3,7 +3,7 @@ let
   cursorName = "Adwaita";
   cursorPkg = pkgs.adwaita-icon-theme;
   cursorSize = 22;
-  colors = config.programs.kasane.colors;
+  inherit (config.programs.kasane.colors) blue foreground;
 in
 {
   gtk = {
@@ -22,14 +22,14 @@ in
       size = cursorSize;
     };
     gtk3.extraCss = ''
-      @define-color accent_color ${colors.blue};
-      @define-color accent_bg_color ${colors.blue};
-      @define-color accent_fg_color ${colors.foreground};
+      @define-color accent_color ${blue};
+      @define-color accent_bg_color ${blue};
+      @define-color accent_fg_color ${foreground};
     '';
     gtk4.extraCss = ''
-      @define-color accent_color ${colors.blue};
-      @define-color accent_bg_color ${colors.blue};
-      @define-color accent_fg_color ${colors.foreground};
+      @define-color accent_color ${blue};
+      @define-color accent_bg_color ${blue};
+      @define-color accent_fg_color ${foreground};
     '';
   };
 

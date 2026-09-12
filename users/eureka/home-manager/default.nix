@@ -66,37 +66,49 @@ in
     };
     extraConfig =
       let
-        c = config.programs.kasane.colors;
+        inherit (config.programs.kasane.colors)
+          cursor foreground background
+          selection_foreground selection_background
+          black black-bright
+          red red-bright
+          green green-bright
+          yellow yellow-bright
+          blue blue-bright
+          magenta magenta-bright
+          cyan cyan-bright
+          white white-bright
+          active_tab_foreground active_tab_background
+          inactive_tab_foreground inactive_tab_background;
       in
       ''
-        cursor                  ${c.cursor}
-        foreground              ${c.foreground}
-        background              ${c.background}
-        selection_foreground    ${c.selection_foreground}
-        selection_background    ${c.selection_background}
-        color0                  ${c.black}
-        color8                  ${c."black-bright"}
-        color1                  ${c.red}
-        color9                  ${c."red-bright"}
-        color2                  ${c.green}
-        color10                 ${c."green-bright"}
-        color3                  ${c.yellow}
-        color11                 ${c."yellow-bright"}
-        color4                  ${c.blue}
-        color12                 ${c."blue-bright"}
-        color5                  ${c.magenta}
-        color13                 ${c."magenta-bright"}
-        color6                  ${c.cyan}
-        color14                 ${c."cyan-bright"}
-        color7                  ${c.white}
-        color15                 ${c."white-bright"}
-        active_tab_foreground   ${c.active_tab_foreground}
-        active_tab_background   ${c.active_tab_background}
-        inactive_tab_foreground ${c.inactive_tab_foreground}
-        inactive_tab_background ${c.inactive_tab_background}
-        active_border_color     ${c."black-bright"}
-        inactive_border_color   ${c.black}
-        bell_border_color       ${c.yellow}
+        cursor                  ${cursor}
+        foreground              ${foreground}
+        background              ${background}
+        selection_foreground    ${selection_foreground}
+        selection_background    ${selection_background}
+        color0                  ${black}
+        color8                  ${black-bright}
+        color1                  ${red}
+        color9                  ${red-bright}
+        color2                  ${green}
+        color10                 ${green-bright}
+        color3                  ${yellow}
+        color11                 ${yellow-bright}
+        color4                  ${blue}
+        color12                 ${blue-bright}
+        color5                  ${magenta}
+        color13                 ${magenta-bright}
+        color6                  ${cyan}
+        color14                 ${cyan-bright}
+        color7                  ${white}
+        color15                 ${white-bright}
+        active_tab_foreground   ${active_tab_foreground}
+        active_tab_background   ${active_tab_background}
+        inactive_tab_foreground ${inactive_tab_foreground}
+        inactive_tab_background ${inactive_tab_background}
+        active_border_color     ${black-bright}
+        inactive_border_color   ${black}
+        bell_border_color       ${yellow}
       '';
   };
   programs.helix = {
