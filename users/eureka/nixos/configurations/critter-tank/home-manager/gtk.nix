@@ -39,6 +39,7 @@ in
       @define-color sidebar_fg_color ${colors.foreground};
       @define-color theme_fg_color ${colors.foreground};
       @define-color theme_text_color ${colors.foreground};
+      * { color: ${colors.foreground}; }
     '';
     gtk4.extraCss = ''
       @define-color accent_color ${colors.blue};
