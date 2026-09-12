@@ -5,6 +5,7 @@ in
 {
   imports = [
     ./modules/systemd/gh-mdbook-server
+    ../fonts.nix
   ];
 
   # Bootloader.
@@ -128,9 +129,11 @@ in
 
   nix.settings = {
     extra-substituters = [
+      "https://cache.numtide.com"
       "https://cloud-scythe-labs.cachix.org"
     ];
     extra-trusted-public-keys = [
+      "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
       "cloud-scythe-labs.cachix.org-1:I+IM+x2gGlmNjUMZOsyHJpxIzmAi7XhZNmTVijGjsLw="
     ];
 
@@ -151,10 +154,6 @@ in
     WLR_NO_HARDWARE_CURSORS = "1"; # fixes disappearing cursor
     NIXOS_OZONE_WL = "1"; # tells electron apps to use wayland
   };
-
-  fonts.packages = with pkgs.nerd-fonts; [
-    jetbrains-mono
-  ];
 
   nix = {
     package = pkgs.nixVersions.latest;

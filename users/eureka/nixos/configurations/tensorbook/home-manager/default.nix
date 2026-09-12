@@ -40,13 +40,13 @@
   ];
   
   programs.kitty = {
-    themeFile = "kanagawabones";
+    themeFile = "ferra";
     font = {
       name = "JetBrainsMono Nerd Font";
       size = 15;
     };
   };
-  programs.helix.settings.theme = "kanabox_default";
+  programs.helix.settings.theme = "ferra";
 
   home.stateVersion = "23.05";
 }

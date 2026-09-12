@@ -1,6 +1,11 @@
 {
   description = "One flake to rule them all.";
 
+  nixConfig = {
+    extra-substituters = [ "https://cache.numtide.com" ];
+    extra-trusted-public-keys = [ "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=" ];
+  };
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nix-darwin = {
@@ -33,9 +38,10 @@
     };
     helix-themes.url = "github:CptPotato/helix-themes";
     brave-torrent.url = "github:NixOS/nixpkgs?rev=bfbd5014640db4509f601878a2f2a9216a0459d0";
-    openclaude = {
-      url = "github:eureka-cpu/openclaude-nix?ref=eureka-cpu/add-ollama-support";
-      inputs.nixpkgs.follows = "nixpkgs";
+    llm-agents.url = "github:numtide/llm-agents.nix";
+    kitty-diff-git = {
+      url = "github:eureka-cpu/kitty-diff-git";
+      flake = false;
     };
   };
 
@@ -48,7 +54,6 @@
     , awww
     , stylix
     , brave-torrent
-    , openclaude
     , ...
     }@inputs:
 
@@ -80,13 +85,29 @@
                 users.${user} = host + "/home-manager";
                 sharedModules = builtins.attrValues self.homeManagerModules;
               };
+              nixpkgs.overlays = [
+                (import "${inputs.kitty-diff-git}/overlay.nix")
+                (final: _prev: {
+                  llm-agents = inputs.llm-agents.packages.${final.system};
+                })
+                (_final: prev: {
+                  kitty-themes = prev.kitty-themes.overrideAttrs (old: {
+                    version = "0-unstable-2026-07-10";
+                    src = prev.fetchFromGitHub {
+                      owner = "kovidgoyal";
+                      repo = "kitty-themes";
+                      rev = "e144651f75891cf4795ef1e7c24bb3e27c47aa06";
+                      hash = "sha256-cl79/m3tGZzGXBuwcIIBxsewrcgaFK0R0VRlRiiw5yk=";
+                    };
+                  });
+                })
+              ];
             }
           ] ++ lib.optional (type == "nixos")
             {
               # TODO: Use hyprpaper and stylix so we can just remove this
               nixpkgs.overlays = [
                 awww.overlays.default
-                openclaude.overlays.default
               ];
               home-manager.extraSpecialArgs = { inherit brave-torrent; };
             };
@@ -108,7 +129,6 @@
       # All user defined home-manager modules go here
       homeManagerModules = {
         inherit (stylix.homeModules) stylix;
-        inherit (openclaude.homeManagerModules) openclaude;
         helix-themes = inputs.helix-themes.homeManagerModule;
       };
 

@@ -1,14 +1,13 @@
-{ pkgs, lib, osConfig ? { }, ... }:
+{ pkgs, lib, config, osConfig ? { }, ... }:
 let
+  inherit (pkgs) stdenv;
+
   filterByPlatform = ps:
     let
       inherit (pkgs) hostPlatform;
       inherit (lib.meta) availableOn;
     in
     builtins.filter (p: availableOn hostPlatform p) ps;
-
-  nixosOllamaModels = (osConfig.services.ollama or { }).loadModels or [ ];
-  ollamaModels = lib.listToAttrs (map (m: lib.nameValuePair m { name = m; }) nixosOllamaModels);
 in
 {
   # Home Manager needs a bit of information about you and the paths it should manage.
@@ -31,17 +30,19 @@ in
     fastfetch
     # code
     git
+    git-kitten # kitty-diff-git: `git kitten diff`
     helix
     docker
-    claude-code
+    llm-agents.claude-code
     # studio
     ffmpeg
     gphoto2
-    wl-clipboard
     obsidian
     obs-studio
     spotify
     zoom-us
+  ]) ++ lib.optionals stdenv.isLinux (with pkgs; [
+    wl-clipboard
   ]);
 
   stylix.targets.kitty = {
@@ -134,6 +135,20 @@ in
       email = "github.eureka@gmail.com";
     };
   };
+  programs.gh = {
+    enable = true;
+    settings = {
+      git_protocol = "ssh";
+      prompt = "enabled";
+      aliases = {
+        co = "pr checkout";
+        pv = "pr view";
+      };
+    };
+    gitCredentialHelper.enable = true;
+    extensions = [ pkgs.gh-dash ];
+  };
+
   systemd.user.services.eureka-calendar-fetch = {
     Unit = {
       Description = "Fetch upcoming calendar events";
@@ -157,27 +172,6 @@ in
     };
     Install = {
       WantedBy = [ "timers.target" ];
-    };
-  };
-
-  programs.openclaude = {
-    enable = true;
-    ollama.enable = true;
-  };
-  programs.opencode = {
-    enable = true;
-    settings = {
-      model = "ollama/qwen3:30b";
-      small_model = "ollama/qwen2.5-coder:14b";
-      provider.ollama = {
-        npm = "@ai-sdk/openai-compatible";
-        name = "Ollama (local)";
-        options = {
-          baseURL = "http://127.0.0.1:11434/v1";
-          apiKey = "ollama";
-        };
-        models = ollamaModels;
-      };
     };
   };
 
