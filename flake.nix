@@ -90,9 +90,6 @@
                 (final: _prev: {
                   llm-agents = inputs.llm-agents.packages.${final.system};
                 })
-                # Bump kitty-themes so newer upstreamed themes (e.g. ferra) are
-                # available to programs.kitty.themeFile, which hardcodes
-                # pkgs.kitty-themes in the home-manager module.
                 (_final: prev: {
                   kitty-themes = prev.kitty-themes.overrideAttrs (old: {
                     version = "0-unstable-2026-07-10";
