@@ -8,11 +8,6 @@ let
       inherit (lib.meta) availableOn;
     in
     builtins.filter (p: availableOn hostPlatform p) ps;
-
-  nixosOllamaModels = (osConfig.services.ollama or { }).loadModels or [ ];
-  ollamaModels = lib.listToAttrs (map (m: lib.nameValuePair m { name = m; }) nixosOllamaModels);
-
-  dotfiles = "${config.home.homeDirectory}/.config/dotfiles";
 in
 {
   # Home Manager needs a bit of information about you and the paths it should manage.
