@@ -18,7 +18,7 @@
         mako = "${pkgs.mako}/bin/mako";
 
         inherit (config.home) homeDirectory;
-        wallpaper = "${homeDirectory}/Wallpapers/wallhaven.jpg";
+        wallpaper = "${homeDirectory}/Wallpapers/koi-rain.jpg";
         mynixui = "${homeDirectory}/Code/mynixui/eww";
         onStart = pkgs.writeShellScriptBin "start.sh" ''
           # start wallpaper daemon and set wallpaper
@@ -235,7 +235,7 @@
         bind = [
           "$mainMod, Q, killactive,"
           "$mainMod, M, exit,"
-          "$mainMod, E, exec, thunar"
+          "$mainMod, E, exec, nautilus"
           "$mainMod, V, togglefloating,"
           "$mainMod, P, pseudo," # dwindle
 
@@ -302,7 +302,7 @@
     rofi
     mako
     awww
-    thunar
+    nautilus
     zathura
     image-roll
     celluloid
@@ -447,8 +447,7 @@
         "mako/config".text = ''
           background-color=${background}ff
           text-color=${foreground}ff
-          border-color=${blue}ff
-          border-size=1
+          border-size=0
           border-radius=0
           font=JetBrainsMono Nerd Font 12
           layer=overlay

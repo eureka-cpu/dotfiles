@@ -3,7 +3,8 @@ let
   cursorName = "Adwaita";
   cursorPkg = pkgs.adwaita-icon-theme;
   cursorSize = 20;
-  inherit (config.programs.kasane.colors) blue foreground;
+  inherit (config.programs.kasane.colors) blue foreground background;
+
 in
 {
   gtk = {
@@ -18,9 +19,7 @@ in
     };
     iconTheme = {
       name = "Gruvbox-Plus-Dark";
-      package = pkgs.gruvbox-plus-icons.override {
-        folder-color = "jade";
-      };
+      package = pkgs.gruvbox-plus-icons.override { folder-color = "jade"; };
     };
     cursorTheme = {
       name = cursorName;
@@ -40,6 +39,33 @@ in
       @define-color theme_fg_color ${foreground};
       @define-color theme_text_color ${foreground};
       * { color: ${foreground}; }
+
+      placessidebar {
+        background-color: #2e2e32;
+      }
+      placessidebar row {
+        min-height: 36px;
+        color: alpha(${foreground}, 0.7);
+      }
+      placessidebar row > revealer {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+      .sidebar row {
+        border-radius: 9px;
+        margin-left: 4px;
+        margin-right: 4px;
+      }
+      placessidebar row:selected {
+        background-color: alpha(currentColor, 0.1);
+        color: ${foreground};
+      }
+      placessidebar row.activatable:hover {
+        background-color: alpha(currentColor, 0.07);
+      }
+      placessidebar row image.sidebar-icon {
+        opacity: 0.7;
+      }
     '';
     gtk4.extraCss = ''
       @define-color accent_color ${blue};
