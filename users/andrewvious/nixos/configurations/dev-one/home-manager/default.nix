@@ -9,16 +9,16 @@
   ];
 
   home.packages = with pkgs; [
-    # comms
+    noctalia-shell
+     # comms
     telegram-desktop
     zoom-us
     # studio
     inkscape
-    # kdePackages.kdenlive
     krita
     reaper
     discord
-    melonDS
+    melonds
     blender
     steam
     libreoffice
@@ -26,12 +26,14 @@
 
   braveTorrent.enable = true;
 
+  xdg.configFile."niri/config.kdl".source = ./config.kdl;
+  
   programs.kitty = {
-    themeFile = "kanagawabones";
+    themeFile = "Catppuccin-Macchiato";
     font.name = "JetBrainsMono Nerd Font";
   };
 
-  programs.helix.settings.theme = "kanabox_default";
+  programs.helix.settings.theme = "catppuccin_macchiato";
 
   # zsh & oh-my-zsh configurations
   programs.zsh.oh-my-zsh.theme = "dst";

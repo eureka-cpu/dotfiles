@@ -22,16 +22,20 @@
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
 
+  programs.niri.enable = true;
+
+  security.pam.services.swaylock = {};
+
+  fonts.fontconfig.defaultFonts = {
+    monospace = [ "JetBrainsMono Nerd Font Mono" ];
+  };  
+
   # Audio settings specific to this machine
   services.pipewire.jack.enable = true;
 
   # Enabling due to issues with Wayland & screen sharing
   xdg.portal.enable = true;
   
-  # Workaround for GNOME autologin
-  systemd.services."getty@tty1".enable = false;
-  systemd.services."autovt@tty1".enable = false;
-
   # Enabling to build images for Raspberry Pi
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 

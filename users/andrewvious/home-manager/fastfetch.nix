@@ -5,7 +5,7 @@
   settings = {
     logo = {
       type = "builtin";
-      source = "nixos";
+      source = "nixos_small";
       padding = {
         top = 2;
         left = 3;
@@ -26,6 +26,7 @@
         type = "cpu";
         key = "├  CPU";
         keyColor = "32";
+        temp = true;
       }
       {
         type = "cpuusage";
@@ -37,12 +38,6 @@
         key = "├  Load";
         keyColor = "32";
         text = "awk '{print \"1m: \"$1\" | 5m: \"$2\" | 15m: \"$3}' /proc/loadavg";
-      }
-      {
-        type = "command";
-        key = "├  Temp";
-        keyColor = "32";
-        text = "awk '{printf \"%.1f°C\", $1/1000}' /sys/class/thermal/thermal_zone0/temp";
       }
       {
         type = "gpu";
@@ -57,7 +52,7 @@
       }
       {
         type = "disk";
-        key = "├  System";
+        key = "└ System";
         keyColor = "32";
         folders = "/";
       }
@@ -78,11 +73,6 @@
       {
         type = "kernel";
         key = "├  Kernel";
-        keyColor = "35";
-      }
-      {
-        type = "de";
-        key = "├  DE";
         keyColor = "35";
       }
       {
