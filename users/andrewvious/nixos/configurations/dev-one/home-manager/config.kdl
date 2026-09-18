@@ -1,6 +1,3 @@
-// niri config — converted from hyprland.nix (asus-rog)
-// Drop at ~/.config/niri/config.kdl. Hot-reloads on save.
-
 input {
     keyboard {
         xkb {
@@ -36,12 +33,19 @@ layout {
 
     focus-ring {
         width 2
-        active-gradient from="#33ccff" to="#00ff99" angle=45
+        active-gradient from="#33ccff" to="#00ff99" angle=45 relative-to="workspace-view"
         inactive-color "#595959"
     }
+
+    background-color "#24273a" // macchiato base
+}
+
+overview {
+    backdrop-color "#24273a" // macchiato base
 }
 
 spawn-at-startup "noctalia-shell"
+spawn-at-startup "sh" "-c" "$(dirname $(readlink -f $(which polkit-gnome-authentication-agent-1 2>/dev/null)))/polkit-gnome-authentication-agent-1"
 
 hotkey-overlay {
     skip-at-startup

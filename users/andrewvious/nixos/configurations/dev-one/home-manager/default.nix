@@ -2,7 +2,6 @@
 {
   imports = [
     ./gtk.nix
-    ../../../../home-manager/gnome.nix
     ../../../../home-manager/default.nix
     ../../../../home-manager/brave-torrent.nix
     ../../../../home-manager/fastfetch.nix
@@ -10,14 +9,16 @@
 
   home.packages = with pkgs; [
     noctalia-shell
+    polkit_gnome
+    nautilus
      # comms
     telegram-desktop
     zoom-us
+    discord
     # studio
     inkscape
     krita
     reaper
-    discord
     melonds
     blender
     steam

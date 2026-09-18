@@ -18,13 +18,12 @@
   services.xserver.videoDrivers = [ "amdgpu" "radeon" ];
   boot.initrd.kernelModules = [ "amdgpu" "radeon" ];
   
-  # Enable the GNOME Desktop Environment.
+  # Enable GDM for keyring management & niri compositor
   services.displayManager.gdm.enable = true;
-  services.desktopManager.gnome.enable = true;
-
   programs.niri.enable = true;
 
-  security.pam.services.swaylock = {};
+  # Battery statistics
+  services.upower.enable = true;
 
   fonts.fontconfig.defaultFonts = {
     monospace = [ "JetBrainsMono Nerd Font Mono" ];
@@ -44,22 +43,6 @@
   networking.firewall.allowedTCPPorts = [ 443 ];
   networking.firewall.allowedUDPPorts = [ 1194 ];
   networking.firewall.checkReversePath = "loose";
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment = {   
-    gnome.excludePackages = with pkgs; [
-      cheese
-      gnome-music
-      gnome-tour
-      epiphany
-      geary
-      gedit
-      gnome-text-editor
-      gnome-contacts
-      yelp
-    ];
-  };
 
   programs.steam = {
     enable = true;
