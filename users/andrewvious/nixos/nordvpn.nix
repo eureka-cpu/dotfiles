@@ -1,9 +1,5 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: let
+{ pkgs, config, lib, ... }:
+let
   nordVpnPkg = pkgs.callPackage ({
     autoPatchelfHook,
     buildFHSEnvChroot,

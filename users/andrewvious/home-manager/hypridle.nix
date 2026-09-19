@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, config, ... }:
 let
   hyprctlBin = "${pkgs.hyprland}/bin/hyprctl";
   kittyBin = "${pkgs.kitty}/bin/kitty";

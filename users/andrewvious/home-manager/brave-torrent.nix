@@ -1,4 +1,4 @@
-{ config, lib, pkgs, brave-torrent, ... }:
+{ pkgs, config, lib, brave-torrent, ... }:
 
 let
   bravePkgs = import brave-torrent {

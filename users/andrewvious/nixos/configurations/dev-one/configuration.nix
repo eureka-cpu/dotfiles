@@ -22,9 +22,6 @@
   services.displayManager.gdm.enable = true;
   programs.niri.enable = true;
 
-  # Battery statistics
-  services.upower.enable = true;
-
   fonts.fontconfig.defaultFonts = {
     monospace = [ "JetBrainsMono Nerd Font Mono" ];
   };  

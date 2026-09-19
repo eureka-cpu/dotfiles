@@ -43,6 +43,10 @@
       url = "github:eureka-cpu/kasane";
       flake = false;
     };
+    noctalia = {
+      url = "github:noctalia-dev/noctalia";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -53,6 +57,7 @@
     , home-manager
     , awww
     , brave-torrent
+    , noctalia
     , ...
     }@inputs:
 
@@ -108,8 +113,12 @@
               # TODO: Use hyprpaper and stylix so we can just remove this
               nixpkgs.overlays = [
                 awww.overlays.default
+                (final: _prev: {
+                  noctalia = inputs.noctalia.packages.${final.stdenv.hostPlatform.system}.default;
+                })
               ];
               home-manager.extraSpecialArgs = { inherit brave-torrent; };
+              home-manager.sharedModules = [ inputs.noctalia.homeModules.default ];
             };
         };
 

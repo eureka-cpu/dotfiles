@@ -5,6 +5,7 @@
     ../../../../home-manager/default.nix
     ../../../../home-manager/brave-torrent.nix
     ../../../../home-manager/fastfetch.nix
+    ../../../../home-manager/noctalia/noctalia.nix
   ];
 
   home.packages = with pkgs; [

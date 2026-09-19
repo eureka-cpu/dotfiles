@@ -1,0 +1,60 @@
+[theme]
+builtin = "Catppuccin"
+community_palette = "Catppuccin Macchiato Sapphire"
+source = "community"
+mode    = "dark"
+ 
+[bar.default]
+start  = [ "launcher", "clock", "gap", "cpu", "ram", "gap", "active_window", "media" ]
+center = [ "workspaces" ]
+end    = [ "tray", "notifications", "clipboard", "gap", "battery", "volume", "brightness", "gap", "control-center" ]
+margin_ends = 8
+widget_spacing = 6
+ 
+[widget.gap]
+type        = "spacer"
+interactive = false
+
+[shell]
+avatar_path       = "/home/andrewvious/Pictures/berserk-pfp.jpg"
+clipboard_enabled = true
+show_location = false
+ 
+[shell.launcher]
+pinned        = [ "brave-browser.desktop", "kitty.desktop" ]
+sort_by_usage = true
+categories    = true
+app_grid      = false
+
+[shell.panel]
+control_center_placement       = "attached"
+control_center_position        = "auto"
+clipboard_placement            = "attached"
+clipboard_position             = "auto"
+session_placement              = "attached"
+session_position               = "auto"
+wallpaper_placement            = "attached"
+wallpaper_position             = "auto"
+launcher_placement             = "floating"
+launcher_position              = "center"
+open_near_click_clipboard      = true
+open_near_click_control_center = true
+open_near_click_session        = true
+open_near_click_wallpaper      = true 
+
+[location]
+address     = "Houston, TX"
+auto_locate = false
+ 
+[weather]
+enabled = true
+unit    = "imperial"
+
+[wallpaper]
+directory = "/home/andrewvious/Pictures/Wallpapers"
+
+    [wallpaper.default]
+    path = "/home/andrewvious/Pictures/Wallpapers/wallhaven_wqv8k7.jpg"
+
+    [wallpaper.last]
+    path = "/home/andrewvious/Pictures/Wallpapers/wallhaven_wqv8k7.jpg"
