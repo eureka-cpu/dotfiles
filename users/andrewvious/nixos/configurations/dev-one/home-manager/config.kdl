@@ -44,8 +44,7 @@ overview {
     backdrop-color "#24273a" // macchiato base
 }
 
-spawn-at-startup "noctalia-shell"
-spawn-at-startup "sh" "-c" "$(dirname $(readlink -f $(which polkit-gnome-authentication-agent-1 2>/dev/null)))/polkit-gnome-authentication-agent-1"
+spawn-at-startup "noctalia"
 
 hotkey-overlay {
     skip-at-startup
@@ -75,9 +74,10 @@ binds {
     // --- programs ---
     Mod+Return    { spawn "kitty"; }
     Mod+E         { spawn "nautilus"; }
-    Mod+Space     hotkey-overlay-title="Launcher"     { spawn "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
-    Mod+BackSpace hotkey-overlay-title="Session Menu" { spawn "noctalia-shell" "ipc" "call" "sessionMenu" "toggle"; }
-    Mod+Escape    hotkey-overlay-title="Lock Screen"  { spawn "noctalia-shell" "ipc" "call" "lockScreen" "lock"; }
+    Mod+Space     hotkey-overlay-title="Launcher"      { spawn "noctalia" "msg" "panel-toggle" "launcher"; }
+    Mod+C         hotkey-overlay-title="Clipboard"     { spawn "noctalia" "msg" "panel-toggle" "clipboard"; }
+    Mod+BackSpace hotkey-overlay-title="Session Menu"  { spawn "noctalia" "msg" "panel-toggle" "session"; }
+    Mod+Escape    hotkey-overlay-title="Lock Screen"   { spawn "noctalia" "msg" "session" "lock"; }
     
 
     // --- window management ---
@@ -138,10 +138,10 @@ binds {
     Alt+Print  { screenshot-window; }
 
     // --- media keys ---
-    XF86AudioRaiseVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
-    XF86AudioLowerVolume allow-when-locked=true { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "noctalia" "msg" "volume-up"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "noctalia" "msg" "volume-down"; }
     XF86AudioMute        allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
     XF86AudioMicMute     allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_SOURCE@" "toggle"; }
-    XF86MonBrightnessUp   { spawn "noctalia-shell" "ipc" "call" "brightness" "increase"; }
-    XF86MonBrightnessDown { spawn "noctalia-shell" "ipc" "call" "brightness" "decrease"; }
+    XF86MonBrightnessUp   { spawn "noctalia" "msg" "brightness-up"; }
+    XF86MonBrightnessDown { spawn "noctalia" "msg" "brightness-down"; }
 }

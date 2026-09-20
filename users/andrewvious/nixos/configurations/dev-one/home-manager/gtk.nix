@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 let
   cursorName = "Adwaita";
   cursorPkg = pkgs.adwaita-icon-theme;
@@ -20,10 +20,13 @@ in
         gtk-application-prefer-dark-theme=1
       '';
     };
-    gtk4.extraConfig = {
-      Settings = ''
-        gtk-application-prefer-dark-theme=1
-      '';
+    gtk4 = {
+      theme = config.gtk.theme;
+      extraConfig = {
+        Settings = ''
+          gtk-application-prefer-dark-theme=1
+        '';
+      };
     };
     cursorTheme = {
       name = cursorName;
@@ -39,9 +42,4 @@ in
     x11.enable = true;
   };
   home.sessionVariables.GTK_THEME = "Nordic-darker";
-  dconf.settings = {
-    "org/gnome/shell/extensions/user-theme" = {
-      name = "Nordic-darker";
-    };
-  };
 }

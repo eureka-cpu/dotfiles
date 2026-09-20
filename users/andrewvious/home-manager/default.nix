@@ -89,6 +89,7 @@
       name = "andrewvious";
       email = "ohbandrew@gmail.com";
     };
+    signing.format = null;
   };
 
   # Let Home Manager install and manage itself.

@@ -19,7 +19,9 @@ interactive = false
 avatar_path       = "/home/andrewvious/Pictures/berserk-pfp.jpg"
 clipboard_enabled = true
 show_location = false
- 
+password_style = "random"
+center_password_text = true
+
 [shell.launcher]
 pinned        = [ "brave-browser.desktop", "kitty.desktop" ]
 sort_by_usage = true
@@ -42,6 +44,10 @@ open_near_click_control_center = true
 open_near_click_session        = true
 open_near_click_wallpaper      = true 
 
+[lockscreen]
+blur_intensity = 0.05
+tint_intensity = 0.05
+
 [location]
 address     = "Houston, TX"
 auto_locate = false
@@ -52,6 +58,7 @@ unit    = "imperial"
 
 [wallpaper]
 directory = "/home/andrewvious/Pictures/Wallpapers"
+transition_on_startup = true
 
     [wallpaper.default]
     path = "/home/andrewvious/Pictures/Wallpapers/wallhaven_wqv8k7.jpg"

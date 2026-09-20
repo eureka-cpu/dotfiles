@@ -20,10 +20,13 @@ in
         gtk-application-prefer-dark-theme=1
       '';
     };
-    gtk4.extraConfig = {
-      Settings = ''
-        gtk-application-prefer-dark-theme=1
-      '';
+    gtk4 = {
+      theme = config.gtk.theme;
+      extraConfig = {
+        Settings = ''
+          gtk-application-prefer-dark-theme=1
+        '';
+      };
     };
     cursorTheme = {
       name = cursorName;
