@@ -18,9 +18,45 @@
   services.xserver.videoDrivers = [ "amdgpu" "radeon" ];
   boot.initrd.kernelModules = [ "amdgpu" "radeon" ];
   
-  # Enable GDM for keyring management & niri compositor
-  services.displayManager.gdm.enable = true;
+  # Enable greetd for keyring management & niri compositor
+  services.greetd.enable = true;
   programs.niri.enable = true;
+  security.pam.services.greetd.enableGnomeKeyring = true;
+
+  # Enable regreet for Login auth
+  programs.regreet = {
+    enable = true;
+
+    theme = {
+      name = "Nordic-darker";
+      package = pkgs.nordic;
+    };
+    iconTheme = {
+      name = "Colloid";
+      package = pkgs.colloid-icon-theme;
+    };
+    cursorTheme = {
+      name = "Adwaita";
+      package = pkgs.adwaita-icon-theme;
+    };
+    font = {
+      name = "JetBrainsMono Nerd Font";
+      package = pkgs.nerd-fonts.jetbrains-mono;
+      size = 12;
+    };
+    settings = {
+      background = {
+        path = "/etc/greetd/wallpaper.jpg";
+        fit = "Cover";
+      };
+      GTK.application_prefer_dark_theme = true;
+      commands = {
+        reboot = [ "systemctl" "reboot" ];
+        poweroff = [ "systemctl" "poweroff" ];
+      };
+    };
+  };
+  environment.etc."greetd/wallpaper.jpg".source = ./wallpaper.jpg;
 
   fonts.fontconfig.defaultFonts = {
     monospace = [ "JetBrainsMono Nerd Font Mono" ];

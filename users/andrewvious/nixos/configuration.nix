@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, config, lib, ... }:
 let
   user = config.users.users.andrewvious.name;
 in
@@ -97,7 +97,7 @@ in
   # Enable automatic login for the user.
   services.displayManager.autoLogin = {
     inherit user;
-    enable = true;
+    enable = lib.mkDefault true;
   };
 
   # Allow unfree packages

@@ -8,7 +8,9 @@
 
   networking.hostName = "asus-rog";
 
-  # Enable the X11 windowing system.
+  # Workaround for GNOME autologin
+  systemd.services."getty@tty1".enable = false;
+  systemd.services."autovt@tty1".enable = false;
   services.displayManager.gdm.enable = true;
 
   # Hyprland
@@ -19,10 +21,6 @@
 
   # Enabling to build images for Raspberry Pi
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
-
-  # Workaround for GNOME autologin
-  systemd.services."getty@tty1".enable = false;
-  systemd.services."autovt@tty1".enable = false;
 
   # Nvidia settings
   services.xserver.videoDrivers = [ "nvidia" ];

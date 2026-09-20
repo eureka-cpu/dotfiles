@@ -2,7 +2,7 @@
 
 let
   bravePkgs = import brave-torrent {
-    system = pkgs.system;
+    system = pkgs.stdenv.hostPlatform.system;
     config.allowUnfree = true;
   };
 

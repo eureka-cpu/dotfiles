@@ -23,7 +23,7 @@ password_style = "random"
 center_password_text = true
 
 [shell.launcher]
-pinned        = [ "brave-browser.desktop", "kitty.desktop" ]
+pinned        = [ "brave-browser", "kitty" ]
 sort_by_usage = true
 categories    = true
 app_grid      = false
@@ -65,3 +65,35 @@ transition_on_startup = true
 
     [wallpaper.last]
     path = "/home/andrewvious/Pictures/Wallpapers/wallhaven_wqv8k7.jpg"
+
+[desktop_widgets]
+schema_version = 2
+widget_order = [ "desktop-widget-0000000000000001" ]
+
+    [desktop_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [desktop_widgets.widget.desktop-widget-0000000000000001]
+    box_height = 352.0
+    box_width = 384.0
+    cx = 1724.0
+    cy = 904.0
+    output = "eDP-1"
+    placement_height = 1080.0
+    placement_width = 1920.0
+    rotation = 0.0
+    type = "fancy_audio_visualizer"
+
+        [desktop_widgets.widget.desktop-widget-0000000000000001.settings]
+        background = false
+        bloom_intensity = 0.45000000000000001
+        inner_diameter = 0.60000000000000009
+        primary_color = "on_primary"
+        ring_opacity = 0.70000000000000007
+        rotation_speed = 0.40000000000000002
+        secondary_color = "secondary"
+        sensitivity = 1.3999999999999999
+        visualization_mode = "wave_rings"
+        wave_thickness = 0.69999999999999996
