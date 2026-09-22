@@ -40,9 +40,14 @@ layout {
     background-color "#24273a" // macchiato base
 }
 
-overview {
-    backdrop-color "#24273a" // macchiato base
+layer-rule {
+    match namespace="^noctalia-backdrop"
+    place-within-backdrop true
 }
+
+// overview {
+//     backdrop-color "#24273a" // macchiato base
+// }
 
 spawn-at-startup "noctalia"
 

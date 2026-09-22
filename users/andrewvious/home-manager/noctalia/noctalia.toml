@@ -48,6 +48,25 @@ open_near_click_wallpaper      = true
 blur_intensity = 0.05
 tint_intensity = 0.05
 
+[idle]
+behavior_order = [ "lock", "screen-off", "lock-and-suspend" ]
+pre_action_fade_seconds = 5
+
+    [idle.behavior.lock]
+    action = "lock"
+    enabled = true
+    timeout = 600.0
+
+    [idle.behavior.lock-and-suspend]
+    action = "lock_and_suspend"
+    enabled = true
+    timeout = 900.0
+
+    [idle.behavior.screen-off]
+    action = "screen_off"
+    enabled = true
+    timeout = 660.0
+
 [location]
 address     = "Houston, TX"
 auto_locate = false
@@ -65,6 +84,11 @@ transition_on_startup = true
 
     [wallpaper.last]
     path = "/home/andrewvious/Pictures/Wallpapers/wallhaven_wqv8k7.jpg"
+
+[backdrop]
+enabled        = true
+blur_intensity = 0.5
+tint_intensity = 0.3
 
 [desktop_widgets]
 schema_version = 2
