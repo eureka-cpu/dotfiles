@@ -12,7 +12,8 @@
     noctalia-shell
     polkit_gnome
     nautilus
-     # comms
+    gvfs
+    # comms
     telegram-desktop
     zoom-us
     discord

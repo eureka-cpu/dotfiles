@@ -59,6 +59,8 @@
   environment.etc."greetd/wallpaper.jpg".source = ./wallpaper.jpg;
 
   fonts.fontconfig.defaultFonts = {
+    sansSerif  = [ "Noto Sans" "Noto Sans CJK JP" ];  # japanese fallbacks
+    serif     = [ "Noto Serif" "Noto Serif CJK JP"];  # for browser
     monospace = [ "JetBrainsMono Nerd Font Mono" ];
   };  
 
@@ -70,6 +72,7 @@
   
   # Enabling to build images for Raspberry Pi
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
 
   # nordvpn settings:
   services.nordvpn.enable = true;

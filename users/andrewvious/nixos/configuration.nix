@@ -121,11 +121,16 @@ in
     NIXOS_OZONE_WL = "1"; # tells electron apps to use wayland
   };
 
-  fonts.packages = with pkgs.nerd-fonts; [
-    droid-sans-mono
-    fira-code
-    jetbrains-mono
-    _0xproto
+  fonts.packages = with pkgs; [
+    nerd-fonts.droid-sans-mono
+    nerd-fonts.fira-code
+    nerd-fonts.jetbrains-mono
+    nerd-fonts._0xproto
+    # japanese & emojis
+    noto-fonts
+    noto-fonts-cjk-sans
+    noto-fonts-cjk-serif
+    noto-fonts-color-emoji
   ];
 
   nix = {
