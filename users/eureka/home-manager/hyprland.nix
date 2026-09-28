@@ -1,5 +1,20 @@
 { pkgs, config, ... }:
 {
+  systemd.user.services.eww = {
+    Unit = {
+      Description = "Eww widget daemon";
+      After = [ "graphical-session.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.eww}/bin/eww daemon --no-daemonize";
+      ExecStartPost = "${pkgs.eww}/bin/eww open window";
+      Restart = "on-failure";
+      RestartSec = "3s";
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
+  };
+
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [
@@ -14,18 +29,13 @@
       let
         swww-daemon = "${pkgs.awww}/bin/awww-daemon";
         swww = "${pkgs.awww}/bin/awww";
-        eww = "${pkgs.eww}/bin/eww";
         mako = "${pkgs.mako}/bin/mako";
 
         inherit (config.home) homeDirectory;
         wallpaper = "${homeDirectory}/Wallpapers/koi-rain.jpg";
-        mynixui = "${homeDirectory}/Code/mynixui/eww";
         onStart = pkgs.writeShellScriptBin "start.sh" ''
           # start wallpaper daemon and set wallpaper
           sleep 2; ${swww-daemon} & ${swww} img --resize crop ${wallpaper} &
-
-          # start widget daemon and open widgets
-          ${eww} daemon -c ${mynixui} & ${eww} open window -c ${mynixui} &
 
           # start notification daemon
           ${mako}
@@ -60,6 +70,7 @@
           "desc:HP Inc. HP Z32 CN42411R5T, preferred, auto, 1"
           "desc:ESP eD15T(2022) 0x00011916, preferred, 0x0, 1, transform, 1"
           "Unknown-1, disabled" # fix for upstream wl-roots bug
+          ", preferred, auto, 1" # fallback: disable auto-scaling for any unmatched display
         ];
         workspace = [
           "1, monitor:desc:HP Inc. HP Z32 CN42411R5T, default:true, persistent:true"
@@ -88,6 +99,8 @@
         # exec-once = waybar & hyprpaper & firefox
         exec-once = [
           "${onStart}/bin/start.sh"
+          "nm-applet"
+          "anyrun daemon"
           (openOnWorkspace 1 "$terminal")
           (openOnWorkspace 1 "$browser")
           (openOnWorkspace 2 "$terminal")
@@ -228,8 +241,8 @@
         # See https://wiki.hyprland.org/Configuring/Keywords/ for more
         "$mainMod" = "SUPER";
 
-        # Opens rofi on first press, closes it on second
-        bindr = "SUPER, SUPER_L, exec, pkill rofi || rofi -show drun -show-icons";
+        # Opens anyrun if closed, closes it if open
+        bindr = "SUPER, SUPER_L, exec, anyrun close 2>/dev/null || anyrun";
 
         # Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
         bind = [
@@ -291,15 +304,18 @@
         # See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
         # See https://wiki.hyprland.org/Configuring/Workspace-Rules/ for workspace rules
 
-        # Example windowrule
-        # windowrule = float, ^(kitty)$
       };
+  };
+
+  programs.eww = {
+    enable = true;
+    package = pkgs.eww;
+    configDir = ./eww;
   };
 
   home.packages = with pkgs; [
     grim
-    eww
-    rofi
+    anyrun
     mako
     awww
     nautilus
@@ -307,6 +323,9 @@
     image-roll
     celluloid
     pavucontrol
+    playerctl
+    networkmanagerapplet
+    gcalcli
   ];
 
   xdg = {
@@ -315,6 +334,7 @@
         inherit (config.programs.kasane.colors)
           background active_tab_background selection_background
           black-bright blue blue-bright foreground white red;
+        hex = s: builtins.substring 1 (builtins.stringLength s - 1) s;
       in
       {
         "rofi/config.rasi".source = ./rofi/config.rasi;
@@ -322,126 +342,209 @@
           * {
               bg:         ${background};
               surface:    ${active_tab_background};
-              surface2:   ${selection_background};
               border-col: ${black-bright};
               accent:     ${blue};
-              accent2:    ${blue-bright};
               fg:         ${foreground};
               fg-dim:     ${white};
               urgent:     ${red};
+              alt-bg:     #2a2c33;
 
               background-color: transparent;
-              text-color:       @fg;
+              text-color:       @fg-dim;
           }
 
           window {
-              location:         center;
-              anchor:           center;
-              border:           2px;
-              border-radius:    0px;
+              location:         north;
+              anchor:           north;
+              x-offset:         0px;
+              y-offset:         180px;
+              border:           1px;
+              border-radius:    10px;
               border-color:     @border-col;
-              height:           360px;
-              width:            600px;
-              background-color: transparent;
+              width:            660px;
+              background-color: @bg;
               spacing:          0;
               children:         [mainbox];
-              orientation:      horizontal;
           }
 
           mainbox {
               spacing:  0;
-              children: [inputbar, message, listview];
-          }
-
-          message {
-              padding:          10px;
-              border:           0px 2px 2px 2px;
-              border-color:     @bg;
-              background-color: @fg-dim;
+              children: [inputbar, listview];
           }
 
           inputbar {
-              color:            @fg;
-              padding:          14px;
-              background-color: @bg;
-              border-color:     @bg;
-              border:           1px;
-              border-radius:    0px;
+              padding:          11px 16px;
+              background-color: transparent;
+              border-radius:    10px 10px 0px 0px;
+              spacing:          10px;
+              children:         [prompt, entry, case-indicator];
           }
 
-          entry, prompt, case-indicator {
-              text-font:  inherit;
-              text-color: inherit;
-          }
-
-          prompt {
-              margin: 0px 1em 0em 0em;
-          }
-
-          listview {
-              padding:          8px;
-              border-radius:    0px;
-              border:           2px 2px 2px 2px;
-              border-color:     @bg;
-              background-color: @bg;
-              dynamic:          false;
-          }
-
-          element {
-              padding:          5px;
-              vertical-align:   0.5;
-              border-radius:    0px;
+          entry, case-indicator {
+              text-font:        inherit;
               text-color:       @fg;
-              background-color: @surface;
-          }
-
-          element.normal.active {
-              background-color: @accent;
-              text-color:       @bg;
-          }
-
-          element.normal.urgent {
-              background-color: @urgent;
-          }
-
-          element.selected.normal {
-              background-color: @accent2;
-              text-color:       @bg;
-          }
-
-          element.selected.active {
-              background-color: @accent;
-              text-color:       @bg;
-          }
-
-          element.selected.urgent {
-              background-color: @urgent;
-          }
-
-          element.alternate.normal {
               background-color: transparent;
           }
 
-          element-text, element-icon {
-              size:             3ch;
-              margin:           0 10 0 0;
+          prompt {
+              text-color:       @accent;
+              background-color: transparent;
+          }
+
+          listview {
+              padding:          6px;
+              border-radius:    0px 0px 10px 10px;
+              border:           1px 0px 0px 0px;
+              border-color:     @border-col;
+              background-color: transparent;
+              dynamic:          true;
+              lines:            8;
+              fixed-num-lines:  false;
+              spacing:          2px;
+          }
+
+          element {
+              padding:          7px 10px;
               vertical-align:   0.5;
-              background-color: inherit;
+              border-radius:    6px;
+              text-color:       @fg-dim;
+              background-color: transparent;
+          }
+
+          element.alternate.normal,
+          element.alternate.active {
+              background-color: @alt-bg;
+          }
+
+          element.selected.normal,
+          element.selected.active {
+              background-color: @surface;
+              text-color:       @fg;
+          }
+
+          element.normal.urgent,
+          element.selected.urgent {
+              text-color: @urgent;
+          }
+
+          element-icon {
+              size:             1.4em;
+              margin:           0px 10px 0px 0px;
+              vertical-align:   0.5;
+              background-color: transparent;
+          }
+
+          element-text {
+              vertical-align:   0.5;
+              background-color: transparent;
               text-color:       inherit;
           }
-
-          button {
-              padding:          6px;
-              color:            @fg-dim;
-              horizontal-align: 0.5;
-              border:           2px 0px 2px 2px;
-              border-radius:    0px;
-              border-color:     @fg-dim;
+        '';
+        "anyrun/config.ron".text = ''
+          Config(
+            x: Fraction(0.5),
+            y: Absolute(270),
+            width: Absolute(600),
+            height: Absolute(0),
+            hide_icons: false,
+            ignore_exclusive_zones: true,
+            layer: Overlay,
+            hide_plugin_info: true,
+            close_on_click: true,
+            show_results_immediately: false,
+            max_entries: Some(4),
+            plugins: [
+              "${pkgs.anyrun}/lib/libapplications.so",
+            ],
+            keybinds: [
+              Keybind(key: "Return", action: Select),
+              Keybind(key: "Up",     action: Up),
+              Keybind(key: "Down",   action: Down),
+              Keybind(key: "ISO_Left_Tab", action: Up, shift: true),
+              Keybind(key: "Tab",    action: Down),
+              Keybind(key: "Escape", action: Close),
+            ],
+          )
+        '';
+        "anyrun/style.css".text = ''
+          * {
+            font-family: "JetBrainsMono Nerd Font";
+            font-size: 13px;
+            outline: none;
           }
 
-          button.selected.normal {
-              border:       2px 0px 2px 2px;
-              border-color: @fg-dim;
+          window {
+            background: transparent;
+          }
+
+          box.main {
+            padding: 0;
+            margin: 0;
+            border-radius: 10px;
+            border: 1px solid ${black-bright};
+            background-color: ${background};
+          }
+
+          entry {
+            background-color: transparent;
+            box-shadow: none;
+            border: none;
+            background-image: url("file:///run/current-system/sw/share/icons/hicolor/scalable/apps/nix-snowflake-white.svg");
+            background-repeat: no-repeat;
+            background-position: 12px center;
+            background-size: 16px 16px;
+          }
+
+          text {
+            min-height: 0;
+            padding: 12px 14px 12px 34px;
+            color: ${foreground};
+            caret-color: ${blue};
+            background-color: transparent;
+          }
+
+          text placeholder {
+            color: ${black-bright};
+          }
+
+          .matches {
+            border-top: 1px solid ${active_tab_background};
+            background-color: transparent;
+            padding: 3px;
+          }
+
+          list.plugin {
+            background-color: transparent;
+          }
+
+          .match {
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: transparent;
+            min-height: 0;
+          }
+
+          .match:selected {
+            background-color: ${active_tab_background};
+          }
+
+          label.match {
+            color: ${white};
+          }
+
+          label.match.description {
+            font-size: 0;
+            min-height: 0;
+            margin: 0;
+            padding: 0;
+            opacity: 0;
+          }
+
+          list.plugin image {
+            -gtk-icon-size: 16px;
+            min-width: 16px;
+            min-height: 16px;
+            margin-right: 8px;
           }
         '';
         "mako/config".text = ''

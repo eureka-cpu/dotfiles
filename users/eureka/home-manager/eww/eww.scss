@@ -1,0 +1,158 @@
+* {
+  font-family: "JetBrainsMono Nerd Font";
+  font-size: 13px;
+  outline: none;
+}
+
+window, box, eventbox, button, scale, overlay, label, image {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+window, box, eventbox, button, scale, overlay {
+  background-color: #1e1f24;
+}
+
+window.center-popup { background-color: transparent; }
+
+.center-outer { background-color: transparent; }
+
+.center-panel box,
+.center-panel eventbox,
+.center-panel button,
+.center-panel overlay { background-color: transparent; }
+
+.center-panel .panel-sep { background-color: #2e3140; }
+
+label { color: #aba398; }
+
+/* -- Top Bar -- */
+
+.topbar { padding: 0 16px; }
+.topbar-right { padding-right: 4px; }
+
+/* -- Workspaces -- */
+
+.workspaces { padding-left: 4px; }
+
+.win-sep { color: #515869; margin: 0 2px 0 6px; }
+.win-title { color: #aba398; }
+
+.ws-empty, .ws-occupied, .ws-active { padding: 0 5px; border-radius: 4px; }
+
+.ws-empty    { color: #515869; }
+.ws-occupied { color: #ae9668; }
+.ws-active   { color: #1e1f24; background-color: #99a2b2; }
+
+/* -- Clock -- */
+
+.clock-box {
+  border-radius: 6px;
+  padding: 0 8px;
+  transition: background-color 150ms ease;
+}
+.clock-box:hover { background-color: #2e3140; }
+
+.time { font-weight: bold; }
+
+.distro {
+  color: #99a2b2;
+  font-size: 14px;
+  margin: 0 4px;
+}
+
+.date { color: #515869; }
+
+/* -- WiFi -- */
+
+.net { color: #515869; font-size: 14px; margin: 0 8px; }
+
+/* -- Battery pill -- */
+
+.battery-wrapper { padding: 0 2px; }
+
+.battery-body {
+  min-width: 28px;
+  min-height: 12px;
+  border-radius: 3px;
+}
+
+.battery-bolt {
+  font-size: 13px;
+  color: #aba398;
+  text-shadow: -1px 0 0 #515869, 0 1px 0 #515869, 1px 0 0 #515869, 0 -1px 0 #515869;
+}
+
+.battery-nub {
+  min-width: 3px;
+  min-height: 7px;
+  background-color: #515869;
+  border-radius: 0 2px 2px 0;
+}
+
+.battery-pct {
+  color: #aba398;
+  font-size: 12px;
+}
+
+/* -- Center panel popup -- */
+
+.center-panel {
+  background-color: #1e1f24;
+  border-radius: 0 0 8px 8px;
+}
+
+.panel-audio { padding-bottom: 10px; }
+
+.art-image { border-radius: 6px; }
+
+.art-placeholder {
+  min-width: 92px;
+  min-height: 92px;
+  border-radius: 6px;
+}
+
+.audio-title {
+  color: #cbc4a7;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.audio-artist {
+  color: #515869;
+  font-size: 12px;
+}
+
+.audio-controls { padding: 2px 0; }
+
+.ctrl-btn {
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+.ctrl-btn label { color: #99a2b2; font-size: 16px; }
+.ctrl-btn:hover { background-color: #2e3140; }
+
+.ctrl-btn.play label { color: #cbc4a7; font-size: 18px; }
+
+.panel-sep {
+  min-height: 1px;
+  background-color: #2e3140;
+  margin: 4px 0 10px 0;
+}
+
+.panel-calendar { padding-bottom: 2px; }
+
+.cal-header {
+  color: #99a2b2;
+  font-size: 11px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.cal-empty { color: #515869; font-size: 12px; }
+
+.cal-events {
+  color: #aba398;
+  font-size: 12px;
+}

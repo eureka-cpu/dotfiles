@@ -1,0 +1,218 @@
+; === Windows ===
+
+(defwindow window
+  :monitor 0
+  :geometry (geometry :anchor "top center" :x "0" :y "0" :width "100%" :height "32px")
+  :stacking  "fg"
+  :exclusive "true"
+  :focusable "false"
+  (topbar :screen 0))
+
+(defwindow center-popup
+  :monitor 0
+  :geometry (geometry :anchor "top center" :x "0" :y "0" :width "360px")
+  :stacking  "fg"
+  :exclusive "false"
+  :focusable "false"
+  (center-panel))
+
+; === State ===
+
+(defvar show-center false)
+
+; === Top Bar ===
+
+(defwidget topbar [screen]
+  (box :class "topbar" :orientation "h" :valign "center"
+    (box :class "topbar-left" :hexpand true :halign "start" :space-evenly false :spacing 4
+      (workspaces)
+      (label :class "win-sep" :text "::" :visible {active-title != ""})
+      (label :class "win-title" :text active-title :limit-width 48 :visible {active-title != ""}))
+    (box :class "topbar-center" :hexpand true :halign "center" :space-evenly false
+      (eventbox
+        :onhover {show-center ? "rm -f /tmp/eww-center-leaving; eww update show-center=true" : "eww open center-popup; eww update show-center=true"}
+        (clock)))
+    (box :class "topbar-right" :hexpand true :halign "end" :space-evenly false :spacing 6
+      (wifi-widget)
+      (battery-pill :capacity {EWW_BATTERY["BATT"]["capacity"]}
+                    :status   {EWW_BATTERY["BATT"]["status"]}))))
+
+; === Workspaces ===
+
+(deflisten active-title :initial ""
+  `(hyprctl activewindow -j 2>/dev/null | grep -o '"title": *"[^"]*"' | head -1 | sed 's/"title": *"//;s/"$//'; socat -u UNIX-CONNECT:$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock - | grep --line-buffered -E '^(activewindow|windowtitle)>>' | while IFS= read -r _; do hyprctl activewindow -j 2>/dev/null | grep -o '"title": *"[^"]*"' | head -1 | sed 's/"title": *"//;s/"$//'; done)`)
+
+(deflisten active-workspace :initial "1"
+  `(hyprctl activeworkspace -j 2>/dev/null | grep -o '"id": *[0-9]*' | head -1 | grep -o '[0-9]*'; socat -u UNIX-CONNECT:$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock - | grep --line-buffered '^workspace>>' | sed -u 's/^workspace>>//')`)
+
+(deflisten occupied-workspaces :initial "::"
+  `(ACTIVE=$(hyprctl activeworkspace -j 2>/dev/null | grep -o '"id": *[0-9]*' | head -1 | grep -o '[0-9]*'); hyprctl workspaces -j 2>/dev/null | grep -o '"id": *[0-9]*' | grep -o '[0-9]*' | grep -v "^$ACTIVE$" | awk '{printf ":%s", $1} END {print ":"}'; socat -u UNIX-CONNECT:$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock - | grep --line-buffered -E '^(workspace|openwindow|closewindow|movewindow|destroyworkspace)>>' | while IFS= read -r _; do ACTIVE=$(hyprctl activeworkspace -j 2>/dev/null | grep -o '"id": *[0-9]*' | head -1 | grep -o '[0-9]*'); hyprctl workspaces -j 2>/dev/null | grep -o '"id": *[0-9]*' | grep -o '[0-9]*' | grep -v "^$ACTIVE$" | awk '{printf ":%s", $1} END {print ":"}'; done)`)
+
+(defwidget workspaces []
+  (box :class "workspaces" :space-evenly false :spacing 2
+    (ws-btn :id "1"  :key ":1:"  :label "一")
+    (ws-btn :id "2"  :key ":2:"  :label "二")
+    (ws-btn :id "3"  :key ":3:"  :label "三")
+    (ws-btn :id "4"  :key ":4:"  :label "四")
+    (ws-btn :id "5"  :key ":5:"  :label "五")
+    (ws-btn :id "6"  :key ":6:"  :label "六")
+    (ws-btn :id "7"  :key ":7:"  :label "七")
+    (ws-btn :id "8"  :key ":8:"  :label "八")
+    (ws-btn :id "9"  :key ":9:"  :label "九")
+    (ws-btn :id "10" :key ":10:" :label "十")))
+
+(defwidget ws-btn [id key label]
+  (eventbox
+    :onclick "hyprctl dispatch workspace ${id}"
+    (label :class {active-workspace + "" == id ? "ws-active" :
+                   matches(occupied-workspaces, key) ? "ws-occupied" : "ws-empty"}
+           :text label)))
+
+; === Battery ===
+
+(defpoll ac-online :interval "5s" :initial "0"
+  `cat /sys/class/power_supply/ACAD/online 2>/dev/null || echo "0"`)
+
+(defpoll bat-time :interval "60s" :initial ""
+  `
+  STATUS=$(cat /sys/class/power_supply/BATT/status 2>/dev/null)
+  CN=$(cat /sys/class/power_supply/BATT/current_now 2>/dev/null || echo "0")
+  if [ "$STATUS" = "Full" ] || { [ "$STATUS" = "Charging" ] && [ "$CN" = "0" ]; }; then
+    echo "Full — on AC power"
+    exit 0
+  fi
+  CF=$(cat /sys/class/power_supply/BATT/charge_full 2>/dev/null)
+  CW=$(cat /sys/class/power_supply/BATT/charge_now 2>/dev/null)
+  if [ "$STATUS" = "Charging" ]; then
+    awk -v cf="$CF" -v cw="$CW" -v cn="$CN" 'BEGIN {
+      rem = cf - cw
+      if (cn == 0 || rem <= 0) { print "Charging"; exit }
+      m = int(rem / cn * 60)
+      h = int(m / 60); m = m % 60
+      if (h > 0) printf "%dh %dm to full", h, m
+      else printf "%dm to full", m
+    }'
+    exit 0
+  fi
+  if [ -z "$CN" ] || [ "$CN" = "0" ]; then echo "Calculating..."; exit 0; fi
+  awk -v cw="$CW" -v cf="$CF" -v cn="$CN" 'BEGIN {
+    rem = cw - cf * 0.1
+    if (rem <= 0) { print "10% or less remaining"; exit }
+    m = int(rem / cn * 60)
+    h = int(m / 60); m = m % 60
+    if (h > 0) printf "%dh %dm until auto-suspend", h, m
+    else printf "%dm until auto-suspend", m
+  }'
+  `)
+
+(defwidget battery-pill [capacity status]
+  (eventbox :class "battery-wrapper" :tooltip bat-time :valign "center"
+    (box :space-evenly false :spacing 5 :valign "center"
+      (box :space-evenly false :spacing 0 :valign "center"
+        (overlay
+          (box :class "battery-body" :valign "center"
+               :style {"min-width: 28px; min-height: 12px; border-radius: 3px; " +
+                       "background: linear-gradient(to right, " +
+                       (capacity < 20 ? "#ad625e" : capacity < 50 ? "#ae9668" : "#8e946f") +
+                       " " + capacity + "%, #2e3140 " + capacity + "%, #2e3140 100%); " +
+                       "border: 1.5px solid " +
+                       (capacity < 20 ? "#ad625e" : "#515869") + ";"})
+          (label :class "battery-bolt"
+                 :halign "center" :valign "center"
+                 :visible {ac-online == "1"}
+                 :text {status == "Charging" ? "󱐋" : "󰚥"}))
+        (box :class "battery-nub" :valign "center"))
+      (label :class "battery-pct" :text "${capacity}%"))))
+
+; === WiFi ===
+
+(defpoll net :interval "30s" :initial ""
+  `nmcli -t -f SIGNAL,ACTIVE device wifi 2>/dev/null | awk -F':' '{if($2=="yes")print$1}'`)
+
+(defpoll wifi-details :interval "30s" :initial ""
+  `nmcli -t -f SSID,SIGNAL,ACTIVE,SECURITY device wifi 2>/dev/null | awk -F':' '$3=="yes"{printf "%s  %s%%  %s", $1, $2, $4}'`)
+
+(defwidget wifi-widget []
+  (eventbox :class "net-btn"
+            :onclick "nm-connection-editor &"
+            :tooltip {wifi-details == "" ? "Not connected" : wifi-details}
+    (label :class "net"
+      :text {net == "" ? "󰤮" :
+             net < 26   ? "󰤟" :
+             net < 51   ? "󰤢" :
+             net < 76   ? "󰤥" : "󰤨"})))
+
+; === Center Panel (popup on clock hover) ===
+
+(defpoll now-playing :interval "2s" :initial ""
+  `playerctl metadata --format "{{artist}} - {{title}}" 2>/dev/null | grep -v "^$" || echo ""`)
+
+(defpoll now-title :interval "2s" :initial ""
+  `playerctl metadata --format "{{title}}" 2>/dev/null | grep -v "^$" || echo ""`)
+
+(defpoll now-artist :interval "2s" :initial ""
+  `playerctl metadata --format "{{artist}}" 2>/dev/null | grep -v "^$" || echo ""`)
+
+
+(defpoll player-status :interval "500ms" :initial "Stopped"
+  `playerctl status 2>/dev/null || echo "Stopped"`)
+
+(defpoll art-url :interval "2s" :initial ""
+  `
+  URL=$(playerctl metadata mpris:artUrl 2>/dev/null)
+  if [ -z "$URL" ]; then echo ""; exit 0; fi
+  if echo "$URL" | grep -q "^file://"; then echo "$URL" | sed 's|^file://||'; exit 0; fi
+  KEY=$(echo "$URL" | md5sum | cut -d' ' -f1)
+  CACHE="$HOME/.cache/eww-art-$KEY"
+  [ -f "$CACHE" ] || curl -s -o "$CACHE" "$URL"
+  echo "$CACHE"
+  `)
+
+(defpoll cal-events :interval "300s" :initial ""
+  `cat ~/.cache/eureka-prompt/events.tsv 2>/dev/null | head -5 | awk -F'\t' 'NF>=6{printf "%s %s  %s\n", $2, $1, $6}'`)
+
+(defwidget center-panel []
+  (eventbox
+    :class       "center-outer"
+    :onhover     "eww update show-center=true; rm -f /tmp/eww-center-leaving"
+    :onhoverlost "{ touch /tmp/eww-center-leaving; sleep 0.1; [ -f /tmp/eww-center-leaving ] && eww update show-center=false; rm -f /tmp/eww-center-leaving; } &"
+  (revealer
+    :transition "slidedown"
+    :reveal show-center
+    :duration "180ms"
+  (box :class "center-panel" :orientation "v" :space-evenly false :spacing 0
+       :style {show-center ? "border: 1px solid #2e3140; border-top: none; padding: 12px 16px;" : "border: none; padding: 0;"}
+    (box :class "panel-audio" :orientation "v" :space-evenly false :spacing 6
+         :visible {now-playing != ""}
+      (image :class "art-image" :path art-url :image-width 92 :image-height 92
+             :halign "center" :visible {art-url != ""})
+      (box :class "art-placeholder" :halign "center"
+           :style "background-color: #2e3140;"
+           :visible {art-url == ""})
+      (label :class "audio-title" :halign "center" :text now-title
+             :limit-width 36 :wrap false)
+      (label :class "audio-artist" :halign "center" :text now-artist
+             :limit-width 36 :wrap false)
+      (box :class "audio-controls" :space-evenly false :spacing 20 :halign "center"
+        (button :class "ctrl-btn" :onclick "playerctl previous" (label :text "󰒮"))
+        (button :class "ctrl-btn play" :onclick "playerctl play-pause"
+          (label :text {player-status == "Playing" ? "󰏤" : "󰐊"}))
+        (button :class "ctrl-btn" :onclick "playerctl next" (label :text "󰒭"))))
+    (box :class "panel-sep" :visible {now-playing != ""})
+    (box :class "panel-calendar" :orientation "v" :space-evenly false :spacing 4
+      (label :class "cal-header" :halign "start" :text "Today")
+      (label :class "cal-empty" :halign "center"
+             :visible {cal-events == ""}
+             :text "No upcoming events")
+      (label :class "cal-events" :halign "start" :wrap true
+             :visible {cal-events != ""}
+             :text cal-events))))))
+
+; === Clock ===
+
+(defwidget clock []
+  (eventbox :class "clock-box" :cursor "default"
+    (box :space-evenly false :spacing 8
+      (label :class "time" :text {formattime(EWW_TIME, "%I:%M")})
+      (label :class "distro" :text "")
+      (label :class "date" :text {formattime(EWW_TIME, "%a %b %d")}))))
