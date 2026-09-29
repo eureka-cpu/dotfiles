@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 let
   cursorName = "Adwaita";
   cursorPkg = pkgs.adwaita-icon-theme;

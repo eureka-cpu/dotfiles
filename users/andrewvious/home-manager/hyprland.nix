@@ -54,6 +54,14 @@
             | wl-copy
         '';
 
+        focusFloatToggle = pkgs.writeShellScriptBin "focus-float-toggle.sh" ''
+          if [ "$(hyprctl activewindow -j | ${pkgs.jq}/bin/jq -r .floating)" = "true" ]; then
+            hyprctl dispatch cyclenext tiled
+          else
+            hyprctl dispatch cyclenext floating
+          fi
+        '';
+
         # Stolen from @iynaix :^)
         openOnWorkspace = workspace: program: "[workspace ${builtins.toString workspace} silent] ${program}";
       in
@@ -237,33 +245,47 @@
         # See https://wiki.hyprland.org/Configuring/Keywords/ for more
         "$mainMod" = "SUPER";
 
-        # Opens rofi on first press, closes it on second
+        # Release binds
         bindr = [
-          "SUPER, SUPER_L, exec, pkill rofi || rofi -show drun -show-icons" # app finder
-          "SUPER, BACKSPACE, exec, pkill rofi || ${powerMenu}/bin/powermenu.sh"
-          "SUPER, C, exec, pkill rofi || ${clipboardMenu}/bin/clipboardmenu.sh"
-          "SUPER, U, exec, wpctl set-mute @DEFAULT_SOURCE@ 1" # release-to-mute for default input device
+          "$mainMod, U, exec, wpctl set-mute @DEFAULT_SOURCE@ 1" # push-to-talk release for default input device
         ];
 
         # Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
         bind = [
-          "$mainMod, Q, killactive,"
+          # Programs
+          "$mainMod, RETURN, exec, $terminal"
           "$mainMod, E, exec, dolphin"
+          "$mainMod, SPACE, exec, pkill rofi || rofi -show drun -show-icons"
+          "$mainMod, C, exec, pkill rofi || ${clipboardMenu}/bin/clipboardmenu.sh"
+          "$mainMod, BACKSPACE, exec, pkill rofi || ${powerMenu}/bin/powermenu.sh"         
+
+          # Window Management
+          "$mainMod, Q, killactive,"
           "$mainMod, V, togglefloating,"
-          "$mainMod, P, pseudo," # dwindle
-          "$mainMod, T, movetoworkspacesilent, special:minimized" # send to tray
-          "$mainMod SHIFT, T, togglespecialworkspace, minimized" # show tray
-          "$mainMod SHIFT, C, exec, cliphist wipe" # clear clipboard manager
+          "$mainMod SHIFT, V, exec, ${focusFloatToggle}/bin/focus-float-toggle.sh"
+          "$mainMod, F, fullscreen, 1"       # maximize
+          "$mainMod SHIFT, F, fullscreen, 0" # fullscreen
+          "$mainMod, P, pseudo,"
 
-          # Push-to-Talk + Mute Toggle for default input device
-          "$mainMod, U, exec, wpctl set-mute @DEFAULT_SOURCE@ 0"
-          "$mainMod, SPACE, exec, wpctl set-mute @DEFAULT_SOURCE@ toggle"
-
-          # Move focus with mainMod + arrow keys
-          "$mainMod, L, movefocus, r"
+          # Focus
           "$mainMod, H, movefocus, l"
-          "$mainMod, K, movefocus, u"
+          "$mainMod, L, movefocus, r"
           "$mainMod, J, movefocus, d"
+          "$mainMod, K, movefocus, u"
+
+          # Move Windows
+          "$mainMod SHIFT, H, movewindow, l"
+          "$mainMod SHIFT, L, movewindow, r"
+          "$mainMod SHIFT, J, movewindow, d"
+          "$mainMod SHIFT, K, movewindow, u"
+
+          # Tray / Clipboard / Mic
+          "$mainMod, T, movetoworkspacesilent, special:minimized"               # send to tray
+          "$mainMod SHIFT, T, togglespecialworkspace, minimized"                # show tray
+          "$mainMod SHIFT, C, exec, cliphist wipe"                              # wipe clipboard
+          "$mainMod, U, exec, wpctl set-mute @DEFAULT_SOURCE@ 0"                # push-to-talk press
+          "$mainMod, M, exec, wpctl set-mute @DEFAULT_SOURCE@ toggle"           # mic mute toggle
+          "$mainMod SHIFT, M, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle" # output mute toggle
 
           # Switch workspaces with mainMod + [0-9]
           "$mainMod, 1, workspace, 1"
@@ -296,6 +318,14 @@
           # Scroll through existing workspaces with mainMod + scroll
           "$mainMod, mouse_down, workspace, e+1"
           "$mainMod, mouse_up, workspace, e-1"
+        ];
+
+        # Repeat while held
+        binde = [
+          "$mainMod, MINUS, resizeactive, -100 0"
+          "$mainMod, EQUAL, resizeactive, 100 0"
+          "$mainMod SHIFT, MINUS, resizeactive, 0 -100"
+          "$mainMod SHIFT, EQUAL, resizeactive, 0 100"
         ];
 
         # Move/resize windows with mainMod + LMB/RMB and dragging
