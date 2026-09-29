@@ -19,16 +19,17 @@ let
     libidn2,
     zlib,
     wireguard-tools,
+    nftables,
   }: let
     pname = "nordvpn";
-    version = "4.5.0";
+    version = "5.4.0";
 
     nordVPNBase = stdenv.mkDerivation {
       inherit pname version;
 
       src = fetchurl {
         url = "https://repo.nordvpn.com/deb/nordvpn/debian/pool/main/n/nordvpn/nordvpn_${version}_amd64.deb";
-        hash = "sha256-bekJOzhLGwFsYRuPagANwUduyCufaU4XoJPwWoBniR8=";
+        hash = "sha256-V2adQHIV80zYC1bQuVPc0KuNzTQT7RjGRvZm4FguATo=";
       };
 
       buildInputs = [libxml2 libidn2 sqlite];
@@ -62,6 +63,7 @@ let
         nordVPNBase
         sysctl
         iptables
+        nftables
         iproute2
         procps
         cacert
@@ -123,10 +125,8 @@ in
           serviceConfig = {
             ExecStart = "${nordVpnPkg}/bin/nordvpnd";
             ExecStartPre = pkgs.writeShellScript "nordvpn-start" ''
-              mkdir -m 700 -p /var/lib/nordvpn;
-              if [ -z "$(ls -A /var/lib/nordvpn)" ]; then
-                cp -r ${nordVpnPkg}/var/lib/nordvpn/* /var/lib/nordvpn;
-              fi
+              mkdir -m 700 -p /var/lib/nordvpn
+              cp -rT --no-preserve=mode,ownership ${nordVpnPkg}/var/lib/nordvpn /var/lib/nordvpn
             '';
             NonBlocking = true;
             KillMode = "process";

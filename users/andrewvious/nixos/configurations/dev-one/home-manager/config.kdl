@@ -45,10 +45,6 @@ layer-rule {
     place-within-backdrop true
 }
 
-// overview {
-//     backdrop-color "#24273a" // macchiato base
-// }
-
 spawn-at-startup "noctalia"
 
 hotkey-overlay {
