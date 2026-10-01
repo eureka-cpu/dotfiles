@@ -1,9 +1,12 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, config, ... }:
 {
   imports = [
     ./gtk.nix
     ../../../../home-manager/hyprland.nix
     ../../../../home-manager/default.nix
+    ../../../../home-manager/hypridle.nix
+    ../../../../home-manager/hyprpaper.nix
+    ../../../../home-manager/hyprlock.nix
   ];
 
   home.packages = with pkgs; [
@@ -33,6 +36,13 @@
     source = "${pkgs.kasane}/themes/helix/shibui-gamma.toml";
     force = true;
   };
+
+  services.hyprpaper.settings =
+    let wallpaper = "${config.home.homeDirectory}/Wallpapers/fuji.jpg";
+    in {
+      preload = [ wallpaper ];
+      wallpaper = [{ monitor = ""; path = wallpaper; }];
+    };
 
   home.stateVersion = "23.11";
 }

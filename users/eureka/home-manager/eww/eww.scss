@@ -15,6 +15,9 @@ window, box, eventbox, button, scale, overlay {
 }
 
 window.center-popup { background-color: transparent; }
+window.wifi-overlay { background-color: transparent; }
+window.wifi-popup { background-color: transparent; }
+.wifi-overlay-box { background-color: transparent; }
 
 .center-outer { background-color: transparent; }
 
@@ -66,11 +69,14 @@ label { color: #aba398; }
 
 /* -- WiFi -- */
 
-.net { color: #515869; font-size: 14px; margin: 0 8px; }
+.wifi-box { border-radius: 4px; padding: 0 6px; transition: background-color 150ms ease; }
+.wifi-box:hover { background-color: #2e3140; }
+.net { color: #515869; font-size: 14px; min-width: 22px; }
 
 /* -- Battery pill -- */
 
-.battery-wrapper { padding: 0 2px; }
+eventbox.battery-wrapper { background-color: transparent; padding: 0 2px; }
+.battery-wrapper overlay { background-color: transparent; }
 
 .battery-body {
   min-width: 28px;
@@ -156,3 +162,56 @@ label { color: #aba398; }
   color: #aba398;
   font-size: 12px;
 }
+
+/* -- WiFi popup -- */
+
+.wifi-panel {
+  background-color: #1e1f24;
+  border: 1px solid #2e3140;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.wifi-panel box,
+.wifi-panel eventbox,
+.wifi-panel button { background-color: transparent; }
+.wf-top { padding-bottom: 10px; }
+.wf-title { color: #cbc4a7; font-size: 14px; font-weight: bold; }
+
+.wf-sq-btn { min-width: 24px; min-height: 24px; border-radius: 5px; padding: 0; -GtkButton-default-border: 0; -GtkButton-inner-border: 0; -GtkWidget-focus-padding: 0; -GtkWidget-focus-line-width: 0; }
+.wf-sq-icon { font-size: 14px; }
+button.wf-sq-btn.wf-sq-on { background-color: #99a2b2; }
+.wf-sq-btn.wf-sq-on label { color: #1e1f24; }
+button.wf-sq-btn.wf-sq-on:hover { background-color: #b3bece; }
+button.wf-sq-btn.wf-sq-off { background-color: #2e3140; }
+.wf-sq-btn.wf-sq-off label { color: #515869; }
+button.wf-sq-btn.wf-sq-off:hover { background-color: #3a3f52; }
+
+.wifi-sep { min-height: 1px; background-color: #2e3140; margin: 4px 0; }
+
+.wf-active-row { padding: 6px 6px; }
+.wf-check { color: #99a2b2; font-size: 13px; min-width: 20px; }
+.wf-active-ssid { color: #cbc4a7; font-size: 13px; font-weight: bold; }
+.wf-active-signal { color: #99a2b2; font-size: 15px; min-width: 22px; }
+
+.net-list { margin: 2px 0; }
+.net-item { border-radius: 6px; padding: 5px 6px; }
+.wifi-panel .net-item { background-color: transparent; }
+.wifi-panel .net-item:hover { background-color: #2e3140; }
+.net-ssid { color: #aba398; font-size: 13px; }
+.net-signal { color: #515869; font-size: 14px; min-width: 22px; }
+
+.wifi-scanning { color: #515869; font-size: 12px; padding: 6px 0; }
+.wifi-off-msg { color: #515869; font-size: 12px; padding: 6px 0; }
+
+.vpn-eyebrow { color: #515869; font-size: 10px; font-weight: bold; margin: 4px 6px 2px; }
+.vpn-list { margin: 2px 0; }
+.vpn-item { border-radius: 6px; padding: 5px 6px; }
+.wifi-panel .vpn-item { background-color: transparent; }
+.wifi-panel .vpn-item:hover { background-color: #2e3140; }
+.vpn-lock { color: #515869; font-size: 13px; min-width: 20px; }
+.vpn-name { color: #aba398; font-size: 13px; }
+.vpn-dot { font-size: 11px; min-width: 18px; }
+.vpn-dot-on { color: #99a2b2; }
+.vpn-dot-off { color: #515869; }
+

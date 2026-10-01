@@ -4,11 +4,10 @@
     ./hardware-configuration.nix
     ../../../nixos/configuration.nix
     ../../../nixos/desktop-configuration.nix
+    ../../../nixos/greetd.nix
   ];
 
   networking.hostName = "critter-tank";
-
-  services.displayManager.gdm.enable = true;
 
   # Hyprland
   programs.hyprland = {

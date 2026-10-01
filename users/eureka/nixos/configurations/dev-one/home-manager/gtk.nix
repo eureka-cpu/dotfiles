@@ -27,6 +27,47 @@ in
       size = cursorSize;
     };
     gtk3.extraCss = ''
+      menu {
+        background-color: #1e1f24;
+        border: 1px solid #2e3140;
+        border-radius: 8px;
+        padding: 4px;
+      }
+      menu > menuitem {
+        border-radius: 4px;
+        padding: 5px 10px;
+        color: #aba398;
+        background-color: transparent;
+        font-family: "Noto Sans";
+        font-size: 12px;
+      }
+      menu > menuitem > * {
+        background: none;
+        color: inherit;
+      }
+      menu > menuitem:first-child label {
+        color: #515869;
+        font-size: 11px;
+      }
+      menu > menuitem:hover {
+        background-color: #2e3140;
+        color: #cbc4a7;
+      }
+      menu > menuitem:hover > * {
+        background: none;
+        color: #cbc4a7;
+      }
+      menu > menuitem:disabled,
+      menu > menuitem:disabled > * {
+        color: #515869;
+        background: none;
+      }
+      menu > separator {
+        background-color: #2e3140;
+        margin: 4px 0;
+        min-height: 1px;
+      }
+
       @define-color accent_color ${blue};
       @define-color accent_bg_color ${blue};
       @define-color accent_fg_color ${foreground};

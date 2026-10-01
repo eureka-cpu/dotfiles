@@ -1,18 +1,61 @@
 { pkgs, config, ... }:
 {
+  systemd.user.services.mako = {
+    Unit = {
+      Description = "Mako notification daemon";
+      After = [ "hyprland-session.target" ];
+      PartOf = [ "hyprland-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.mako}/bin/mako";
+      Restart = "on-failure";
+      RestartSec = "3s";
+    };
+    Install.WantedBy = [ "hyprland-session.target" ];
+  };
+
+  systemd.user.services.nm-applet = {
+    Unit = {
+      Description = "Network Manager applet";
+      After = [ "hyprland-session.target" ];
+      PartOf = [ "hyprland-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.networkmanagerapplet}/bin/nm-applet";
+      Restart = "on-failure";
+      RestartSec = "3s";
+    };
+    Install.WantedBy = [ "hyprland-session.target" ];
+  };
+
+  systemd.user.services.anyrun = {
+    Unit = {
+      Description = "Anyrun launcher daemon";
+      After = [ "hyprland-session.target" ];
+      PartOf = [ "hyprland-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.anyrun}/bin/anyrun daemon";
+      Restart = "on-failure";
+      RestartSec = "3s";
+    };
+    Install.WantedBy = [ "hyprland-session.target" ];
+  };
+
   systemd.user.services.eww = {
     Unit = {
       Description = "Eww widget daemon";
-      After = [ "graphical-session.target" ];
-      PartOf = [ "graphical-session.target" ];
+      After = [ "hyprland-session.target" ];
+      PartOf = [ "hyprland-session.target" ];
     };
     Service = {
+      ExecStartPre = "${pkgs.bash}/bin/bash -c 'pkill -f \"^socat.*socket2\\.sock\" 2>/dev/null; sleep 0.2; true'";
       ExecStart = "${pkgs.eww}/bin/eww daemon --no-daemonize";
       ExecStartPost = "${pkgs.eww}/bin/eww open window";
       Restart = "on-failure";
       RestartSec = "3s";
     };
-    Install.WantedBy = [ "graphical-session.target" ];
+    Install.WantedBy = [ "hyprland-session.target" ];
   };
 
   xdg.portal = {
@@ -25,21 +68,9 @@
   };
   wayland.windowManager.hyprland = {
     enable = true;
+    systemd.enable = true;
     settings =
       let
-        swww-daemon = "${pkgs.awww}/bin/awww-daemon";
-        swww = "${pkgs.awww}/bin/awww";
-        mako = "${pkgs.mako}/bin/mako";
-
-        inherit (config.home) homeDirectory;
-        wallpaper = "${homeDirectory}/Wallpapers/koi-rain.jpg";
-        onStart = pkgs.writeShellScriptBin "start.sh" ''
-          # start wallpaper daemon and set wallpaper
-          sleep 2; ${swww-daemon} & ${swww} img --resize crop ${wallpaper} &
-
-          # start notification daemon
-          ${mako}
-        '';
         # Stolen from @iynaix :^)
         openOnWorkspace = workspace: program: "[workspace ${builtins.toString workspace} silent] ${program}";
       in
@@ -98,9 +129,6 @@
         # exec-once = nm-applet &
         # exec-once = waybar & hyprpaper & firefox
         exec-once = [
-          "${onStart}/bin/start.sh"
-          "nm-applet"
-          "anyrun daemon"
           (openOnWorkspace 1 "$terminal")
           (openOnWorkspace 1 "$browser")
           (openOnWorkspace 2 "$terminal")
@@ -203,6 +231,7 @@
         misc = {
           force_default_wallpaper = 0; # Set to 0 or 1 to disable the anime mascot wallpapers
           disable_hyprland_logo = false; # If true disables the random hyprland logo / anime girl background. :(
+          disable_splash_rendering = true;
         };
 
         #############
@@ -317,7 +346,6 @@
     grim
     anyrun
     mako
-    awww
     nautilus
     zathura
     image-roll

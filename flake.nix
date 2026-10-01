@@ -28,10 +28,6 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    awww = {
-      url = "git+https://codeberg.org/LGFae/awww";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     helix-themes.url = "github:CptPotato/helix-themes";
     brave-torrent.url = "github:NixOS/nixpkgs?rev=bfbd5014640db4509f601878a2f2a9216a0459d0";
     llm-agents.url = "github:numtide/llm-agents.nix";
@@ -55,7 +51,6 @@
     , nix-darwin
     , nixos-wsl
     , home-manager
-    , awww
     , brave-torrent
     , noctalia
     , ...
@@ -110,9 +105,7 @@
             }
           ] ++ lib.optional (type == "nixos")
             {
-              # TODO: Use hyprpaper and stylix so we can just remove this
               nixpkgs.overlays = [
-                awww.overlays.default
                 (final: _prev: {
                   noctalia = inputs.noctalia.packages.${final.stdenv.hostPlatform.system}.default;
                 })

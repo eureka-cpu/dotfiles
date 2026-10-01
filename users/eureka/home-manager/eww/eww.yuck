@@ -16,9 +16,29 @@
   :focusable "false"
   (center-panel))
 
+
+(defwindow wifi-overlay
+  :monitor 0
+  :geometry (geometry :anchor "top left" :x "0" :y "32px" :width "100%" :height "2000px")
+  :stacking "fg"
+  :exclusive false
+  :focusable false
+  (eventbox :class "wifi-overlay-box"
+    :onclick "eww close wifi-overlay; eww close wifi-popup; eww update wifi-open=false"))
+
+(defwindow wifi-popup
+  :monitor 0
+  :geometry (geometry :anchor "top right" :x "0" :y "32px" :width "280px")
+  :stacking  "fg"
+  :exclusive false
+  :focusable false
+  (wifi-panel))
+
 ; === State ===
 
 (defvar show-center false)
+(defvar wifi-open false)
+(defvar airplane-mode false)
 
 ; === Top Bar ===
 
@@ -33,20 +53,17 @@
         :onhover {show-center ? "rm -f /tmp/eww-center-leaving; eww update show-center=true" : "eww open center-popup; eww update show-center=true"}
         (clock)))
     (box :class "topbar-right" :hexpand true :halign "end" :space-evenly false :spacing 6
-      (wifi-widget)
+      (wifi-indicator)
       (battery-pill :capacity {EWW_BATTERY["BATT"]["capacity"]}
                     :status   {EWW_BATTERY["BATT"]["status"]}))))
 
 ; === Workspaces ===
 
-(deflisten active-title :initial ""
-  `(hyprctl activewindow -j 2>/dev/null | grep -o '"title": *"[^"]*"' | head -1 | sed 's/"title": *"//;s/"$//'; socat -u UNIX-CONNECT:$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock - | grep --line-buffered -E '^(activewindow|windowtitle)>>' | while IFS= read -r _; do hyprctl activewindow -j 2>/dev/null | grep -o '"title": *"[^"]*"' | head -1 | sed 's/"title": *"//;s/"$//'; done)`)
+(defpoll active-title :interval "200ms" :initial ""
+  `hyprctl activewindow -j 2>/dev/null | grep -o '"title": *"[^"]*"' | head -1 | sed 's/"title": *"//;s/"$//'`)
 
-(deflisten active-workspace :initial "1"
-  `(hyprctl activeworkspace -j 2>/dev/null | grep -o '"id": *[0-9]*' | head -1 | grep -o '[0-9]*'; socat -u UNIX-CONNECT:$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock - | grep --line-buffered '^workspace>>' | sed -u 's/^workspace>>//')`)
-
-(deflisten occupied-workspaces :initial "::"
-  `(ACTIVE=$(hyprctl activeworkspace -j 2>/dev/null | grep -o '"id": *[0-9]*' | head -1 | grep -o '[0-9]*'); hyprctl workspaces -j 2>/dev/null | grep -o '"id": *[0-9]*' | grep -o '[0-9]*' | grep -v "^$ACTIVE$" | awk '{printf ":%s", $1} END {print ":"}'; socat -u UNIX-CONNECT:$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock - | grep --line-buffered -E '^(workspace|openwindow|closewindow|movewindow|destroyworkspace)>>' | while IFS= read -r _; do ACTIVE=$(hyprctl activeworkspace -j 2>/dev/null | grep -o '"id": *[0-9]*' | head -1 | grep -o '[0-9]*'); hyprctl workspaces -j 2>/dev/null | grep -o '"id": *[0-9]*' | grep -o '[0-9]*' | grep -v "^$ACTIVE$" | awk '{printf ":%s", $1} END {print ":"}'; done)`)
+(deflisten ws-state :initial "1@::"
+  `socat -u UNIX-CONNECT:$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock - | awk -f ~/.config/eww/scripts/active-workspace.awk`)
 
 (defwidget workspaces []
   (box :class "workspaces" :space-evenly false :spacing 2
@@ -64,8 +81,8 @@
 (defwidget ws-btn [id key label]
   (eventbox
     :onclick "hyprctl dispatch workspace ${id}"
-    (label :class {active-workspace + "" == id ? "ws-active" :
-                   matches(occupied-workspaces, key) ? "ws-occupied" : "ws-empty"}
+    (label :class {matches(ws-state, "^" + id + "@") ? "ws-active" :
+                   matches(ws-state, "@.*" + key) ? "ws-occupied" : "ws-empty"}
            :text label)))
 
 ; === Battery ===
@@ -126,21 +143,86 @@
 
 ; === WiFi ===
 
-(defpoll net :interval "30s" :initial ""
-  `nmcli -t -f SIGNAL,ACTIVE device wifi 2>/dev/null | awk -F':' '{if($2=="yes")print$1}'`)
+(defpoll net :interval "10s" :initial ""
+  `nmcli -t -f SIGNAL,ACTIVE device wifi 2>/dev/null | awk -F: '$2=="yes"{print$1}'`)
 
-(defpoll wifi-details :interval "30s" :initial ""
-  `nmcli -t -f SSID,SIGNAL,ACTIVE,SECURITY device wifi 2>/dev/null | awk -F':' '$3=="yes"{printf "%s  %s%%  %s", $1, $2, $4}'`)
+(defpoll wifi-ssid :interval "10s" :initial ""
+  `nmcli -t -f NAME,TYPE con show --active 2>/dev/null | awk -F: '$2=="802-11-wireless"{print $1}' | head -1`)
 
-(defwidget wifi-widget []
-  (eventbox :class "net-btn"
-            :onclick "nm-connection-editor &"
-            :tooltip {wifi-details == "" ? "Not connected" : wifi-details}
+(defpoll wifi-enabled :interval "5s" :initial "enabled"
+  `nmcli radio wifi 2>/dev/null | grep -oE "enabled|disabled" | head -1`)
+
+(defpoll wifi-vpn-json :interval "10s" :initial "[]"
+  `sh /home/eureka/.config/dotfiles/users/eureka/home-manager/eww/scripts/wifi-vpn.sh`)
+
+(defpoll wifi-has-vpn :interval "10s" :initial false
+  `nmcli -t -f TYPE connection show 2>/dev/null | grep -qE "^vpn$|^wireguard$" && echo true || echo false`)
+
+(defpoll wifi-nets-json :interval "30s" :initial "[]"
+  `sh /home/eureka/.config/dotfiles/users/eureka/home-manager/eww/scripts/wifi-nets.sh`)
+
+(defwidget wifi-indicator []
+  (eventbox
+    :class "wifi-box"
+    :onclick {wifi-open
+      ? "eww close wifi-overlay; eww close wifi-popup; eww update wifi-open=false"
+      : "eww open wifi-overlay; eww open wifi-popup; eww update wifi-open=true"}
     (label :class "net"
-      :text {net == "" ? "󰤮" :
+      :text {wifi-enabled != "enabled" || airplane-mode ? "󰤮" :
+             net == ""  ? "󰤮" :
              net < 26   ? "󰤟" :
              net < 51   ? "󰤢" :
              net < 76   ? "󰤥" : "󰤨"})))
+
+(defwidget wifi-panel []
+  (box :class "wifi-panel" :orientation "v" :space-evenly false :spacing 0
+    (box :class "wf-top" :space-evenly false :spacing 4 :valign "center"
+      (label :class "wf-title" :hexpand true :halign "start" :text "Wi-Fi")
+      (button :class {"wf-sq-btn " + (wifi-enabled == "enabled" && airplane-mode == false ? "wf-sq-on" : "wf-sq-off")}
+              :valign "center"
+              :onclick {wifi-enabled == "enabled" ? "nmcli radio wifi off &" : "nmcli radio wifi on &"}
+        (label :class "wf-sq-icon" :halign "center" :valign "center"
+          :text {wifi-enabled == "enabled" && airplane-mode == false ? "󰤨" : "󰤮"}))
+      (button :class {"wf-sq-btn " + (airplane-mode ? "wf-sq-on" : "wf-sq-off")}
+              :valign "center"
+              :onclick {airplane-mode
+                ? "rfkill unblock all; eww update airplane-mode=false &"
+                : "rfkill block all; eww update airplane-mode=true &"}
+        (label :class "wf-sq-icon" :halign "center" :valign "center"
+          :text "󰗕")))
+    (box :class "wifi-sep"
+         :visible {wifi-ssid != "" && wifi-enabled == "enabled" && airplane-mode == false})
+    (box :class "wf-active-row"
+         :visible {wifi-ssid != "" && wifi-enabled == "enabled" && airplane-mode == false}
+         :space-evenly false :spacing 0 :valign "center"
+      (label :class "wf-check" :text "✓")
+      (label :class "wf-active-ssid" :hexpand true :halign "start" :text wifi-ssid)
+      (label :class "wf-active-signal" :halign "end"
+        :text {net == "" ? "󰤨" : net < 26 ? "󰤟" : net < 51 ? "󰤢" : net < 76 ? "󰤥" : "󰤨"}))
+    (box :class "wifi-sep")
+    (label :class "wifi-off-msg" :halign "center" :text "Airplane mode on"
+           :visible {airplane-mode})
+    (label :class "wifi-off-msg" :halign "center" :text "Wi-Fi is off"
+           :visible {airplane-mode == false && wifi-enabled != "enabled"})
+    (box :class "net-list" :orientation "v" :space-evenly false :spacing 0
+         :visible {airplane-mode == false && wifi-enabled == "enabled"}
+      (for net in {wifi-nets-json}
+        (button :class "net-item" :onclick {net.onclick}
+          (box :space-evenly false
+            (label :class "net-ssid" :hexpand true :halign "start" :limit-width 18
+                   :text {net.ssid + net.lock})
+            (label :class "net-signal" :halign "end" :text {net.icon})))))
+    (box :class "wifi-sep" :visible {wifi-has-vpn})
+    (box :class "vpn-list" :orientation "v" :space-evenly false :spacing 0
+         :visible {wifi-has-vpn}
+      (label :class "vpn-eyebrow" :halign "start" :text "VPN")
+      (for vpn in {wifi-vpn-json}
+        (button :class "vpn-item" :onclick {vpn.onclick}
+          (box :space-evenly false
+            (label :class "vpn-lock" :text "󰌾")
+            (label :class "vpn-name" :hexpand true :halign "start" :limit-width 20
+                   :text {vpn.name})
+            (label :class {"vpn-dot " + vpn.cls} :text {vpn.dot})))))))
 
 ; === Center Panel (popup on clock hover) ===
 
@@ -152,7 +234,6 @@
 
 (defpoll now-artist :interval "2s" :initial ""
   `playerctl metadata --format "{{artist}}" 2>/dev/null | grep -v "^$" || echo ""`)
-
 
 (defpoll player-status :interval "500ms" :initial "Stopped"
   `playerctl status 2>/dev/null || echo "Stopped"`)
@@ -175,7 +256,7 @@
   (eventbox
     :class       "center-outer"
     :onhover     "eww update show-center=true; rm -f /tmp/eww-center-leaving"
-    :onhoverlost "{ touch /tmp/eww-center-leaving; sleep 0.1; [ -f /tmp/eww-center-leaving ] && eww update show-center=false; rm -f /tmp/eww-center-leaving; } &"
+    :onhoverlost "{ touch /tmp/eww-center-leaving; sleep 0.1; [ -f /tmp/eww-center-leaving ] && { eww update show-center=false; eww close center-popup; }; rm -f /tmp/eww-center-leaving; } &"
   (revealer
     :transition "slidedown"
     :reveal show-center
