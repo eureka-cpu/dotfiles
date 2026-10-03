@@ -5,7 +5,7 @@
 
 if eww active-windows 2>/dev/null | grep -q '^launcher:'; then
   eww close launcher
-  eww update launcher-query="" launcher-selected=0 filtered-apps-json="[]"
+  eww update launcher-query="" launcher-live-query="" launcher-nix-pending="false" launcher-selected=0 filtered-apps-json="[]" launcher-mode="apps" launcher-output=""
   hyprctl dispatch submap reset
 else
   screen=$(eww get monitor-name)

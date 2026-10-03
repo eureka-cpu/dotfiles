@@ -453,6 +453,7 @@
     networkmanagerapplet
     gcalcli
     socat
+    ansifilter # converts nix search/run's ANSI output to Pango markup for the launcher
   ];
 
   xdg = {

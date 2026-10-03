@@ -234,6 +234,7 @@ window.launcher { background-color: transparent; }
 
 .launcher-input-row { padding-bottom: 6px; }
 .launcher-icon { margin: 0 8px 0 4px; }
+.launcher-icon-nix { color: $yellow; }
 
 .launcher-input {
   background-color: $active-tab-background;
@@ -263,4 +264,14 @@ window.launcher { background-color: transparent; }
 }
 .launcher-outer .launcher-item:hover { background-color: $active-tab-background; }
 .launcher-outer .launcher-item-selected { background-color: $active-tab-background; }
+
+.launcher-output-scroll {
+  margin-top: 4px;
+}
+
+.launcher-output-text {
+  font-size: 12px;
+  color: $white;
+  padding: 7px 10px;
+}
 

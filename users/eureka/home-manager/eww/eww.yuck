@@ -215,23 +215,53 @@
 (defvar launcher-selected "0")
 (defvar filtered-apps-json "[]")
 
+; Mirrors the input's live text. launcher-query itself is write-only (see
+; launcher-search.sh for why); this is what other scripts read to find out
+; what's currently typed, e.g. launcher-nav.sh checking for a `nix search `/
+; `nix run ` prefix on Enter. Not bound to :value anywhere, so updating it
+; every keystroke is safe and can't cause the cursor-jump feedback loop.
+(defvar launcher-live-query "")
+
+; "apps" shows the normal filtered app list; "output" shows launcher-output
+; instead, used while/after running a literal `nix search `/`nix run `
+; command typed into the input (see launcher-nix-exec.sh).
+(defvar launcher-mode "apps")
+(defvar launcher-output "")
+
+; "true" while the typed text already matches `nix search `/`nix run ` (set
+; alongside launcher-live-query in launcher-search.sh) - Enter will run it as
+; a command rather than selecting an app. Drives the icon color below so
+; that's visible before Enter, not just after.
+(defvar launcher-nix-pending "false")
+
 (defwidget launcher-panel []
   (box :class "launcher-outer" :orientation "v" :space-evenly false
     (box :class "launcher-input-row" :space-evenly false
-      (label :class "distro launcher-icon" :valign "center" :text "")
+      (label :class {"distro launcher-icon" + (launcher-nix-pending == "true" ? " launcher-icon-nix" : "")}
+             :valign "center" :text "")
       (input :class "launcher-input" :hexpand true
              :value launcher-query
-             :onchange "sh ~/.config/eww/scripts/launcher-search.sh {}")
+             ; eww splices {} into this exec string raw, unquoted - without
+             ; the quotes here, the shell word-splits any query with a space
+             ; in it, so launcher-search.sh only ever saw the first word
+             ; (confirmed by hand: typing "nix search nixpkgs hello" arrived
+             ; as $1=nix $2=search $3=nixpkgs $4=hello). This silently
+             ; broke every multi-word search, app filtering included, not
+             ; just the newer nix-mode detection.
+             :onchange "sh ~/.config/eww/scripts/launcher-search.sh '{}'")
       (button :class "launcher-close"
-              :onclick "eww close launcher; eww update launcher-query=\"\" launcher-selected=0 filtered-apps-json=\"[]\"; hyprctl dispatch submap reset"
+              :onclick "eww close launcher; eww update launcher-query=\"\" launcher-live-query=\"\" launcher-nix-pending=\"false\" launcher-selected=0 filtered-apps-json=\"[]\" launcher-mode=\"apps\" launcher-output=\"\"; hyprctl dispatch submap reset"
         (label :text "󰅖")))
-    (box :class "launcher-list" :orientation "v" :space-evenly false
+    (box :class "launcher-list" :orientation "v" :space-evenly false :visible {launcher-mode == "apps"}
       (for app in {filtered-apps-json}
         (button :class {"launcher-item" + (app.rank == launcher-selected ? " launcher-item-selected" : "")}
                 :onclick {app.onclick}
           (box :space-evenly false :spacing 8
             (image :visible {app.icon != ""} :path {app.icon} :image-width 20 :image-height 20)
-            (label :halign "start" :text {app.name})))))))
+            (label :halign "start" :text {app.name})))))
+    (scroll :class "launcher-output-scroll" :visible {launcher-mode == "output"}
+            :vscroll true :hscroll false :height 320
+      (label :class "launcher-output-text" :wrap true :halign "start" :valign "start" :markup launcher-output))))
 
 ; === Center Panel (popup on clock hover) ===
 
