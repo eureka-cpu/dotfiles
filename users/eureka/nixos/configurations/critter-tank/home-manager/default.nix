@@ -1,9 +1,12 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, config, ... }:
 {
   imports = [
     ./gtk.nix
     ../../../../home-manager/hyprland.nix
     ../../../../home-manager/default.nix
+    ../../../../home-manager/hypridle.nix
+    ../../../../home-manager/hyprpaper.nix
+    ../../../../home-manager/hyprlock.nix
   ];
 
   home.packages = with pkgs; [
@@ -17,6 +20,9 @@
 
   programs.helix.settings.theme = lib.mkForce "obi-gamma";
 
+  programs.eww.monitorDescription = "HP Inc. HP Z32 CN42411R5T";
+  programs.eww.batteryName = null;
+
   xdg.configFile."helix/themes/obi-gamma.toml" = {
     source = "${pkgs.kasane}/themes/helix/obi-gamma.toml";
     force = true;
@@ -29,5 +35,12 @@
   # You should not change this value, even if you update Home Manager. If you do
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
+  services.hyprpaper.settings =
+    let wallpaper = "${config.home.homeDirectory}/Wallpapers/koi-rain.jpg";
+    in {
+      preload = [ wallpaper ];
+      wallpaper = [{ monitor = ""; path = wallpaper; }];
+    };
+
   home.stateVersion = "23.05"; # Please read the comment before changing.
 }

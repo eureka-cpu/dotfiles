@@ -1,5 +1,67 @@
-{ pkgs, config, ... }:
+{ pkgs, lib, config, ... }:
 {
+  imports = [ ./eww-monitor.nix ];
+
+  systemd.user.services.mako = {
+    Unit = {
+      Description = "Mako notification daemon";
+      After = [ "hyprland-session.target" ];
+      PartOf = [ "hyprland-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.mako}/bin/mako";
+      Restart = "on-failure";
+      RestartSec = "3s";
+    };
+    Install.WantedBy = [ "hyprland-session.target" ];
+  };
+
+  systemd.user.services.nm-applet = {
+    Unit = {
+      Description = "Network Manager applet";
+      After = [ "hyprland-session.target" ];
+      PartOf = [ "hyprland-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.networkmanagerapplet}/bin/nm-applet";
+      Restart = "on-failure";
+      RestartSec = "3s";
+    };
+    Install.WantedBy = [ "hyprland-session.target" ];
+  };
+
+  systemd.user.services.eww = {
+    Unit = {
+      Description = "Eww widget daemon";
+      After = [ "hyprland-session.target" ];
+      PartOf = [ "hyprland-session.target" ];
+    };
+    Service = {
+      ExecStartPre = "${pkgs.bash}/bin/bash -c 'pkill -f \"^socat.*socket2\\.sock\" 2>/dev/null; sleep 0.2; true'";
+      ExecStart = "${pkgs.eww}/bin/eww daemon --no-daemonize";
+      ExecStartPost = [
+        (
+          let
+            desc = config.programs.eww.monitorDescription;
+          in
+          if desc == null then
+            "${pkgs.eww}/bin/eww open window"
+          else
+            "${pkgs.bash}/bin/bash -c "
+            + lib.escapeShellArg ''name=$(${pkgs.hyprland}/bin/hyprctl monitors | ${pkgs.gawk}/bin/awk -v target=${lib.escapeShellArg desc} '/^Monitor /{name=$2} /^\tdescription: /{d=$0; sub(/^\tdescription: /,"",d); if (d==target){print name; exit}}'); ${pkgs.eww}/bin/eww open window --screen "$name"; ${pkgs.eww}/bin/eww update monitor-name="$name"''
+        )
+        # Pre-resolves and caches every installed app's icon path in the
+        # background, so the launcher's per-keystroke search (which can't
+        # afford to run `find` itself, see apps.sh) is never the one paying
+        # for a cold cache.
+        "${pkgs.bash}/bin/bash -c 'sh ~/.config/eww/scripts/apps.sh --warm &'"
+      ];
+      Restart = "on-failure";
+      RestartSec = "3s";
+    };
+    Install.WantedBy = [ "hyprland-session.target" ];
+  };
+
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [
@@ -10,26 +72,9 @@
   };
   wayland.windowManager.hyprland = {
     enable = true;
+    systemd.enable = true;
     settings =
       let
-        swww-daemon = "${pkgs.awww}/bin/awww-daemon";
-        swww = "${pkgs.awww}/bin/awww";
-        eww = "${pkgs.eww}/bin/eww";
-        mako = "${pkgs.mako}/bin/mako";
-
-        inherit (config.home) homeDirectory;
-        wallpaper = "${homeDirectory}/Wallpapers/koi-rain.jpg";
-        mynixui = "${homeDirectory}/Code/mynixui/eww";
-        onStart = pkgs.writeShellScriptBin "start.sh" ''
-          # start wallpaper daemon and set wallpaper
-          sleep 2; ${swww-daemon} & ${swww} img --resize crop ${wallpaper} &
-
-          # start widget daemon and open widgets
-          ${eww} daemon -c ${mynixui} & ${eww} open window -c ${mynixui} &
-
-          # start notification daemon
-          ${mako}
-        '';
         # Stolen from @iynaix :^)
         openOnWorkspace = workspace: program: "[workspace ${builtins.toString workspace} silent] ${program}";
       in
@@ -60,6 +105,7 @@
           "desc:HP Inc. HP Z32 CN42411R5T, preferred, auto, 1"
           "desc:ESP eD15T(2022) 0x00011916, preferred, 0x0, 1, transform, 1"
           "Unknown-1, disabled" # fix for upstream wl-roots bug
+          ", preferred, auto, 1" # fallback: disable auto-scaling for any unmatched display
         ];
         workspace = [
           "1, monitor:desc:HP Inc. HP Z32 CN42411R5T, default:true, persistent:true"
@@ -87,7 +133,6 @@
         # exec-once = nm-applet &
         # exec-once = waybar & hyprpaper & firefox
         exec-once = [
-          "${onStart}/bin/start.sh"
           (openOnWorkspace 1 "$terminal")
           (openOnWorkspace 1 "$browser")
           (openOnWorkspace 2 "$terminal")
@@ -190,6 +235,7 @@
         misc = {
           force_default_wallpaper = 0; # Set to 0 or 1 to disable the anime mascot wallpapers
           disable_hyprland_logo = false; # If true disables the random hyprland logo / anime girl background. :(
+          disable_splash_rendering = true;
         };
 
         #############
@@ -228,8 +274,8 @@
         # See https://wiki.hyprland.org/Configuring/Keywords/ for more
         "$mainMod" = "SUPER";
 
-        # Opens rofi on first press, closes it on second
-        bindr = "SUPER, SUPER_L, exec, pkill rofi || rofi -show drun -show-icons";
+        # Opens the eww launcher if closed, closes it if open
+        bindr = "SUPER, SUPER_L, exec, sh ~/.config/eww/scripts/toggle-launcher.sh";
 
         # Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
         bind = [
@@ -291,22 +337,122 @@
         # See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
         # See https://wiki.hyprland.org/Configuring/Workspace-Rules/ for workspace rules
 
-        # Example windowrule
-        # windowrule = float, ^(kitty)$
       };
+
+    # Scoped keybinds for the eww launcher: these only intercept Escape/Up/Down/Return
+    # while the launcher submap is active (entered/exited by toggle-launcher.sh and
+    # launcher-nav.sh), so they don't affect these keys anywhere else.
+    extraConfig = ''
+      submap = launcher
+      bind = , Escape, exec, sh ~/.config/eww/scripts/launcher-nav.sh escape
+      bind = , Up, exec, sh ~/.config/eww/scripts/launcher-nav.sh up
+      bind = , Down, exec, sh ~/.config/eww/scripts/launcher-nav.sh down
+      bind = , Return, exec, sh ~/.config/eww/scripts/launcher-nav.sh enter
+      submap = reset
+    '';
   };
+
+  programs.eww =
+    let
+      inherit (config.programs.kasane.colors)
+        black black-bright blue blue-bright foreground white yellow red green
+        active_tab_background selection_background;
+      colorsYuck = pkgs.writeText "colors.yuck" ''
+        (defvar black "${black}")
+        (defvar black-bright "${black-bright}")
+        (defvar blue "${blue}")
+        (defvar blue-bright "${blue-bright}")
+        (defvar foreground "${foreground}")
+        (defvar white "${white}")
+        (defvar yellow "${yellow}")
+        (defvar red "${red}")
+        (defvar green "${green}")
+        (defvar active-tab-background "${active_tab_background}")
+        (defvar selection-background "${selection_background}")
+      '';
+      colorsScss = pkgs.writeText "colors.scss" ''
+        $black: ${black};
+        $black-bright: ${black-bright};
+        $blue: ${blue};
+        $blue-bright: ${blue-bright};
+        $foreground: ${foreground};
+        $white: ${white};
+        $yellow: ${yellow};
+        $red: ${red};
+        $green: ${green};
+        $active-tab-background: ${active_tab_background};
+        $selection-background: ${selection_background};
+      '';
+      batteryYuck =
+        let
+          batName = config.programs.eww.batteryName;
+        in
+        pkgs.writeText "battery.yuck" (
+          if batName == null then ''
+            (defvar battery-name "")
+            (defpoll bat-time :interval "3600s" :initial "" `echo ""`)
+          '' else ''
+            (defvar battery-name "${batName}")
+            (defpoll bat-time :interval "60s" :initial ""
+              `
+              STATUS=$(cat /sys/class/power_supply/${batName}/status 2>/dev/null)
+              CN=$(cat /sys/class/power_supply/${batName}/current_now 2>/dev/null || echo "0")
+              if [ "$STATUS" = "Full" ] || { [ "$STATUS" = "Charging" ] && [ "$CN" = "0" ]; }; then
+                echo "Full — on AC power"
+                exit 0
+              fi
+              CF=$(cat /sys/class/power_supply/${batName}/charge_full 2>/dev/null)
+              CW=$(cat /sys/class/power_supply/${batName}/charge_now 2>/dev/null)
+              if [ "$STATUS" = "Charging" ]; then
+                awk -v cf="$CF" -v cw="$CW" -v cn="$CN" 'BEGIN {
+                  rem = cf - cw
+                  if (cn == 0 || rem <= 0) { print "Charging"; exit }
+                  m = int(rem / cn * 60)
+                  h = int(m / 60); m = m % 60
+                  if (h > 0) printf "%dh %dm to full", h, m
+                  else printf "%dm to full", m
+                }'
+                exit 0
+              fi
+              if [ -z "$CN" ] || [ "$CN" = "0" ]; then echo "Calculating..."; exit 0; fi
+              awk -v cw="$CW" -v cf="$CF" -v cn="$CN" 'BEGIN {
+                rem = cw - cf * 0.1
+                if (rem <= 0) { print "10% or less remaining"; exit }
+                m = int(rem / cn * 60)
+                h = int(m / 60); m = m % 60
+                if (h > 0) printf "%dh %dm until auto-suspend", h, m
+                else printf "%dm until auto-suspend", m
+              }'
+              `)
+          ''
+        );
+    in
+    {
+      enable = true;
+      package = pkgs.eww;
+      configDir = pkgs.runCommand "eww-config" { } ''
+        mkdir -p $out
+        cp ${./eww/eww.yuck} $out/eww.yuck
+        cp ${./eww/eww.scss} $out/eww.scss
+        cp -r ${./eww/scripts} $out/scripts
+        cp ${colorsYuck} $out/colors.yuck
+        cp ${colorsScss} $out/colors.scss
+        cp ${batteryYuck} $out/battery.yuck
+      '';
+    };
 
   home.packages = with pkgs; [
     grim
-    eww
-    rofi
     mako
-    awww
     nautilus
     zathura
     image-roll
     celluloid
     pavucontrol
+    playerctl
+    networkmanagerapplet
+    gcalcli
+    socat
   ];
 
   xdg = {
@@ -315,6 +461,7 @@
         inherit (config.programs.kasane.colors)
           background active_tab_background selection_background
           black-bright blue blue-bright foreground white red;
+        hex = s: builtins.substring 1 (builtins.stringLength s - 1) s;
       in
       {
         "rofi/config.rasi".source = ./rofi/config.rasi;
@@ -322,126 +469,102 @@
           * {
               bg:         ${background};
               surface:    ${active_tab_background};
-              surface2:   ${selection_background};
               border-col: ${black-bright};
               accent:     ${blue};
-              accent2:    ${blue-bright};
               fg:         ${foreground};
               fg-dim:     ${white};
               urgent:     ${red};
+              alt-bg:     #2a2c33;
 
               background-color: transparent;
-              text-color:       @fg;
+              text-color:       @fg-dim;
           }
 
           window {
-              location:         center;
-              anchor:           center;
-              border:           2px;
-              border-radius:    0px;
+              location:         north;
+              anchor:           north;
+              x-offset:         0px;
+              y-offset:         180px;
+              border:           1px;
+              border-radius:    10px;
               border-color:     @border-col;
-              height:           360px;
-              width:            600px;
-              background-color: transparent;
+              width:            660px;
+              background-color: @bg;
               spacing:          0;
               children:         [mainbox];
-              orientation:      horizontal;
           }
 
           mainbox {
               spacing:  0;
-              children: [inputbar, message, listview];
-          }
-
-          message {
-              padding:          10px;
-              border:           0px 2px 2px 2px;
-              border-color:     @bg;
-              background-color: @fg-dim;
+              children: [inputbar, listview];
           }
 
           inputbar {
-              color:            @fg;
-              padding:          14px;
-              background-color: @bg;
-              border-color:     @bg;
-              border:           1px;
-              border-radius:    0px;
+              padding:          11px 16px;
+              background-color: transparent;
+              border-radius:    10px 10px 0px 0px;
+              spacing:          10px;
+              children:         [prompt, entry, case-indicator];
           }
 
-          entry, prompt, case-indicator {
-              text-font:  inherit;
-              text-color: inherit;
-          }
-
-          prompt {
-              margin: 0px 1em 0em 0em;
-          }
-
-          listview {
-              padding:          8px;
-              border-radius:    0px;
-              border:           2px 2px 2px 2px;
-              border-color:     @bg;
-              background-color: @bg;
-              dynamic:          false;
-          }
-
-          element {
-              padding:          5px;
-              vertical-align:   0.5;
-              border-radius:    0px;
+          entry, case-indicator {
+              text-font:        inherit;
               text-color:       @fg;
-              background-color: @surface;
-          }
-
-          element.normal.active {
-              background-color: @accent;
-              text-color:       @bg;
-          }
-
-          element.normal.urgent {
-              background-color: @urgent;
-          }
-
-          element.selected.normal {
-              background-color: @accent2;
-              text-color:       @bg;
-          }
-
-          element.selected.active {
-              background-color: @accent;
-              text-color:       @bg;
-          }
-
-          element.selected.urgent {
-              background-color: @urgent;
-          }
-
-          element.alternate.normal {
               background-color: transparent;
           }
 
-          element-text, element-icon {
-              size:             3ch;
-              margin:           0 10 0 0;
-              vertical-align:   0.5;
-              background-color: inherit;
-              text-color:       inherit;
+          prompt {
+              text-color:       @accent;
+              background-color: transparent;
           }
 
-          button {
+          listview {
               padding:          6px;
-              color:            @fg-dim;
-              horizontal-align: 0.5;
-              border:           2px 0px 2px 2px;
-              border-radius:    0px;
-              border-color:     @fg-dim;
+              border-radius:    0px 0px 10px 10px;
+              border:           1px 0px 0px 0px;
+              border-color:     @border-col;
+              background-color: transparent;
+              dynamic:          true;
+              lines:            8;
+              fixed-num-lines:  false;
+              spacing:          2px;
           }
 
-          button.selected.normal {
-              border:       2px 0px 2px 2px;
-              border-color: @fg-dim;
+          element {
+              padding:          7px 10px;
+              vertical-align:   0.5;
+              border-radius:    6px;
+              text-color:       @fg-dim;
+              background-color: transparent;
+          }
+
+          element.alternate.normal,
+          element.alternate.active {
+              background-color: @alt-bg;
+          }
+
+          element.selected.normal,
+          element.selected.active {
+              background-color: @surface;
+              text-color:       @fg;
+          }
+
+          element.normal.urgent,
+          element.selected.urgent {
+              text-color: @urgent;
+          }
+
+          element-icon {
+              size:             1.4em;
+              margin:           0px 10px 0px 0px;
+              vertical-align:   0.5;
+              background-color: transparent;
+          }
+
+          element-text {
+              vertical-align:   0.5;
+              background-color: transparent;
+              text-color:       inherit;
           }
         '';
         "mako/config".text = ''
