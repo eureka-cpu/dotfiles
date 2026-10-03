@@ -2,7 +2,7 @@
 # Usage: apps.sh <query>       -> JSON array of up to 8 matches (for the launcher UI)
 #        apps.sh --warm        -> populate the icon cache for every installed app,
 #                                  without printing anything (run once in the
-#                                  background at eww startup, see toggle-launcher.sh)
+#                                  background at eww startup, see hyprland.nix)
 #
 # [{"rank":0,"name":"Firefox","icon":"/path/to/icon.svg","onclick":"<cmd> & disown; ..."}]
 #
@@ -52,18 +52,28 @@ resolve_icon() {
 
 # Cached, fast version of resolve_icon: everything above only ever runs once
 # per icon name, ever (results, including "not found", are cached).
+#
+# The icon-cache warmer (run once in the background at eww startup, see
+# hyprland.nix) and an interactive search can both be resolving the same
+# icon at once. flock serializes the check-then-append below so they can't
+# race into writing two cache lines for one icon; the awk also collapses to
+# the last matching line defensively, since two lines for the same key used
+# to get printed back-to-back as one glued-together (invalid) path.
 find_icon() {
   icon="$1"
   pkgroot="$2"
   [ -z "$icon" ] && return
-  cached=$(awk -F'\t' -v k="$icon" '$1 == k { print $2; f = 1 } END { exit !f }' "$ICON_CACHE")
-  if [ $? -eq 0 ]; then
-    printf '%s' "$cached"
-    return
-  fi
-  resolved=$(resolve_icon "$icon" "$pkgroot")
-  printf '%s\t%s\n' "$icon" "$resolved" >> "$ICON_CACHE"
-  printf '%s' "$resolved"
+  (
+    flock -x 9
+    cached=$(awk -F'\t' -v k="$icon" '$1 == k { v = $2; f = 1 } END { if (f) print v; exit !f }' "$ICON_CACHE")
+    if [ $? -eq 0 ]; then
+      printf '%s' "$cached"
+      return
+    fi
+    resolved=$(resolve_icon "$icon" "$pkgroot")
+    printf '%s\t%s\n' "$icon" "$resolved" >> "$ICON_CACHE"
+    printf '%s' "$resolved"
+  ) 9>"$ICON_CACHE.lock"
 }
 
 jesc() {
