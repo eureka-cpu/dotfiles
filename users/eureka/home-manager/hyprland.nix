@@ -1,5 +1,7 @@
-{ pkgs, config, ... }:
+{ pkgs, lib, config, ... }:
 {
+  imports = [ ./eww-monitor.nix ];
+
   systemd.user.services.mako = {
     Unit = {
       Description = "Mako notification daemon";
@@ -28,20 +30,6 @@
     Install.WantedBy = [ "hyprland-session.target" ];
   };
 
-  systemd.user.services.anyrun = {
-    Unit = {
-      Description = "Anyrun launcher daemon";
-      After = [ "hyprland-session.target" ];
-      PartOf = [ "hyprland-session.target" ];
-    };
-    Service = {
-      ExecStart = "${pkgs.anyrun}/bin/anyrun daemon";
-      Restart = "on-failure";
-      RestartSec = "3s";
-    };
-    Install.WantedBy = [ "hyprland-session.target" ];
-  };
-
   systemd.user.services.eww = {
     Unit = {
       Description = "Eww widget daemon";
@@ -51,7 +39,23 @@
     Service = {
       ExecStartPre = "${pkgs.bash}/bin/bash -c 'pkill -f \"^socat.*socket2\\.sock\" 2>/dev/null; sleep 0.2; true'";
       ExecStart = "${pkgs.eww}/bin/eww daemon --no-daemonize";
-      ExecStartPost = "${pkgs.eww}/bin/eww open window";
+      ExecStartPost = [
+        (
+          let
+            desc = config.programs.eww.monitorDescription;
+          in
+          if desc == null then
+            "${pkgs.eww}/bin/eww open window"
+          else
+            "${pkgs.bash}/bin/bash -c "
+            + lib.escapeShellArg ''name=$(${pkgs.hyprland}/bin/hyprctl monitors | ${pkgs.gawk}/bin/awk -v target=${lib.escapeShellArg desc} '/^Monitor /{name=$2} /^\tdescription: /{d=$0; sub(/^\tdescription: /,"",d); if (d==target){print name; exit}}'); ${pkgs.eww}/bin/eww open window --screen "$name"; ${pkgs.eww}/bin/eww update monitor-name="$name"''
+        )
+        # Pre-resolves and caches every installed app's icon path in the
+        # background, so the launcher's per-keystroke search (which can't
+        # afford to run `find` itself, see apps.sh) is never the one paying
+        # for a cold cache.
+        "${pkgs.bash}/bin/bash -c 'sh ~/.config/eww/scripts/apps.sh --warm &'"
+      ];
       Restart = "on-failure";
       RestartSec = "3s";
     };
@@ -270,8 +274,8 @@
         # See https://wiki.hyprland.org/Configuring/Keywords/ for more
         "$mainMod" = "SUPER";
 
-        # Opens anyrun if closed, closes it if open
-        bindr = "SUPER, SUPER_L, exec, anyrun close 2>/dev/null || anyrun";
+        # Opens the eww launcher if closed, closes it if open
+        bindr = "SUPER, SUPER_L, exec, sh ~/.config/eww/scripts/toggle-launcher.sh";
 
         # Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
         bind = [
@@ -334,17 +338,111 @@
         # See https://wiki.hyprland.org/Configuring/Workspace-Rules/ for workspace rules
 
       };
+
+    # Scoped keybinds for the eww launcher: these only intercept Escape/Up/Down/Return
+    # while the launcher submap is active (entered/exited by toggle-launcher.sh and
+    # launcher-nav.sh), so they don't affect these keys anywhere else.
+    extraConfig = ''
+      submap = launcher
+      bind = , Escape, exec, sh ~/.config/eww/scripts/launcher-nav.sh escape
+      bind = , Up, exec, sh ~/.config/eww/scripts/launcher-nav.sh up
+      bind = , Down, exec, sh ~/.config/eww/scripts/launcher-nav.sh down
+      bind = , Return, exec, sh ~/.config/eww/scripts/launcher-nav.sh enter
+      submap = reset
+    '';
   };
 
-  programs.eww = {
-    enable = true;
-    package = pkgs.eww;
-    configDir = ./eww;
-  };
+  programs.eww =
+    let
+      inherit (config.programs.kasane.colors)
+        black black-bright blue blue-bright foreground white yellow red green
+        active_tab_background selection_background;
+      colorsYuck = pkgs.writeText "colors.yuck" ''
+        (defvar black "${black}")
+        (defvar black-bright "${black-bright}")
+        (defvar blue "${blue}")
+        (defvar blue-bright "${blue-bright}")
+        (defvar foreground "${foreground}")
+        (defvar white "${white}")
+        (defvar yellow "${yellow}")
+        (defvar red "${red}")
+        (defvar green "${green}")
+        (defvar active-tab-background "${active_tab_background}")
+        (defvar selection-background "${selection_background}")
+      '';
+      colorsScss = pkgs.writeText "colors.scss" ''
+        $black: ${black};
+        $black-bright: ${black-bright};
+        $blue: ${blue};
+        $blue-bright: ${blue-bright};
+        $foreground: ${foreground};
+        $white: ${white};
+        $yellow: ${yellow};
+        $red: ${red};
+        $green: ${green};
+        $active-tab-background: ${active_tab_background};
+        $selection-background: ${selection_background};
+      '';
+      batteryYuck =
+        let
+          batName = config.programs.eww.batteryName;
+        in
+        pkgs.writeText "battery.yuck" (
+          if batName == null then ''
+            (defvar battery-name "")
+            (defpoll bat-time :interval "3600s" :initial "" `echo ""`)
+          '' else ''
+            (defvar battery-name "${batName}")
+            (defpoll bat-time :interval "60s" :initial ""
+              `
+              STATUS=$(cat /sys/class/power_supply/${batName}/status 2>/dev/null)
+              CN=$(cat /sys/class/power_supply/${batName}/current_now 2>/dev/null || echo "0")
+              if [ "$STATUS" = "Full" ] || { [ "$STATUS" = "Charging" ] && [ "$CN" = "0" ]; }; then
+                echo "Full — on AC power"
+                exit 0
+              fi
+              CF=$(cat /sys/class/power_supply/${batName}/charge_full 2>/dev/null)
+              CW=$(cat /sys/class/power_supply/${batName}/charge_now 2>/dev/null)
+              if [ "$STATUS" = "Charging" ]; then
+                awk -v cf="$CF" -v cw="$CW" -v cn="$CN" 'BEGIN {
+                  rem = cf - cw
+                  if (cn == 0 || rem <= 0) { print "Charging"; exit }
+                  m = int(rem / cn * 60)
+                  h = int(m / 60); m = m % 60
+                  if (h > 0) printf "%dh %dm to full", h, m
+                  else printf "%dm to full", m
+                }'
+                exit 0
+              fi
+              if [ -z "$CN" ] || [ "$CN" = "0" ]; then echo "Calculating..."; exit 0; fi
+              awk -v cw="$CW" -v cf="$CF" -v cn="$CN" 'BEGIN {
+                rem = cw - cf * 0.1
+                if (rem <= 0) { print "10% or less remaining"; exit }
+                m = int(rem / cn * 60)
+                h = int(m / 60); m = m % 60
+                if (h > 0) printf "%dh %dm until auto-suspend", h, m
+                else printf "%dm until auto-suspend", m
+              }'
+              `)
+          ''
+        );
+    in
+    {
+      enable = true;
+      package = pkgs.eww;
+      configDir = pkgs.runCommand "eww-config" { } ''
+        mkdir -p $out
+        cp ${./eww/eww.yuck} $out/eww.yuck
+        cp ${./eww/eww.scss} $out/eww.scss
+        cp -r ${./eww/scripts} $out/scripts
+        cp ${colorsYuck} $out/colors.yuck
+        cp ${colorsScss} $out/colors.scss
+        cp ${batteryYuck} $out/battery.yuck
+      '';
+    };
 
   home.packages = with pkgs; [
     grim
-    anyrun
     mako
     nautilus
     zathura
@@ -354,6 +452,7 @@
     playerctl
     networkmanagerapplet
     gcalcli
+    socat
   ];
 
   xdg = {
@@ -466,113 +565,6 @@
               vertical-align:   0.5;
               background-color: transparent;
               text-color:       inherit;
-          }
-        '';
-        "anyrun/config.ron".text = ''
-          Config(
-            x: Fraction(0.5),
-            y: Absolute(270),
-            width: Absolute(600),
-            height: Absolute(0),
-            hide_icons: false,
-            ignore_exclusive_zones: true,
-            layer: Overlay,
-            hide_plugin_info: true,
-            close_on_click: true,
-            show_results_immediately: false,
-            max_entries: Some(4),
-            plugins: [
-              "${pkgs.anyrun}/lib/libapplications.so",
-            ],
-            keybinds: [
-              Keybind(key: "Return", action: Select),
-              Keybind(key: "Up",     action: Up),
-              Keybind(key: "Down",   action: Down),
-              Keybind(key: "ISO_Left_Tab", action: Up, shift: true),
-              Keybind(key: "Tab",    action: Down),
-              Keybind(key: "Escape", action: Close),
-            ],
-          )
-        '';
-        "anyrun/style.css".text = ''
-          * {
-            font-family: "JetBrainsMono Nerd Font";
-            font-size: 13px;
-            outline: none;
-          }
-
-          window {
-            background: transparent;
-          }
-
-          box.main {
-            padding: 0;
-            margin: 0;
-            border-radius: 10px;
-            border: 1px solid ${black-bright};
-            background-color: ${background};
-          }
-
-          entry {
-            background-color: transparent;
-            box-shadow: none;
-            border: none;
-            background-image: url("file:///run/current-system/sw/share/icons/hicolor/scalable/apps/nix-snowflake-white.svg");
-            background-repeat: no-repeat;
-            background-position: 12px center;
-            background-size: 16px 16px;
-          }
-
-          text {
-            min-height: 0;
-            padding: 12px 14px 12px 34px;
-            color: ${foreground};
-            caret-color: ${blue};
-            background-color: transparent;
-          }
-
-          text placeholder {
-            color: ${black-bright};
-          }
-
-          .matches {
-            border-top: 1px solid ${active_tab_background};
-            background-color: transparent;
-            padding: 3px;
-          }
-
-          list.plugin {
-            background-color: transparent;
-          }
-
-          .match {
-            padding: 5px 10px;
-            border-radius: 5px;
-            background-color: transparent;
-            min-height: 0;
-          }
-
-          .match:selected {
-            background-color: ${active_tab_background};
-          }
-
-          label.match {
-            color: ${white};
-          }
-
-          label.match.description {
-            font-size: 0;
-            min-height: 0;
-            margin: 0;
-            padding: 0;
-            opacity: 0;
-          }
-
-          list.plugin image {
-            -gtk-icon-size: 16px;
-            min-width: 16px;
-            min-height: 16px;
-            margin-right: 8px;
           }
         '';
         "mako/config".text = ''

@@ -1,3 +1,6 @@
+(include "./colors.yuck")
+(include "./battery.yuck")
+
 ; === Windows ===
 
 (defwindow window
@@ -34,11 +37,20 @@
   :focusable false
   (wifi-panel))
 
+(defwindow launcher
+  :monitor 0
+  :stacking "overlay"
+  :exclusive false
+  :focusable true
+  :geometry (geometry :anchor "top center" :x "0" :y "80px" :width "480px")
+  (launcher-panel))
+
 ; === State ===
 
 (defvar show-center false)
 (defvar wifi-open false)
 (defvar airplane-mode false)
+(defvar monitor-name "0")
 
 ; === Top Bar ===
 
@@ -50,12 +62,13 @@
       (label :class "win-title" :text active-title :limit-width 48 :visible {active-title != ""}))
     (box :class "topbar-center" :hexpand true :halign "center" :space-evenly false
       (eventbox
-        :onhover {show-center ? "rm -f /tmp/eww-center-leaving; eww update show-center=true" : "eww open center-popup; eww update show-center=true"}
+        :onhover {show-center ? "rm -f /tmp/eww-center-leaving; eww update show-center=true" : "eww open center-popup --screen ${monitor-name}; eww update show-center=true"}
         (clock)))
     (box :class "topbar-right" :hexpand true :halign "end" :space-evenly false :spacing 6
       (wifi-indicator)
-      (battery-pill :capacity {EWW_BATTERY["BATT"]["capacity"]}
-                    :status   {EWW_BATTERY["BATT"]["status"]}))))
+      (box :visible {battery-name != ""}
+        (battery-pill :capacity {battery-name == "" ? 0 : EWW_BATTERY[battery-name]["capacity"]}
+                      :status   {battery-name == "" ? "" : EWW_BATTERY[battery-name]["status"]})))))
 
 ; === Workspaces ===
 
@@ -90,37 +103,9 @@
 (defpoll ac-online :interval "5s" :initial "0"
   `cat /sys/class/power_supply/ACAD/online 2>/dev/null || echo "0"`)
 
-(defpoll bat-time :interval "60s" :initial ""
-  `
-  STATUS=$(cat /sys/class/power_supply/BATT/status 2>/dev/null)
-  CN=$(cat /sys/class/power_supply/BATT/current_now 2>/dev/null || echo "0")
-  if [ "$STATUS" = "Full" ] || { [ "$STATUS" = "Charging" ] && [ "$CN" = "0" ]; }; then
-    echo "Full — on AC power"
-    exit 0
-  fi
-  CF=$(cat /sys/class/power_supply/BATT/charge_full 2>/dev/null)
-  CW=$(cat /sys/class/power_supply/BATT/charge_now 2>/dev/null)
-  if [ "$STATUS" = "Charging" ]; then
-    awk -v cf="$CF" -v cw="$CW" -v cn="$CN" 'BEGIN {
-      rem = cf - cw
-      if (cn == 0 || rem <= 0) { print "Charging"; exit }
-      m = int(rem / cn * 60)
-      h = int(m / 60); m = m % 60
-      if (h > 0) printf "%dh %dm to full", h, m
-      else printf "%dm to full", m
-    }'
-    exit 0
-  fi
-  if [ -z "$CN" ] || [ "$CN" = "0" ]; then echo "Calculating..."; exit 0; fi
-  awk -v cw="$CW" -v cf="$CF" -v cn="$CN" 'BEGIN {
-    rem = cw - cf * 0.1
-    if (rem <= 0) { print "10% or less remaining"; exit }
-    m = int(rem / cn * 60)
-    h = int(m / 60); m = m % 60
-    if (h > 0) printf "%dh %dm until auto-suspend", h, m
-    else printf "%dm until auto-suspend", m
-  }'
-  `)
+; bat-time is generated into battery.yuck, since its shell script needs the
+; configured battery name baked in at build time (defpoll bodies are literal
+; shell scripts and can't reference eww variables).
 
 (defwidget battery-pill [capacity status]
   (eventbox :class "battery-wrapper" :tooltip bat-time :valign "center"
@@ -130,10 +115,10 @@
           (box :class "battery-body" :valign "center"
                :style {"min-width: 28px; min-height: 12px; border-radius: 3px; " +
                        "background: linear-gradient(to right, " +
-                       (capacity < 20 ? "#ad625e" : capacity < 50 ? "#ae9668" : "#8e946f") +
-                       " " + capacity + "%, #2e3140 " + capacity + "%, #2e3140 100%); " +
+                       (capacity < 20 ? red : capacity < 50 ? yellow : green) +
+                       " " + capacity + "%, " + active-tab-background + " " + capacity + "%, " + active-tab-background + " 100%); " +
                        "border: 1.5px solid " +
-                       (capacity < 20 ? "#ad625e" : "#515869") + ";"})
+                       (capacity < 20 ? red : black-bright) + ";"})
           (label :class "battery-bolt"
                  :halign "center" :valign "center"
                  :visible {ac-online == "1"}
@@ -166,7 +151,7 @@
     :class "wifi-box"
     :onclick {wifi-open
       ? "eww close wifi-overlay; eww close wifi-popup; eww update wifi-open=false"
-      : "eww open wifi-overlay; eww open wifi-popup; eww update wifi-open=true"}
+      : "eww open wifi-overlay --screen ${monitor-name}; eww open wifi-popup --screen ${monitor-name}; eww update wifi-open=true"}
     (label :class "net"
       :text {wifi-enabled != "enabled" || airplane-mode ? "󰤮" :
              net == ""  ? "󰤮" :
@@ -224,6 +209,30 @@
                    :text {vpn.name})
             (label :class {"vpn-dot " + vpn.cls} :text {vpn.dot})))))))
 
+; === Launcher ===
+
+(defvar launcher-query "")
+(defvar launcher-selected "0")
+(defvar filtered-apps-json "[]")
+
+(defwidget launcher-panel []
+  (box :class "launcher-outer" :orientation "v" :space-evenly false
+    (box :class "launcher-input-row" :space-evenly false
+      (label :class "distro launcher-icon" :valign "center" :text "")
+      (input :class "launcher-input" :hexpand true
+             :value launcher-query
+             :onchange "sh ~/.config/eww/scripts/launcher-search.sh {}")
+      (button :class "launcher-close"
+              :onclick "eww close launcher; eww update launcher-query=\"\" launcher-selected=0 filtered-apps-json=\"[]\"; hyprctl dispatch submap reset"
+        (label :text "󰅖")))
+    (box :class "launcher-list" :orientation "v" :space-evenly false
+      (for app in {filtered-apps-json}
+        (button :class {"launcher-item" + (app.rank == launcher-selected ? " launcher-item-selected" : "")}
+                :onclick {app.onclick}
+          (box :space-evenly false :spacing 8
+            (image :visible {app.icon != ""} :path {app.icon} :image-width 20 :image-height 20)
+            (label :halign "start" :text {app.name})))))))
+
 ; === Center Panel (popup on clock hover) ===
 
 (defpoll now-playing :interval "2s" :initial ""
@@ -262,13 +271,13 @@
     :reveal show-center
     :duration "180ms"
   (box :class "center-panel" :orientation "v" :space-evenly false :spacing 0
-       :style {show-center ? "border: 1px solid #2e3140; border-top: none; padding: 12px 16px;" : "border: none; padding: 0;"}
+       :style {show-center ? "border: 1px solid " + active-tab-background + "; border-top: none; padding: 12px 16px;" : "border: none; padding: 0;"}
     (box :class "panel-audio" :orientation "v" :space-evenly false :spacing 6
          :visible {now-playing != ""}
       (image :class "art-image" :path art-url :image-width 92 :image-height 92
              :halign "center" :visible {art-url != ""})
       (box :class "art-placeholder" :halign "center"
-           :style "background-color: #2e3140;"
+           :style {"background-color: " + active-tab-background + ";"}
            :visible {art-url == ""})
       (label :class "audio-title" :halign "center" :text now-title
              :limit-width 36 :wrap false)

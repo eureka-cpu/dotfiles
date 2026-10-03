@@ -46,6 +46,15 @@ BEGIN {
     next
 }
 
+/^focusedmon>>/ {
+    n = split(substr($0, 13), f, ",")
+    if (n >= 2) {
+        active = f[2]
+        emit()
+    }
+    next
+}
+
 /^openwindow>>/ {
     split(substr($0, 13), f, ",")
     addr = f[1]; wsid = f[2] + 0

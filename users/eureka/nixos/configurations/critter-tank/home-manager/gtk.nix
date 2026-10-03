@@ -38,7 +38,6 @@ in
       @define-color sidebar_fg_color ${foreground};
       @define-color theme_fg_color ${foreground};
       @define-color theme_text_color ${foreground};
-      * { color: ${foreground}; }
 
       placessidebar {
         background-color: #2e2e32;

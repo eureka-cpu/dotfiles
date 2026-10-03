@@ -1,6 +1,7 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 let
-  p = builtins.fromJSON (builtins.readFile "${pkgs.kasane}/palettes/shibui-gamma.json");
+  inherit (config.home-manager.users.eureka.programs.kasane) palette;
+  p = builtins.fromJSON (builtins.readFile "${pkgs.kasane}/palettes/${palette}.json");
 in
 {
   services.greetd.enable = true;

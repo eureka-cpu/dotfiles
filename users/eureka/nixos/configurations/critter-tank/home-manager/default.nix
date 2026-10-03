@@ -20,6 +20,9 @@
 
   programs.helix.settings.theme = lib.mkForce "obi-gamma";
 
+  programs.eww.monitorDescription = "HP Inc. HP Z32 CN42411R5T";
+  programs.eww.batteryName = null;
+
   xdg.configFile."helix/themes/obi-gamma.toml" = {
     source = "${pkgs.kasane}/themes/helix/obi-gamma.toml";
     force = true;

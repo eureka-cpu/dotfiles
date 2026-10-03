@@ -1,3 +1,5 @@
+@import "colors";
+
 * {
   font-family: "JetBrainsMono Nerd Font";
   font-size: 13px;
@@ -11,7 +13,7 @@ window, box, eventbox, button, scale, overlay, label, image {
 }
 
 window, box, eventbox, button, scale, overlay {
-  background-color: #1e1f24;
+  background-color: $black;
 }
 
 window.center-popup { background-color: transparent; }
@@ -26,9 +28,9 @@ window.wifi-popup { background-color: transparent; }
 .center-panel button,
 .center-panel overlay { background-color: transparent; }
 
-.center-panel .panel-sep { background-color: #2e3140; }
+.center-panel .panel-sep { background-color: $active-tab-background; }
 
-label { color: #aba398; }
+label { color: $white; }
 
 /* -- Top Bar -- */
 
@@ -39,14 +41,14 @@ label { color: #aba398; }
 
 .workspaces { padding-left: 4px; }
 
-.win-sep { color: #515869; margin: 0 2px 0 6px; }
-.win-title { color: #aba398; }
+.win-sep { color: $black-bright; margin: 0 2px 0 6px; }
+.win-title { color: $white; }
 
 .ws-empty, .ws-occupied, .ws-active { padding: 0 5px; border-radius: 4px; }
 
-.ws-empty    { color: #515869; }
-.ws-occupied { color: #ae9668; }
-.ws-active   { color: #1e1f24; background-color: #99a2b2; }
+.ws-empty    { color: $black-bright; }
+.ws-occupied { color: $yellow; }
+.ws-active   { color: $black; background-color: $blue; }
 
 /* -- Clock -- */
 
@@ -55,23 +57,23 @@ label { color: #aba398; }
   padding: 0 8px;
   transition: background-color 150ms ease;
 }
-.clock-box:hover { background-color: #2e3140; }
+.clock-box:hover { background-color: $active-tab-background; }
 
 .time { font-weight: bold; }
 
 .distro {
-  color: #99a2b2;
+  color: $blue;
   font-size: 14px;
   margin: 0 4px;
 }
 
-.date { color: #515869; }
+.date { color: $black-bright; }
 
 /* -- WiFi -- */
 
 .wifi-box { border-radius: 4px; padding: 0 6px; transition: background-color 150ms ease; }
-.wifi-box:hover { background-color: #2e3140; }
-.net { color: #515869; font-size: 14px; min-width: 22px; }
+.wifi-box:hover { background-color: $active-tab-background; }
+.net { color: $black-bright; font-size: 14px; min-width: 22px; }
 
 /* -- Battery pill -- */
 
@@ -86,26 +88,26 @@ eventbox.battery-wrapper { background-color: transparent; padding: 0 2px; }
 
 .battery-bolt {
   font-size: 13px;
-  color: #aba398;
-  text-shadow: -1px 0 0 #515869, 0 1px 0 #515869, 1px 0 0 #515869, 0 -1px 0 #515869;
+  color: $white;
+  text-shadow: -1px 0 0 $black-bright, 0 1px 0 $black-bright, 1px 0 0 $black-bright, 0 -1px 0 $black-bright;
 }
 
 .battery-nub {
   min-width: 3px;
   min-height: 7px;
-  background-color: #515869;
+  background-color: $black-bright;
   border-radius: 0 2px 2px 0;
 }
 
 .battery-pct {
-  color: #aba398;
+  color: $white;
   font-size: 12px;
 }
 
 /* -- Center panel popup -- */
 
 .center-panel {
-  background-color: #1e1f24;
+  background-color: $black;
   border-radius: 0 0 8px 8px;
 }
 
@@ -120,13 +122,13 @@ eventbox.battery-wrapper { background-color: transparent; padding: 0 2px; }
 }
 
 .audio-title {
-  color: #cbc4a7;
+  color: $foreground;
   font-weight: bold;
   font-size: 13px;
 }
 
 .audio-artist {
-  color: #515869;
+  color: $black-bright;
   font-size: 12px;
 }
 
@@ -136,38 +138,38 @@ eventbox.battery-wrapper { background-color: transparent; padding: 0 2px; }
   border-radius: 4px;
   padding: 2px 6px;
 }
-.ctrl-btn label { color: #99a2b2; font-size: 16px; }
-.ctrl-btn:hover { background-color: #2e3140; }
+.ctrl-btn label { color: $blue; font-size: 16px; }
+.ctrl-btn:hover { background-color: $active-tab-background; }
 
-.ctrl-btn.play label { color: #cbc4a7; font-size: 18px; }
+.ctrl-btn.play label { color: $foreground; font-size: 18px; }
 
 .panel-sep {
   min-height: 1px;
-  background-color: #2e3140;
+  background-color: $active-tab-background;
   margin: 4px 0 10px 0;
 }
 
 .panel-calendar { padding-bottom: 2px; }
 
 .cal-header {
-  color: #99a2b2;
+  color: $blue;
   font-size: 11px;
   font-weight: bold;
   margin-bottom: 6px;
 }
 
-.cal-empty { color: #515869; font-size: 12px; }
+.cal-empty { color: $black-bright; font-size: 12px; }
 
 .cal-events {
-  color: #aba398;
+  color: $white;
   font-size: 12px;
 }
 
 /* -- WiFi popup -- */
 
 .wifi-panel {
-  background-color: #1e1f24;
-  border: 1px solid #2e3140;
+  background-color: $black;
+  border: 1px solid $active-tab-background;
   border-radius: 10px;
   padding: 14px 16px;
 }
@@ -176,42 +178,89 @@ eventbox.battery-wrapper { background-color: transparent; padding: 0 2px; }
 .wifi-panel eventbox,
 .wifi-panel button { background-color: transparent; }
 .wf-top { padding-bottom: 10px; }
-.wf-title { color: #cbc4a7; font-size: 14px; font-weight: bold; }
+.wf-title { color: $foreground; font-size: 14px; font-weight: bold; }
 
 .wf-sq-btn { min-width: 24px; min-height: 24px; border-radius: 5px; padding: 0; -GtkButton-default-border: 0; -GtkButton-inner-border: 0; -GtkWidget-focus-padding: 0; -GtkWidget-focus-line-width: 0; }
 .wf-sq-icon { font-size: 14px; }
-button.wf-sq-btn.wf-sq-on { background-color: #99a2b2; }
-.wf-sq-btn.wf-sq-on label { color: #1e1f24; }
-button.wf-sq-btn.wf-sq-on:hover { background-color: #b3bece; }
-button.wf-sq-btn.wf-sq-off { background-color: #2e3140; }
-.wf-sq-btn.wf-sq-off label { color: #515869; }
-button.wf-sq-btn.wf-sq-off:hover { background-color: #3a3f52; }
+button.wf-sq-btn.wf-sq-on { background-color: $blue; }
+.wf-sq-btn.wf-sq-on label { color: $black; }
+button.wf-sq-btn.wf-sq-on:hover { background-color: $blue-bright; }
+button.wf-sq-btn.wf-sq-off { background-color: $active-tab-background; }
+.wf-sq-btn.wf-sq-off label { color: $black-bright; }
+button.wf-sq-btn.wf-sq-off:hover { background-color: $selection-background; }
 
-.wifi-sep { min-height: 1px; background-color: #2e3140; margin: 4px 0; }
+.wifi-sep { min-height: 1px; background-color: $active-tab-background; margin: 4px 0; }
 
 .wf-active-row { padding: 6px 6px; }
-.wf-check { color: #99a2b2; font-size: 13px; min-width: 20px; }
-.wf-active-ssid { color: #cbc4a7; font-size: 13px; font-weight: bold; }
-.wf-active-signal { color: #99a2b2; font-size: 15px; min-width: 22px; }
+.wf-check { color: $blue; font-size: 13px; min-width: 20px; }
+.wf-active-ssid { color: $foreground; font-size: 13px; font-weight: bold; }
+.wf-active-signal { color: $blue; font-size: 15px; min-width: 22px; }
 
 .net-list { margin: 2px 0; }
 .net-item { border-radius: 6px; padding: 5px 6px; }
 .wifi-panel .net-item { background-color: transparent; }
-.wifi-panel .net-item:hover { background-color: #2e3140; }
-.net-ssid { color: #aba398; font-size: 13px; }
-.net-signal { color: #515869; font-size: 14px; min-width: 22px; }
+.wifi-panel .net-item:hover { background-color: $active-tab-background; }
+.net-ssid { color: $white; font-size: 13px; }
+.net-signal { color: $black-bright; font-size: 14px; min-width: 22px; }
 
-.wifi-scanning { color: #515869; font-size: 12px; padding: 6px 0; }
-.wifi-off-msg { color: #515869; font-size: 12px; padding: 6px 0; }
+.wifi-scanning { color: $black-bright; font-size: 12px; padding: 6px 0; }
+.wifi-off-msg { color: $black-bright; font-size: 12px; padding: 6px 0; }
 
-.vpn-eyebrow { color: #515869; font-size: 10px; font-weight: bold; margin: 4px 6px 2px; }
+.vpn-eyebrow { color: $black-bright; font-size: 10px; font-weight: bold; margin: 4px 6px 2px; }
 .vpn-list { margin: 2px 0; }
 .vpn-item { border-radius: 6px; padding: 5px 6px; }
 .wifi-panel .vpn-item { background-color: transparent; }
-.wifi-panel .vpn-item:hover { background-color: #2e3140; }
-.vpn-lock { color: #515869; font-size: 13px; min-width: 20px; }
-.vpn-name { color: #aba398; font-size: 13px; }
+.wifi-panel .vpn-item:hover { background-color: $active-tab-background; }
+.vpn-lock { color: $black-bright; font-size: 13px; min-width: 20px; }
+.vpn-name { color: $white; font-size: 13px; }
 .vpn-dot { font-size: 11px; min-width: 18px; }
-.vpn-dot-on { color: #99a2b2; }
-.vpn-dot-off { color: #515869; }
+.vpn-dot-on { color: $blue; }
+.vpn-dot-off { color: $black-bright; }
+
+/* -- Launcher -- */
+
+window.launcher { background-color: transparent; }
+
+.launcher-outer {
+  background-color: $black;
+  border: 1px solid $active-tab-background;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.launcher-outer box,
+.launcher-outer eventbox,
+.launcher-outer button { background-color: transparent; }
+
+.launcher-input-row { padding-bottom: 6px; }
+.launcher-icon { margin: 0 8px 0 4px; }
+
+.launcher-input {
+  background-color: $active-tab-background;
+  color: $foreground;
+  caret-color: $blue;
+  font-size: 15px;
+  border-radius: 6px;
+  padding: 8px 10px;
+  border: none;
+  box-shadow: none;
+}
+
+.launcher-close {
+  color: $red;
+  font-size: 15px;
+  padding: 0 10px;
+  min-width: 0;
+}
+
+.launcher-list { margin-top: 4px; }
+
+.launcher-item {
+  border-radius: 6px;
+  padding: 7px 10px;
+  color: $white;
+  font-size: 13px;
+}
+.launcher-outer .launcher-item:hover { background-color: $active-tab-background; }
+.launcher-outer .launcher-item-selected { background-color: $active-tab-background; }
 
