@@ -1,5 +1,6 @@
 { lib, ... }:
 {
+  # TODO: The monitor with the topbar should change in clamshell mode on laptops
   options.programs.eww.monitorDescription = lib.mkOption {
     type = lib.types.nullOr lib.types.str;
     default = null;
