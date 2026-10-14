@@ -44,5 +44,16 @@
       wallpaper = [{ monitor = ""; path = wallpaper; }];
     };
 
+  # Ryzen 7 PRO 5850U, 64GB, CPU inference, so local is offline fallback only.
+  # gemma4:26b (MoE) answered every scout test correctly in 3-4 min; the
+  # qwen3:30b tag is the always-thinking 2507 build and was slower, and
+  # models with ~1B active params ran 4x faster but invented answers.
+  # Measured ~40 tok/s prefill, 8-12 tok/s generation. The Vega iGPU via
+  # ollama-vulkan hits amdgpu compute ring timeouts; don't use it.
+  eureka.ollama = {
+    model = "gemma4:26b";
+    extraModels = [ "qwen3:30b" "qwen2.5-coder:14b" ];
+  };
+
   home.stateVersion = "23.11";
 }

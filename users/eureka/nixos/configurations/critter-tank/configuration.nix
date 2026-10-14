@@ -43,5 +43,7 @@
   };
   programs.gamemode.enable = true;
 
+  services.ollama.package = pkgs.ollama-cuda;
+
   system.stateVersion = "23.05";
 }

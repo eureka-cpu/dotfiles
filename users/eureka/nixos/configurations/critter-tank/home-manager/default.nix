@@ -28,6 +28,13 @@
     force = true;
   };
 
+  # RTX 4080 16GB: gpt-oss:20b fits fully in VRAM with 32K context, so local
+  # subagents are fast enough to take scout/sonic work off Claude.
+  eureka.ollama = {
+    model = "gpt-oss:20b";
+    localSubagents = true;
+  };
+
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
   # introduces backwards incompatible changes.

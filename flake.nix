@@ -43,6 +43,14 @@
       url = "github:noctalia-dev/noctalia";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    omp = {
+      url = "github:can1357/oh-my-pi";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    ompweb = {
+      url = "github:kahme247/ompweb";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -90,6 +98,27 @@
                 (final: _prev: {
                   llm-agents = inputs.llm-agents.packages.${final.system};
                 })
+                (final: _prev: {
+                  # Built from a vendored fix of upstream's package.nix; see
+                  # lib/pkgs/ompweb.nix for why the flake output can't be used.
+                  ompweb = final.callPackage ./lib/pkgs/ompweb.nix {
+                    source = inputs.ompweb;
+                  };
+                })
+                # Ollama from llm-agents' own nixpkgs pin: new model
+                # architectures need a new runner (gemma4 rejects 0.20.x), and
+                # `nix flake update llm-agents` bumps it with the other AI
+                # tooling without moving the whole system.
+                (final: _prev:
+                  let
+                    ollamaPkgs = import inputs.llm-agents.inputs.nixpkgs {
+                      inherit (final.stdenv.hostPlatform) system;
+                      inherit (final) config;
+                    };
+                  in
+                  {
+                    inherit (ollamaPkgs) ollama ollama-cpu ollama-cuda ollama-rocm ollama-vulkan;
+                  })
                 (_final: prev: {
                   kitty-themes = prev.kitty-themes.overrideAttrs (old: {
                     version = "0-unstable-2026-07-10";
@@ -132,6 +161,9 @@
       homeManagerModules = {
         helix-themes = inputs.helix-themes.homeManagerModule;
         kasane = import "${inputs.kasane}/module.nix";
+        # Provides the `programs.omp` options for every user's home-manager;
+        # inert unless a user sets `programs.omp.enable = true`.
+        omp = inputs.omp.homeManagerModules.default;
       };
 
       # All user defined nixos modules go here

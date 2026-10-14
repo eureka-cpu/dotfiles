@@ -99,16 +99,20 @@ in
     useRoutingFeatures = "client";
     openFirewall = true;
   };
-  services.ollama = {
-    enable = true;
-    openFirewall = true;
-    syncModels = true;
-    loadModels = [
-      "gemma4:26b"
-      "qwen2.5-coder:14b"
-      "qwen3:30b"
-    ];
-  };
+  # Models and environment are set per host in home-manager
+  # (`eureka.ollama`, users/eureka/home-manager/omp.nix) so omp and the
+  # server agree on them.
+  services.ollama =
+    let
+      hmOllama = config.home-manager.users.${user}.eureka.ollama;
+    in
+    {
+      enable = true;
+      openFirewall = true;
+      syncModels = true;
+      loadModels = [ hmOllama.model ] ++ hmOllama.extraModels;
+      environmentVariables = hmOllama.environment;
+    };
   services.gh-mdbook-server = {
     inherit user;
     enable = true;

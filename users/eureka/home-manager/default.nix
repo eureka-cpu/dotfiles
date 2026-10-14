@@ -10,6 +10,8 @@ let
     builtins.filter (p: availableOn hostPlatform p) ps;
 in
 {
+  imports = [ ./omp.nix ];
+
   # Home Manager needs a bit of information about you and the paths it should manage.
   home.username = "eureka";
   home.homeDirectory = lib.mkDefault
@@ -33,7 +35,6 @@ in
     git-kitten # kitty-diff-git: `git kitten diff`
     helix
     docker
-    llm-agents.claude-code
     # studio
     ffmpeg
     gphoto2
