@@ -110,7 +110,7 @@ in
       enable = true;
       openFirewall = true;
       syncModels = true;
-      loadModels = [ hmOllama.model ] ++ hmOllama.extraModels;
+      loadModels = hmOllama.models;
       environmentVariables = hmOllama.environment;
     };
   services.gh-mdbook-server = {

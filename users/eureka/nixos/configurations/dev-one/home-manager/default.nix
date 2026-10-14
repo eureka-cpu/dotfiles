@@ -52,7 +52,10 @@
   # ollama-vulkan hits amdgpu compute ring timeouts; don't use it.
   eureka.ollama = {
     model = "gemma4:26b";
-    extraModels = [ "qwen3:30b" "qwen2.5-coder:14b" ];
+    # Agentic coding model: solved a small fix-and-extend task correctly but
+    # took ~20 min here, so it's for offline work, not routine delegation.
+    coderModel = "qwen3-coder:30b";
+    extraModels = [ "qwen3:30b" ];
   };
 
   home.stateVersion = "23.11";

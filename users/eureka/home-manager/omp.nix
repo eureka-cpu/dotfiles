@@ -23,6 +23,21 @@ let
   # hosts every generated token costs ~0.12s, so unbounded reasoning dominates.
   localModel = "ollama/${cfg.model}:low";
 
+  claudeModel = "anthropic/claude-opus-5-5";
+
+  # Coding model; no thinking suffix since coder models (qwen3-coder) have no
+  # reasoning mode to cap.
+  localCoder = "ollama/${cfg.coderModel}";
+  separateCoder = cfg.coderModel != cfg.model;
+
+  # How fast local agents are on this host, for their descriptions: the
+  # delegating model reads these to decide whether a hand-off is worth it.
+  speedNote = cpuMeasurement:
+    if cfg.localSubagents then
+      "Runs on this machine's GPU, so routine delegation of small tasks is worthwhile."
+    else
+      "Runs on this machine's CPU and is slow (measured on dev-one: ${cpuMeasurement}). Use only when Claude is unavailable or the user asks for local work.";
+
   # Environment shared by the ompweb service on both platforms. node 24+ is
   # required by ompweb's engines field; omp is pinned so the service does not
   # depend on it being on PATH. OLLAMA_CONTEXT_LENGTH is passed through so the
@@ -78,6 +93,24 @@ in
         Additional Ollama tags to keep pulled on this host. On NixOS
         `syncModels` deletes anything not in `model` + `extraModels`.
       '';
+    };
+
+    coderModel = lib.mkOption {
+      type = lib.types.str;
+      default = cfg.model;
+      defaultText = lib.literalExpression "config.eureka.ollama.model";
+      example = "qwen3-coder:30b";
+      description = ''
+        Ollama tag for local coding work: the `local-coder` agent, and the
+        `task` subagent's fallback when Claude is unreachable.
+      '';
+    };
+
+    models = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      readOnly = true;
+      default = lib.unique ([ cfg.model cfg.coderModel ] ++ cfg.extraModels);
+      description = "Every Ollama tag this host keeps pulled.";
     };
 
     localSubagents = lib.mkOption {
@@ -149,22 +182,54 @@ in
         display.subagentLivePreview = false;
 
         modelRoles = {
-          default = "anthropic/claude-opus-5-5";
+          default = claudeModel;
         } // lib.optionalAttrs cfg.localSubagents {
           smol = localModel;
+        } // lib.optionalAttrs separateCoder {
+          # Pinned (instead of inheriting the session model) because omp only
+          # applies `fallbackChains.task` to task subagents when this role is
+          # set explicitly (model-resolver.ts resolveEffectiveAgentModelSelection).
+          task = claudeModel;
         };
 
         # Any provider error on a chat role (offline, Anthropic down, usage
         # limit) switches to the local model on the first failure; the
         # session returns to Claude once its cooldown expires. Roles without
-        # their own chain (smol, task, slow, …) inherit `default`.
-        retry.fallbackChains.default = [ localModel ];
+        # their own chain (smol, slow, …) inherit `default`; coding subagents
+        # get the host's coder model when it differs.
+        retry.fallbackChains = {
+          default = [ localModel ];
+        } // lib.optionalAttrs separateCoder {
+          task = [ localCoder ];
+        };
 
         # One GPU/CPU per host: queue local requests in omp instead of
         # letting parallel subagents pile up behind Ollama's single slot.
         providers.maxInFlightRequests.ollama = 1;
       };
     };
+
+    # Local-model agents Claude (or you) can hand work to by name, and that
+    # work offline. Descriptions carry this host's measured speed so the
+    # delegating model knows when they're worth using.
+    home.file.".omp/agent/agents/local-coder.md".text = ''
+      ---
+      name: local-coder
+      description: Local-model coding worker (${cfg.coderModel}). Makes small, well-specified code changes and verifies them with tests. ${speedNote "a small fix-and-extend task with 8 tests took ~20 min"}
+      tools: read, edit, write, bash, grep, glob, find
+      model: "${localCoder}"
+      ---
+      You are a coding worker running on a small local model. Read the relevant files, make the smallest correct change, run the tests with bash, and iterate until they pass. Never claim a result you did not observe in tool output. Report what you changed and the final test result.
+    '';
+    home.file.".omp/agent/agents/local-scout.md".text = ''
+      ---
+      name: local-scout
+      description: Local-model read-only scout (${cfg.model}). Answers narrow codebase questions with path:line evidence. ${speedNote "a two-question grep-and-cite lookup took 3-4 min"}
+      tools: read, grep, glob, find
+      model: "${localModel}"
+      ---
+      You are a read-only code scout running on a small local model. Search for every part of the question with grep/glob/read before answering. Cite every fact as path:line. If a search finds nothing, say which pattern you searched; never guess.
+    '';
 
     # Ollama on darwin. On NixOS the system service serves it instead (a user
     # service would lose the race for :11434 and crash-loop).
@@ -183,7 +248,7 @@ in
           "-c"
           (lib.concatMapStringsSep " && "
             (m: "${lib.getExe config.services.ollama.package} pull ${lib.escapeShellArg m}")
-            ([ cfg.model ] ++ cfg.extraModels))
+            cfg.models)
         ];
         EnvironmentVariables.OLLAMA_HOST = "127.0.0.1:11434";
         RunAtLoad = true;
