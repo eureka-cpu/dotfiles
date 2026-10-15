@@ -37,6 +37,8 @@ in
   # activation; if it wins, it never sees the gateway unit and HM skips its
   # reload ("User systemd daemon not running"). Make it wait for activation.
   systemd.services."user@${toString uid}" = {
+    # Drop-in on the user@.service template; a full unit would shadow it.
+    overrideStrategy = "asDropin";
     after = [ "home-manager-openclaw.service" ];
     wants = [ "home-manager-openclaw.service" ];
   };
