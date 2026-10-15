@@ -36,6 +36,7 @@ in
         modules-right = [
           "custom/mic"
           "pulseaudio"
+          "bluetooth"
           "cpu"
           "memory"
           "network"
@@ -101,6 +102,19 @@ in
           scroll-step = 1;
           on-click = "pavucontrol";
         };
+       
+        bluetooth = {
+          format = "󰂯 ";
+          format-on = "󰂯 ";
+          format-off = "󰂲 ";
+          format-disabled = "󰂲 ";
+          format-connected = "󰂱 ";
+          tooltip-format = "{controller_alias}\t{controller_address}";
+          tooltip-format-connected = "{controller_alias}\n{num_connections} connected\n\n{device_enumerate}";
+          tooltip-format-enumerate-connected = "{device_alias}";
+          tooltip-format-enumerate-connected-battery = "{device_alias}\t{device_battery_percentage}%";
+          on-click = "kitty bluetoothctl";
+        };
 
         cpu = {
           format = "󰻠 ";
@@ -156,6 +170,15 @@ in
 
       #custom-mic.muted {
         color: #ff5555;
+      }
+
+      #bluetooth.connected {
+        color: ${colors.green};
+      }
+      
+      #bluetooth.off,
+      #bluetooth.disabled {
+        color: ${colors.inactive};
       }
 
       #tray > widget {

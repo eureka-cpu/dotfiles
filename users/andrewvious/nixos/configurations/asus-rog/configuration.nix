@@ -19,6 +19,18 @@
     package = with pkgs; builtins.trace "Built against Hyprland v${hyprland.version}" hyprland;
   };
 
+  # Disable Webcam microphone 
+  services.pipewire.wireplumber.extraConfig."51-disable-webcam-mic" = {
+    "monitor.alsa.rules" = [
+      {
+        matches = [
+          { "device.name" = "alsa_card.usb-EMEET_HD_Webcam_eMeet_C960_A240229000417429-02"; }
+        ];
+        actions.update-props."device.disabled" = true;
+      }
+    ];
+  };
+
   # Enabling to build images for Raspberry Pi
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
@@ -32,9 +44,14 @@
     open = false;
     # Enable the nvidia settings menu
     nvidiaSettings = true;
+    # Save VRAM on suspend, preventing black screen or corruption on resume
+    powerManagement.enable = true;
     # Optionally, you may need to select the appropriate driver version for your specific GPU
     package = config.boot.kernelPackages.nvidiaPackages.production;
   };
+
+  # GPU overclocking software
+  services.lact.enable = true;
 
   # nordvpn settings:
   services.nordvpn.enable = true;
@@ -45,6 +62,12 @@
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
+    # xbox controller
+    input = {
+      General = {
+        UserspaceHID = true;
+      };
+    };
   };
   services.blueman.enable = true;
 
@@ -54,7 +77,10 @@
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
     dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
     localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+    extraCompatPackages = [ pkgs.proton-ge-bin ];
   };
+  # Proton runs on 32-bit Windows code paths
+  hardware.graphics.enable32Bit = true;
   programs.gamemode.enable = true;
 
   # This value determines the NixOS release from which the default
