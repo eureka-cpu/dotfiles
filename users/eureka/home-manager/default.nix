@@ -175,11 +175,22 @@ in
       custom = "${./zsh/custom}";
     };
   };
+  home.file.".ssh/allowed_signers".text = ''
+    github.eureka@gmail.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINQ66bGgeELzU/wZjpYxSlKIgMoROQxPx76vGdpS3lwc
+  '';
   programs.git = {
     enable = true;
-    settings.user = {
-      name = "eureka-cpu";
-      email = "github.eureka@gmail.com";
+    settings = {
+      user = {
+        name = "eureka-cpu";
+        email = "github.eureka@gmail.com";
+      };
+      gpg.ssh.allowedSignersFile = "${config.home.homeDirectory}/.ssh/allowed_signers";
+    };
+    signing = {
+      format = "ssh";
+      key = "~/.ssh/id_ed25519.pub";
+      signByDefault = true;
     };
   };
   programs.gh = {

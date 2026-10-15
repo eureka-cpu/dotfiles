@@ -4,7 +4,6 @@ let
 in
 {
   imports = [
-    ./modules/systemd/gh-mdbook-server
     ../fonts.nix
   ];
 
@@ -113,14 +112,6 @@ in
       loadModels = hmOllama.models;
       environmentVariables = hmOllama.environment;
     };
-  services.gh-mdbook-server = {
-    inherit user;
-    enable = true;
-    remote = "git@github.com/eureka-cpu/todo.git";
-    local = "/home/eureka/Code/eureka-cpu/todo";
-    port = 3001;
-    update = true;
-  };
 
   # Enable automatic login for the user.
   services.displayManager.autoLogin = {
