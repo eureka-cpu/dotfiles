@@ -51,6 +51,12 @@
       url = "github:kahme247/ompweb";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Not following our nixpkgs: OpenClaw is built from nix-openclaw's own
+    # pin, which is what upstream tests (see nixosModules.eureka.openclaw).
+    nix-openclaw = {
+      url = "github:openclaw/nix-openclaw";
+      inputs.home-manager.follows = "home-manager";
+    };
   };
 
   outputs =
@@ -180,6 +186,22 @@
           qcom-x1e80100 = { config, lib, ... }: {
             imports = [ inputs.x1e-nixos-config.nixosModules.x1e ];
           };
+        };
+        # Inert unless a user sets `programs.openclaw.enable` in home-manager.
+        eureka.openclaw = { ... }: {
+          nixpkgs.overlays = [
+            (final: _prev:
+              let
+                openclawPkgs = import inputs.nix-openclaw.inputs.nixpkgs {
+                  inherit (final.stdenv.hostPlatform) system;
+                  overlays = [ inputs.nix-openclaw.overlays.default ];
+                };
+              in
+              {
+                inherit (openclawPkgs) openclaw openclawPackages openclawRuntimePlugins;
+              })
+          ];
+          home-manager.sharedModules = [ inputs.nix-openclaw.homeManagerModules.openclaw ];
         };
       };
       # All nixos systems per-user go here
