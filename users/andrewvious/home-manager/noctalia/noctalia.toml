@@ -5,8 +5,8 @@ source = "community"
 mode    = "dark"
  
 [bar.default]
-start  = [ "launcher", "clock", "gap", "cpu", "ram", "gap", "active_window", "media" ]
-center = [ "workspaces" ]
+start  = [ "launcher", "workspaces", "gap", "cpu", "ram", "gap", "active_window", "media" ]
+center = [ "clock" ]
 end    = [ "tray", "notifications", "clipboard", "gap", "battery", "volume", "brightness", "gap", "control-center" ]
 margin_ends = 8
 widget_spacing = 6
