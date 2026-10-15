@@ -27,6 +27,9 @@
   # Early KMS: without the GPU driver in the initrd the firmware framebuffer
   # never reaches the display, so the LUKS prompt is invisible.
   boot.initrd.kernelModules = [ "i915" ];
+  # systemd stage 1: the LUKS prompt echoes `*` per keystroke, so dropped
+  # input after a warm reboot is visible.
+  boot.initrd.systemd.enable = true;
 
   # Wired networking only.
   networking.networkmanager.enable = true;
