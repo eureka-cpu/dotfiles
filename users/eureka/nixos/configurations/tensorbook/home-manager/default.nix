@@ -48,5 +48,11 @@
   };
   programs.helix.settings.theme = "ferra";
 
+  # RTX 3080 16GB laptop dGPU: same fit as critter-tank.
+  eureka.ollama = {
+    model = "gpt-oss:20b";
+    localSubagents = true;
+  };
+
   home.stateVersion = "23.05";
 }

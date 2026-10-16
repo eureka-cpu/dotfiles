@@ -10,6 +10,8 @@ let
     builtins.filter (p: availableOn hostPlatform p) ps;
 in
 {
+  imports = [ ./omp.nix ];
+
   # Home Manager needs a bit of information about you and the paths it should manage.
   home.username = "eureka";
   home.homeDirectory = lib.mkDefault
@@ -33,7 +35,6 @@ in
     git-kitten # kitty-diff-git: `git kitten diff`
     helix
     docker
-    llm-agents.claude-code
     # studio
     ffmpeg
     gphoto2
@@ -174,11 +175,22 @@ in
       custom = "${./zsh/custom}";
     };
   };
+  home.file.".ssh/allowed_signers".text = ''
+    github.eureka@gmail.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINQ66bGgeELzU/wZjpYxSlKIgMoROQxPx76vGdpS3lwc
+  '';
   programs.git = {
     enable = true;
-    settings.user = {
-      name = "eureka-cpu";
-      email = "github.eureka@gmail.com";
+    settings = {
+      user = {
+        name = "eureka-cpu";
+        email = "github.eureka@gmail.com";
+      };
+      gpg.ssh.allowedSignersFile = "${config.home.homeDirectory}/.ssh/allowed_signers";
+    };
+    signing = {
+      format = "ssh";
+      key = "~/.ssh/id_ed25519.pub";
+      signByDefault = true;
     };
   };
   programs.gh = {

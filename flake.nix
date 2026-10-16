@@ -28,10 +28,6 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    awww = {
-      url = "git+https://codeberg.org/LGFae/awww";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     helix-themes.url = "github:CptPotato/helix-themes";
     brave-torrent.url = "github:NixOS/nixpkgs?rev=bfbd5014640db4509f601878a2f2a9216a0459d0";
     llm-agents.url = "github:numtide/llm-agents.nix";
@@ -47,6 +43,20 @@
       url = "github:noctalia-dev/noctalia";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    omp = {
+      url = "github:can1357/oh-my-pi";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    ompweb = {
+      url = "github:kahme247/ompweb";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # Not following our nixpkgs: OpenClaw is built from nix-openclaw's own
+    # pin, which is what upstream tests (see nixosModules.eureka.openclaw).
+    nix-openclaw = {
+      url = "github:openclaw/nix-openclaw";
+      inputs.home-manager.follows = "home-manager";
+    };
   };
 
   outputs =
@@ -55,7 +65,6 @@
     , nix-darwin
     , nixos-wsl
     , home-manager
-    , awww
     , brave-torrent
     , noctalia
     , ...
@@ -95,6 +104,27 @@
                 (final: _prev: {
                   llm-agents = inputs.llm-agents.packages.${final.system};
                 })
+                (final: _prev: {
+                  # Built from a vendored fix of upstream's package.nix; see
+                  # lib/pkgs/ompweb.nix for why the flake output can't be used.
+                  ompweb = final.callPackage ./lib/pkgs/ompweb.nix {
+                    source = inputs.ompweb;
+                  };
+                })
+                # Ollama from llm-agents' own nixpkgs pin: new model
+                # architectures need a new runner (gemma4 rejects 0.20.x), and
+                # `nix flake update llm-agents` bumps it with the other AI
+                # tooling without moving the whole system.
+                (final: _prev:
+                  let
+                    ollamaPkgs = import inputs.llm-agents.inputs.nixpkgs {
+                      inherit (final.stdenv.hostPlatform) system;
+                      inherit (final) config;
+                    };
+                  in
+                  {
+                    inherit (ollamaPkgs) ollama ollama-cpu ollama-cuda ollama-rocm ollama-vulkan;
+                  })
                 (_final: prev: {
                   kitty-themes = prev.kitty-themes.overrideAttrs (old: {
                     version = "0-unstable-2026-07-10";
@@ -110,9 +140,7 @@
             }
           ] ++ lib.optional (type == "nixos")
             {
-              # TODO: Use hyprpaper and stylix so we can just remove this
               nixpkgs.overlays = [
-                awww.overlays.default
                 (final: _prev: {
                   noctalia = inputs.noctalia.packages.${final.stdenv.hostPlatform.system}.default;
                 })
@@ -139,6 +167,9 @@
       homeManagerModules = {
         helix-themes = inputs.helix-themes.homeManagerModule;
         kasane = import "${inputs.kasane}/module.nix";
+        # Provides the `programs.omp` options for every user's home-manager;
+        # inert unless a user sets `programs.omp.enable = true`.
+        omp = inputs.omp.homeManagerModules.default;
       };
 
       # All user defined nixos modules go here
@@ -155,6 +186,22 @@
           qcom-x1e80100 = { config, lib, ... }: {
             imports = [ inputs.x1e-nixos-config.nixosModules.x1e ];
           };
+        };
+        # Inert unless a user sets `programs.openclaw.enable` in home-manager.
+        eureka.openclaw = { ... }: {
+          nixpkgs.overlays = [
+            (final: _prev:
+              let
+                openclawPkgs = import inputs.nix-openclaw.inputs.nixpkgs {
+                  inherit (final.stdenv.hostPlatform) system;
+                  overlays = [ inputs.nix-openclaw.overlays.default ];
+                };
+              in
+              {
+                inherit (openclawPkgs) openclaw openclawPackages openclawRuntimePlugins;
+              })
+          ];
+          home-manager.sharedModules = [ inputs.nix-openclaw.homeManagerModules.openclaw ];
         };
       };
       # All nixos systems per-user go here

@@ -4,6 +4,9 @@
     ./gtk.nix
     ../../../../home-manager/hyprland.nix
     ../../../../home-manager/default.nix
+    ../../../../home-manager/hypridle.nix
+    ../../../../home-manager/hyprpaper.nix
+    ../../../../home-manager/hyprlock.nix
   ];
 
   home.packages = with pkgs; [
@@ -42,6 +45,10 @@
     };
   };
   programs.helix.settings.theme = "gruvbox_material_dark_medium";
+
+  # M1 16GB under Asahi, CPU inference: 8B is the most that leaves room for
+  # the desktop; offline fallback only.
+  eureka.ollama.model = "qwen3:8b";
 
   home.stateVersion = "25.05";
 }

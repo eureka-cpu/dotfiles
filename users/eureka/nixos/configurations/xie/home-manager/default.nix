@@ -22,5 +22,12 @@
 
   programs.helix.settings.theme = "rose_pine";
 
+  # Snapdragon X Elite, 32GB, CPU-only: same reasoning as dev-one; offline
+  # fallback only.
+  eureka.ollama = {
+    model = "gemma4:26b";
+    coderModel = "qwen3-coder:30b";
+  };
+
   home.stateVersion = "25.05";
 }

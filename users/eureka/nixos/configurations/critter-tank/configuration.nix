@@ -4,11 +4,10 @@
     ./hardware-configuration.nix
     ../../../nixos/configuration.nix
     ../../../nixos/desktop-configuration.nix
+    ../../../nixos/greetd.nix
   ];
 
   networking.hostName = "critter-tank";
-
-  services.displayManager.gdm.enable = true;
 
   # Hyprland
   programs.hyprland = {
@@ -43,6 +42,8 @@
     localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
   };
   programs.gamemode.enable = true;
+
+  services.ollama.package = pkgs.ollama-cuda;
 
   system.stateVersion = "23.05";
 }
